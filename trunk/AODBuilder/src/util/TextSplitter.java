@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 public class TextSplitter {
 
 	public static String COMMON_PATTERN = "[';.,\\s]+";
+	public static String COMMON_PATTERN_REPLACE = "[';.,\\s]+";
 
 	public static String [] split (String text) {
 		Pattern splitter = Pattern.compile(COMMON_PATTERN);
@@ -17,5 +18,18 @@ public class TextSplitter {
 		String [] result = splitter.split(text);
 		return result;
 	}
-
+	
+	public static String[] split2 (String text){   
+	   text = text.replaceAll("[.]", " .");
+	   text = text.replaceAll("[,]", " ,");
+	   text = text.replaceAll("[;]", " ;");
+	   text = text.replaceAll("[']", " ' ");
+	   text = text.replaceAll("  "," ");	   
+	   
+	   String[] result= text.split(" ");
+			   
+	   
+	   return result;
+	}
+	
 }
