@@ -10,12 +10,14 @@ public class TextSplitterTest {
 	}
 	
 	public static void main(String[] args) {
-//		TextSplitter textSplitter = new TextSplitter();
 		String text = "En 'Es imposible', su sexto álbum, la banda de Ale Sergi busca sonar más rockera y orgánica. La imagen es más madura; las letras, adolescentes como siempre"; 
-//		String pattern = "[';.,\\s]+";
+
 		String [] resultado = TextSplitter.split(text);
 		print(resultado);
 				
+		String[] resultado2 = TextSplitter.split2(text);
+
+		print(resultado2);
 	}
 
 }
