@@ -22,15 +22,15 @@ class ParserTest {
 		LexicalizedParser lp = new LexicalizedParser("resources/englishPCFG.ser.gz");
 		lp.setOptionFlags(new String[]{"-maxLength", "80", "-retainTmpSubcategories"});
 
-		String text = "En 'Es imposible', su sexto álbum, la banda de Ale Sergi busca sonar más rockera y orgánica. La imagen es más madura; las letras, adolescentes como siempre";
+		String text = "The Advertiser is an entity who pays WebNewsOnLine for displaying advertising content to subscribers and potential subscribers.Advertisers also put advertising content to the Web site.";
 		String[] sentences= text.split("[.]");
 		for (String sentence: sentences){
 			String[] sent = TextSplitter.split(sentence);
 //			Tree parse = (Tree) lp.apply(Arrays.asList(sent));
 			lp.parse(sentence);
 			Tree parse = lp.getBestParse();
-			//		    parse.pennPrint();
-			//		    System.out.println();
+			parse.pennPrint();
+			System.out.println();
 	
 			TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 			GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
@@ -38,19 +38,22 @@ class ParserTest {
 	
 	
 			Collection<TypedDependency> tdl = gs.typedDependenciesCollapsed();
+			
+			TreePrint tp = new TreePrint("penn,typedDependenciesCollapsed");
+		    tp.printTree(parse);
 					
-			for (TypedDependency td: tdl){
-				TreeGraphNode gov = td.gov();
-				TreeGraphNode dep = td.dep();
-				GrammaticalRelation reln = td.reln();
-				
-				NLPDependencyWord t1 = createTreeNode(gov);
-				NLPDependencyWord t2 = createTreeNode(dep);
-				NLPDependencyRelation tnr = createTreeRelationNode(reln, t1, t2);
-				
-				System.out.println(tnr);
-				
-			}
+//			for (TypedDependency td: tdl){
+//				TreeGraphNode gov = td.gov();
+//				TreeGraphNode dep = td.dep();
+//				GrammaticalRelation reln = td.reln();
+//				
+//				NLPDependencyWord t1 = createTreeNode(gov);
+//				NLPDependencyWord t2 = createTreeNode(dep);
+//				NLPDependencyRelation tnr = createTreeRelationNode(reln, t1, t2);
+//				
+//				System.out.println(tnr);
+//				
+//			}
 		}
 
 //		Collection<TreeGraphNode> t = gs.getNodes();

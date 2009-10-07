@@ -4,8 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import beans.DBBean;
-import beans.DBWord;
+import beans.db.DBBean;
+import beans.db.DBWord;
 
 public class WordsHelper extends TableHelper{
 	

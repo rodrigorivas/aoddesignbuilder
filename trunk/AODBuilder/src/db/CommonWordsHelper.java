@@ -5,8 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import beans.DBBean;
-import beans.DBWord;
+import beans.db.DBBean;
+import beans.db.DBWord;
 
 public class CommonWordsHelper extends TableHelper{
 

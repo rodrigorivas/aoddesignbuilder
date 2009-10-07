@@ -12,7 +12,7 @@ import java.util.List;
 import org.apache.commons.beanutils.RowSetDynaClass;
 import org.hsqldb.jdbc.jdbcDataSource;
 
-import beans.DBWord;
+import beans.db.DBWord;
 
 public class DatabaseManager {
     
