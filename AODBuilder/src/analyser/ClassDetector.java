@@ -34,6 +34,10 @@ public class ClassDetector {
 				System.out.println(root);
 			}
 		}
+		
+		if (roots.size()>0)
+			return roots.values().iterator().next();
+		
 		return null;
 	}
 
