@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import factories.UMLFactory;
+import factories.aodprofile.AODProfileFactory;
+import factories.uml.UMLFactory;
 
-import beans.UMLBean;
-import beans.UMLGenericBean;
-import beans.UMLStereotype;
-import beans.UMLTaggedValue;
+import beans.aodprofile.AODProfileBean;
+import beans.uml.UMLBean;
+import beans.uml.UMLGenericBean;
+import beans.uml.UMLStereotype;
+import beans.uml.UMLTaggedValue;
 
 public class GenericBeanAnalyzer {
 	
@@ -25,6 +27,25 @@ public class GenericBeanAnalyzer {
 		return instance;
 	}
 
+	/**
+	 * Filter TaggedValue and Stereotypes beans. Those were previously included into info on other beans
+	 * 
+	 * @param bean
+	 * @return true for UMLTaggedValue and UMLStereotype, false otherwise
+	 */
+	private boolean filter(UMLBean bean){
+		if (bean instanceof UMLTaggedValue || bean instanceof UMLStereotype)
+			return true;
+		
+		return false;
+	}
+
+	/**
+	 * Converts the UMLGenericBean into specific UMLBeans for later analysis.
+	 * 
+	 * @param list 
+	 * @return Map with new UMLBeans
+	 */
 	public Map<String, UMLBean> preAnalysis(List<UMLGenericBean> list){
 
 		Map<String, UMLBean> map = new HashMap<String, UMLBean>();
@@ -51,23 +72,19 @@ public class GenericBeanAnalyzer {
 		return map2;
 	}
 	
-	public Map<String, UMLBean> analysis(Map<String, UMLBean> map){
-		Map<String, UMLBean> newMap = new HashMap<String, UMLBean>();
+	public Map<String, AODProfileBean> analysis(Map<String, UMLBean> map){
+		Map<String, AODProfileBean> newMap = new HashMap<String, AODProfileBean>();
 		
 		for (Entry<String, UMLBean> entry: map.entrySet()){
-			UMLBean bean = entry.getValue();
-			//Lo tiene q hacer el association, el stereotype y el tagged value
+			UMLBean bean = entry.getValue();			
+			
+			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(bean);
+			
+			if (aodBean!=null)
+				newMap.put(aodBean.getId(), aodBean);
 		}
 		
 		return newMap;		
 	}
-	
-	private boolean filter(UMLBean bean){
-		if (bean instanceof UMLTaggedValue || bean instanceof UMLStereotype)
-			return true;
-		
-		return false;
-	}
-	
 
 }

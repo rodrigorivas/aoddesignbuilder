@@ -1,6 +1,6 @@
 package db;
 
-import beans.DBBean;
+import beans.db.DBBean;
 
 public abstract class TableHelper {
 

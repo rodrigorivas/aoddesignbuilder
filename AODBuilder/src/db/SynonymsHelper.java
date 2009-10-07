@@ -4,8 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import beans.DBBean;
-import beans.DBSynonym;
+import beans.db.DBBean;
+import beans.db.DBSynonym;
 
 public class SynonymsHelper extends TableHelper {
 	
