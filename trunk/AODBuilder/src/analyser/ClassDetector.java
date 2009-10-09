@@ -21,9 +21,47 @@ public class ClassDetector {
 		return instance;
 	}
 	
-	public String detectClass(Collection<NLPDependencyRelation> relations){
-		return null;
+	public ArrayList<NLPDependencyWord> detectClasses (Collection<NLPDependencyRelation> relations){
+		ArrayList<NLPDependencyWord> classes = new ArrayList<NLPDependencyWord>();
+		
+		for (NLPDependencyRelation dr: relations){
+			NLPDependencyWord dwGov = dr.getGovDW();
+			NLPDependencyWord dwRel = dr.getDepDW();
+			
+			if (dwGov.getType().startsWith("NN")){
+				if (!contained(classes, dwGov)){
+					classes.add(dwGov);
+				}
+			}
+			if (!dr.getRelationType().equalsIgnoreCase("nn") && 
+					dwRel.getType().startsWith("NN")){
+				if (!contained(classes, dwRel)){
+					classes.add(dwRel);
+				}
+			}
+		}
+		
+		return classes;
 	}
+
+	private boolean contained(ArrayList<NLPDependencyWord> classes, NLPDependencyWord dwGov) {
+		boolean contained = false;				
+		if (!classes.contains(dwGov)){
+			if (dwGov.getParents()!=null){
+				for (NLPDependencyWord parent: dwGov.getParents()){
+					if (classes.contains(parent)){
+						contained = true;
+						break;
+					}
+				}
+			}
+		}
+		else{
+			contained = true;
+		}
+		return contained;
+	}
+	
 	
 	public NLPDependencyWord getRoots(NLPDependencyWord word){
 		HashMap<String,NLPDependencyWord> roots = new HashMap<String, NLPDependencyWord>();

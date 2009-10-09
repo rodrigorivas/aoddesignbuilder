@@ -48,13 +48,14 @@ public class SentenceAnalizer {
 				//Parse the sentence using Standford parser.
 				Collection<TypedDependency> tdl = parseNLP(sentence);
 				
-				System.out.println(text);
+				ArrayList<NLPDependencyRelation> previousNN = new ArrayList<NLPDependencyRelation>();
+
+				System.out.println(sentence);
 
 				if (tdl!=null){
 					//Convert the parser output in something more simple to use
-					ArrayList<NLPDependencyRelation> previousNN = new ArrayList<NLPDependencyRelation>();
 					for (TypedDependency td: tdl){
-						System.out.println(td);
+//						System.out.println(td);
 						NLPDependencyRelation dr = createNLPDependencyRelation(td, words);
 						if (dr!=null){
 							if ("nn".equalsIgnoreCase(dr.getRelationType())){
@@ -68,6 +69,8 @@ public class SentenceAnalizer {
 
 							if (dr.getGovDW()!=null && !words.containsKey(dr.getGovDW().getKey()))
 								words.put(dr.getGovDW().getKey(),dr.getGovDW());
+														
+							System.out.println(dr.toStringWithRelations());
 						}
 					}
 				}			
@@ -78,14 +81,21 @@ public class SentenceAnalizer {
 //			for (NLPDependencyWord word: words.values()){
 //				System.out.println(word);
 //			}
-			for (NLPDependencyRelation rel: list){
-				System.out.println(rel.toStringWithRelations());
-				System.out.println("-----");
-				System.out.println("WORD:"+rel.getGovDW());
-				System.out.println("ROOT:"+ClassDetector.getInstance().getRoots(rel.getGovDW()));
+//			for (NLPDependencyRelation rel: list){
+//				System.out.println(rel.toStringWithRelations());
+//				System.out.println("-----");
+//				System.out.println("WORD:"+rel.getGovDW());
+//				System.out.println("ROOT:"+ClassDetector.getInstance().getRoots(rel.getGovDW()));
+//			}
+				
+			System.out.println("POSIBLES CLASES:");
+			ArrayList<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(list);
+			for (NLPDependencyWord cl: classes){
+				System.out.println(cl);
 			}
+
 			System.out.println("----------------------");
-						
+			
 			return list;
 		}
 		
