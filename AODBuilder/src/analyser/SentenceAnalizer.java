@@ -52,13 +52,13 @@ public class SentenceAnalizer {
 
 				if (tdl!=null){
 					//Convert the parser output in something more simple to use
-					ArrayList<NLPDependencyRelation> previousNN = null;
+					ArrayList<NLPDependencyRelation> previousNN = new ArrayList<NLPDependencyRelation>();
 					for (TypedDependency td: tdl){
 						System.out.println(td);
 						NLPDependencyRelation dr = createNLPDependencyRelation(td, words);
 						if (dr!=null){
 							if ("nn".equalsIgnoreCase(dr.getRelationType())){
-								processNN(dr,previousNN,dr.getDepDW().getPosition());
+								processNN(dr,previousNN,1);
 							}						
 							dr.relateWords();
 							list.add(dr);
@@ -93,18 +93,16 @@ public class SentenceAnalizer {
 	}
 
 	private boolean processNN(NLPDependencyRelation dr, ArrayList<NLPDependencyRelation> previousNN, int position) {
-		if (dr.getGovDW().getPosition() == position+1){
+		if (dr.getGovDW().getPosition() == dr.getDepDW().getPosition()+position){
 			dr.getGovDW().setWord(dr.getDepDW().getWord()+" "+dr.getGovDW().getWord());
-			position = dr.getDepDW().getPosition();
-			NLPDependencyRelation nextNN = getNextNN(previousNN, position);
+			position++;
+			NLPDependencyRelation nextNN = getNextNN(previousNN, dr.getDepDW().getPosition()-1);
 			if (nextNN!=null){
 				processNN(nextNN, previousNN, position);
 			}
 			return true;
 		}
 		else{
-			if (previousNN==null)
-				previousNN = new ArrayList<NLPDependencyRelation>();
 			if (!previousNN.contains(dr))
 				previousNN.add(dr);
 		}

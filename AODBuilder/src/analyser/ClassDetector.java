@@ -37,6 +37,9 @@ public class ClassDetector {
 			}
 		}
 		
+		if (roots.size()>1)
+			System.out.println("ESTE TIENE MAS DE UN ROOT!!!");
+
 		if (roots.size()>0)
 			return roots.values().iterator().next();
 		
@@ -47,7 +50,6 @@ public class ClassDetector {
 		if (!visited.containsKey(word.getKey())){
 
 			visited.put(word.getKey(), true);
-
 			if (word.getType().startsWith("NN")){
 				lastFound = word;
 			}
