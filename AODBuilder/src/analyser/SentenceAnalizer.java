@@ -52,9 +52,14 @@ public class SentenceAnalizer {
 
 				if (tdl!=null){
 					//Convert the parser output in something more simple to use
+					ArrayList<NLPDependencyRelation> previousNN = null;
 					for (TypedDependency td: tdl){
+						System.out.println(td);
 						NLPDependencyRelation dr = createNLPDependencyRelation(td, words);
 						if (dr!=null){
+							if ("nn".equalsIgnoreCase(dr.getRelationType())){
+								processNN(dr,previousNN,dr.getDepDW().getPosition());
+							}						
 							dr.relateWords();
 							list.add(dr);
 							
@@ -76,6 +81,7 @@ public class SentenceAnalizer {
 			for (NLPDependencyRelation rel: list){
 				System.out.println(rel.toStringWithRelations());
 				System.out.println("-----");
+				System.out.println("WORD:"+rel.getGovDW());
 				System.out.println("ROOT:"+ClassDetector.getInstance().getRoots(rel.getGovDW()));
 			}
 			System.out.println("----------------------");
@@ -84,6 +90,41 @@ public class SentenceAnalizer {
 		}
 		
 		return null;
+	}
+
+	private boolean processNN(NLPDependencyRelation dr, ArrayList<NLPDependencyRelation> previousNN, int position) {
+		if (dr.getGovDW().getPosition() == position+1){
+			dr.getGovDW().setWord(dr.getDepDW().getWord()+" "+dr.getGovDW().getWord());
+			position = dr.getDepDW().getPosition();
+			NLPDependencyRelation nextNN = getNextNN(previousNN, position);
+			if (nextNN!=null){
+				processNN(nextNN, previousNN, position);
+			}
+			return true;
+		}
+		else{
+			if (previousNN==null)
+				previousNN = new ArrayList<NLPDependencyRelation>();
+			if (!previousNN.contains(dr))
+				previousNN.add(dr);
+		}
+		
+		return false;
+		
+	}
+
+	private NLPDependencyRelation getNextNN(ArrayList<NLPDependencyRelation> previousNN, int position) {
+		NLPDependencyRelation ret = null;
+		if (previousNN!=null){
+			for (NLPDependencyRelation nn: previousNN){
+				if (nn.getDepDW().getPosition()==position){
+					ret = nn;
+					previousNN.remove(nn);
+					break;
+				}
+			}
+		}
+		return ret;
 	}
 
 	private NLPDependencyRelation createNLPDependencyRelation(TypedDependency td, HashMap<String, NLPDependencyWord> words) {

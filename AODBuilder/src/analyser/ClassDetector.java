@@ -28,7 +28,9 @@ public class ClassDetector {
 	public NLPDependencyWord getRoots(NLPDependencyWord word){
 		HashMap<String,NLPDependencyWord> roots = new HashMap<String, NLPDependencyWord>();
 		HashMap<String,Boolean> visited = new HashMap<String, Boolean>();
-		roots = getRoots(word,roots,null, visited);
+		for (NLPDependencyWord parent: word.getParents()){
+			roots = getRoots(parent, roots, null, visited);
+		}
 		if (roots!=null){
 			for (NLPDependencyWord root: roots.values()){
 				System.out.println(root);

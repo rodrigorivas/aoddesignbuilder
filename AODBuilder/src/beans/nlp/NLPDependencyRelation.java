@@ -27,9 +27,9 @@ public class NLPDependencyRelation {
 	
 	public void relateWords(){
 		if (govDW!=null && depDW != null && relationType!=null){
-			if ("nn".equalsIgnoreCase(relationType)){
-				govDW.setWord(depDW.getWord()+" "+govDW.getWord());
-			}
+//			if ("nn".equalsIgnoreCase(relationType) && govDW.getPosition() == depDW.getPosition()+1){
+//				govDW.setWord(depDW.getWord()+" "+govDW.getWord());
+//			}
 			if (relationType.equalsIgnoreCase("nsubj"))
 				govDW.addParent(depDW);
 			else
