@@ -39,9 +39,9 @@ public class SentenceAnalizer {
 	
 	public Collection<NLPDependencyRelation> analyze(String text){
 		if (text !=null && text.length()>0){
+			String[] sentences = text.split("[.]");
 			ArrayList<NLPDependencyRelation> list = new ArrayList<NLPDependencyRelation>();
 			HashMap<String,NLPDependencyWord> words = new HashMap<String,NLPDependencyWord>();
-			String[] sentences = text.split("[.]");
 			
 			for (String sentence: sentences){
 				
@@ -55,7 +55,7 @@ public class SentenceAnalizer {
 				if (tdl!=null){
 					//Convert the parser output in something more simple to use
 					for (TypedDependency td: tdl){
-//						System.out.println(td);
+						System.out.println(td);
 						NLPDependencyRelation dr = createNLPDependencyRelation(td, words);
 						if (dr!=null){
 							if ("nn".equalsIgnoreCase(dr.getRelationType())){
@@ -70,7 +70,7 @@ public class SentenceAnalizer {
 							if (dr.getGovDW()!=null && !words.containsKey(dr.getGovDW().getKey()))
 								words.put(dr.getGovDW().getKey(),dr.getGovDW());
 														
-							System.out.println(dr.toStringWithRelations());
+//							System.out.println(dr.toStringWithRelations());
 						}
 					}
 				}			

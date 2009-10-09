@@ -59,6 +59,6 @@ public class NLPDependencyWord {
 	}
 
 	public String getKey(){
-		return Integer.toString(position);
+		return Integer.toString(position)+"-"+word;
 	}
 }
