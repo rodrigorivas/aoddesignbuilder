@@ -22,6 +22,16 @@ public class SentenceAnalizer {
 	
 	public static final String PARSER_ENGLISH = "resources/englishPCFG.ser.gz";
 	private LexicalizedParser lp;
+	ArrayList<NLPDependencyRelation> relations;
+	public ArrayList<NLPDependencyRelation> getRelations() {
+		return relations;
+	}
+
+	HashMap<String,NLPDependencyWord> words;
+
+	public HashMap<String, NLPDependencyWord> getWords() {
+		return words;
+	}
 
 	private static SentenceAnalizer instance = null;
 	
@@ -37,11 +47,11 @@ public class SentenceAnalizer {
 		return instance;
 	}
 	
-	public Collection<NLPDependencyRelation> analyze(String text){
+	public void analyze(String text){
 		if (text !=null && text.length()>0){
 			String[] sentences = text.split("[.]");
-			ArrayList<NLPDependencyRelation> list = new ArrayList<NLPDependencyRelation>();
-			HashMap<String,NLPDependencyWord> words = new HashMap<String,NLPDependencyWord>();
+			relations = new ArrayList<NLPDependencyRelation>();
+			words = new HashMap<String,NLPDependencyWord>();
 			
 			for (String sentence: sentences){
 				
@@ -62,10 +72,10 @@ public class SentenceAnalizer {
 								processNN(dr,previousNN,1);
 							}						
 							dr.relateWords();
-							list.add(dr);
+							relations.add(dr);
 							
-							if (dr.getDepDW()!=null && !words.containsKey(dr.getDepDW().getKey()))
-								words.put(dr.getDepDW().getKey(), dr.getDepDW());
+//							if (dr.getDepDW()!=null && !words.containsKey(dr.getDepDW().getKey()))
+//								words.put(dr.getDepDW().getKey(), dr.getDepDW());
 
 							if (dr.getGovDW()!=null && !words.containsKey(dr.getGovDW().getKey()))
 								words.put(dr.getGovDW().getKey(),dr.getGovDW());
@@ -87,19 +97,17 @@ public class SentenceAnalizer {
 //				System.out.println("WORD:"+rel.getGovDW());
 //				System.out.println("ROOT:"+ClassDetector.getInstance().getRoots(rel.getGovDW()));
 //			}
-				
-			System.out.println("POSIBLES CLASES:");
-			ArrayList<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(list);
-			for (NLPDependencyWord cl: classes){
-				System.out.println(cl);
-			}
-
-			System.out.println("----------------------");
 			
-			return list;
-		}
+//			ArrayList<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
+//
+//			System.out.println("CLASES:");
+//			for (NLPDependencyWord clas: classes){
+//				System.out.println(clas.getWord());
+//			}
+//			System.out.println("----------");
+							
+		}		
 		
-		return null;
 	}
 
 	private boolean processNN(NLPDependencyRelation dr, ArrayList<NLPDependencyRelation> previousNN, int position) {

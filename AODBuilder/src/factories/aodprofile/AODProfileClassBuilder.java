@@ -16,7 +16,9 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		aodClass.setId(bean.getId());
 		aodClass.setName(bean.getName());
 		
-		Collection<NLPDependencyRelation> depList = SentenceAnalizer.getInstance().analyze(bean.getDescription());
+		SentenceAnalizer.getInstance().analyze(bean.getDescription());
+		Collection<NLPDependencyRelation> depList = SentenceAnalizer.getInstance().getRelations();
+		
 		if (depList!=null){
 			
 			
@@ -24,5 +26,6 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		
 		return aodClass;
 	}
+	
 
 }

@@ -16,9 +16,10 @@ public class AODProfileAspectBuilder implements AODProfileBuilder{
 		aspect.setId(bean.getId());
 		aspect.setName(bean.getName());
 		
-		Collection<NLPDependencyRelation> depList = SentenceAnalizer.getInstance().analyze(bean.getDescription());
+		SentenceAnalizer.getInstance().analyze(bean.getDescription());
+		Collection<NLPDependencyRelation> depList = SentenceAnalizer.getInstance().getRelations();
+		
 		if (depList!=null){
-			
 			
 		}	
 		

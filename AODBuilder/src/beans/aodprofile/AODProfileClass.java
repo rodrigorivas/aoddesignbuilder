@@ -1,6 +1,7 @@
 package beans.aodprofile;
 
 import java.util.List;
+import java.util.Map;
 
 import beans.Attribute;
 import beans.Method;
@@ -11,7 +12,7 @@ public class AODProfileClass extends AODProfileBean {
 	protected List<Method> methods;
 	protected AODProfileClass baseClass;
 	protected List<AODProfileAssociation> possibleAssociations;
-	
+
 	public List<Attribute> getAttributes() {
 		return attributes;
 	}
@@ -38,6 +39,30 @@ public class AODProfileClass extends AODProfileBean {
 		this.possibleAssociations = possibleAssociations;
 	}
 
-	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this){
+			return true;
+		}
+		
+		if (obj instanceof AODProfileClass){
+			AODProfileClass aodpc = (AODProfileClass) obj;
+			if (this.getName()!=null && this.getName().equalsIgnoreCase(aodpc.getName())){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	@Override
+	public void processInnerBeans(Map<String, AODProfileBean> newMap) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void merge(AODProfileBean profileBean) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
