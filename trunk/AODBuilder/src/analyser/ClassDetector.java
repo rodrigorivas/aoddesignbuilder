@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import util.Inflector;
+
 import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
 
@@ -20,23 +22,17 @@ public class ClassDetector {
 		
 		return instance;
 	}
-	
-	public ArrayList<NLPDependencyWord> detectClasses (Collection<NLPDependencyRelation> relations){
+
+	public ArrayList<NLPDependencyWord> detectClasses (HashMap<String, NLPDependencyWord> words){
 		ArrayList<NLPDependencyWord> classes = new ArrayList<NLPDependencyWord>();
 		
-		for (NLPDependencyRelation dr: relations){
-			NLPDependencyWord dwGov = dr.getGovDW();
-			NLPDependencyWord dwRel = dr.getDepDW();
-			
-			if (dwGov.getType().startsWith("NN")){
-				if (!contained(classes, dwGov)){
-					classes.add(dwGov);
-				}
-			}
-			if (!dr.getRelationType().equalsIgnoreCase("nn") && 
-					dwRel.getType().startsWith("NN")){
-				if (!contained(classes, dwRel)){
-					classes.add(dwRel);
+		if (words != null){
+			for (NLPDependencyWord word: words.values()){			
+				if (word.getType().startsWith("NN")){
+					if (!contained(classes, word)){
+						word.setWord(Inflector.getInstance().singularize(word.getWord()));
+						classes.add(word);
+					}
 				}
 			}
 		}
@@ -44,12 +40,36 @@ public class ClassDetector {
 		return classes;
 	}
 
+//	public ArrayList<NLPDependencyWord> detectClasses (Collection<NLPDependencyRelation> relations){
+//		ArrayList<NLPDependencyWord> classes = new ArrayList<NLPDependencyWord>();
+//		
+//		for (NLPDependencyRelation dr: relations){
+//			NLPDependencyWord dwGov = dr.getGovDW();
+//			NLPDependencyWord dwRel = dr.getDepDW();
+//			
+//			if (dwGov.getType().startsWith("NN")){
+//				if (!contained(classes, dwGov)){
+//					classes.add(dwGov);
+//				}
+//			}
+//			if (!dr.getRelationType().equalsIgnoreCase("nn") && 
+//					dwRel.getType().startsWith("NN")){
+//				if (!contained(classes, dwRel)){
+//					classes.add(dwRel);
+//				}
+//			}
+//		}
+//		
+//		return classes;
+//	}
+
 	private boolean contained(ArrayList<NLPDependencyWord> classes, NLPDependencyWord dwGov) {
 		boolean contained = false;				
-		if (!classes.contains(dwGov)){
+		if (!contains(classes,dwGov)){
+//		if (!classes.contains(dwGov)){
 			if (dwGov.getParents()!=null){
 				for (NLPDependencyWord parent: dwGov.getParents()){
-					if (classes.contains(parent)){
+					if (contains(classes, parent)){
 						contained = true;
 						break;
 					}
@@ -61,8 +81,19 @@ public class ClassDetector {
 		}
 		return contained;
 	}
+		
 	
-	
+	private boolean contains(ArrayList<NLPDependencyWord> classes, NLPDependencyWord dwGov) {
+		if (classes!=null){
+			for (NLPDependencyWord word: classes){
+				if (word.equals(dwGov) || (word.getWord()!=null && word.getWord().equalsIgnoreCase(dwGov.getWord()))){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public NLPDependencyWord getRoots(NLPDependencyWord word){
 		HashMap<String,NLPDependencyWord> roots = new HashMap<String, NLPDependencyWord>();
 		HashMap<String,Boolean> visited = new HashMap<String, Boolean>();

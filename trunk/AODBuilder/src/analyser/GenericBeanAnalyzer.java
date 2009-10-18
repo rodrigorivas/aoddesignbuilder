@@ -9,6 +9,7 @@ import factories.aodprofile.AODProfileFactory;
 import factories.uml.UMLFactory;
 
 import beans.aodprofile.AODProfileBean;
+import beans.aodprofile.AODProfileClassContainer;
 import beans.uml.UMLBean;
 import beans.uml.UMLGenericBean;
 import beans.uml.UMLStereotype;
@@ -80,8 +81,12 @@ public class GenericBeanAnalyzer {
 			
 			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(bean);
 			
-			if (aodBean!=null)
+			if (aodBean!=null){
+				
+				aodBean.processInnerBeans(newMap);
+				
 				newMap.put(aodBean.getId(), aodBean);
+			}
 		}
 		
 		return newMap;		
