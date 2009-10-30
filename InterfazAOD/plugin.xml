@@ -15,7 +15,7 @@
          </menu>
          <action
                label="&amp;Sample Action"
-               icon="icons/Setting.png"
+               icon="icons/releng_gears.gif"
                class="interfazaod.actions.ClasesAction"
                tooltip="AOD Builder"
                menubarPath="sampleMenu/sampleGroup"
