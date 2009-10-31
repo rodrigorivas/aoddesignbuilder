@@ -2,6 +2,7 @@ package interfazaod.actions;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
@@ -75,13 +76,15 @@ public class Welcome extends javax.swing.JFrame {
 			{
 				jPanelTop = new JPanel();
 				getContentPane().add(jPanelTop, BorderLayout.NORTH);
-				jPanelTop.setPreferredSize(new java.awt.Dimension(429, 71));
+				jPanelTop.setPreferredSize(new java.awt.Dimension(435, 93));
+				jPanelTop.setLayout(null);
 				{
 					jLabel3 = new JLabel();
 					jPanelTop.add(jLabel3);
-					jLabel3.setPreferredSize(new java.awt.Dimension(56, 48));
+					jLabel3.setPreferredSize(new java.awt.Dimension(51, 45));
 					jLabel3.setVisible(true);
 					jLabel3.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/Settings.png")));
+					jLabel3.setBounds(73, 5, 51, 45);
 				}
 				{
 					jLabel1 = new JLabel();
@@ -90,24 +93,27 @@ public class Welcome extends javax.swing.JFrame {
 					jLabel1.setPreferredSize(new java.awt.Dimension(234, 37));
 					jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
 					jLabel1.setFont(new java.awt.Font("Arial",1,12));
+					jLabel1.setBounds(129, 9, 234, 37);
 				}
 				{
 					jLabel2 = new JLabel();
 					jPanelTop.add(jLabel2);
 					jLabel2.setText("This wizard will guide you through the design process of your system");
+					jLabel2.setBounds(54, 68, 329, 14);
 				}
 			}
 			{
 				jPanelBottom = new JPanel();
-				jPanelBottom.setLayout(null);
+				FlowLayout jPanelBottomLayout = new FlowLayout();
+				jPanelBottom.setLayout(jPanelBottomLayout);
 				getContentPane().add(jPanelBottom, BorderLayout.CENTER);
-				jPanelBottom.setPreferredSize(new java.awt.Dimension(389, 73));
+				jPanelBottom.setPreferredSize(new java.awt.Dimension(433, 61));
 				{
 					jButtonExit = new JButton();
-					jPanelBottom.add(jButtonExit, "1, 1, 1, 2");
+					jPanelBottom.add(jButtonExit);
 					jButtonExit.setText("Exit");
-					jButtonExit.setBounds(89, 16, 101, 28);
 					jButtonExit.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/block_16.png")));
+					jButtonExit.setPreferredSize(new java.awt.Dimension(93, 28));
 					jButtonExit.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
 							jButtonExitMouseClicked(evt);
@@ -116,10 +122,10 @@ public class Welcome extends javax.swing.JFrame {
 				}
 				{
 					jButtonNext = new JButton();
-					jPanelBottom.add(jButtonNext, "2, 1, 2, 2");
+					jPanelBottom.add(jButtonNext);
 					jButtonNext.setText("Next");
-					jButtonNext.setBounds(196, 16, 101, 28);
 					jButtonNext.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/001_21.png")));
+					jButtonNext.setPreferredSize(new java.awt.Dimension(93, 28));
 					jButtonNext.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
 							jButtonNextMouseClicked(evt);

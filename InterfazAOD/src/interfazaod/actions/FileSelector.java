@@ -43,9 +43,11 @@ public class FileSelector extends javax.swing.JFrame {
 		}
 	}
 	private JPanel jPanelTop;
-	private JPanel jPanelBottom;
+	private JButton jCancel;
 	private JButton jNext;
 	private JButton jButtonPrevious;
+	private JPanel jPanelButtons;
+	private JPanel jPanelBottom;
 	private JButton jButtonBrowse;
 	private JTextField jTextField1;
 	private JLabel jLabel2;
@@ -53,7 +55,6 @@ public class FileSelector extends javax.swing.JFrame {
 	private Welcome welcome;
 	private ProposedSolution proposedSolution;
 	private JLabel jLabel3;
-	private JButton jCancel;
 	private static FileSelector fileSelector;
 	
 	public static FileSelector getInstance () {
@@ -93,15 +94,17 @@ public class FileSelector extends javax.swing.JFrame {
 					jLabel1 = new JLabel();
 					jPanelTop.add(jLabel1, "0, 1, 3, 1");
 					jLabel1.setLayout(null);
-					jLabel1.setText("Step 1 -  Select the XMI file you want to use as Use Case input");
+					jLabel1.setText("Select the XMI file you want to use as Use Case input");
 					jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
 					jLabel1.setBounds(67, 18, 318, 12);
+					jLabel1.setFont(new java.awt.Font("Tahoma",1,11));
 				}
 				{
 					jLabel3 = new JLabel();
 					jPanelTop.add(jLabel3);
 					jLabel3.setBounds(10, 11, 41, 41);
 					jLabel3.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/Settings.png")));
+					jLabel3.setSize(51, 45);
 				}
 			}
 			{
@@ -131,14 +134,20 @@ public class FileSelector extends javax.swing.JFrame {
 						}
 					});
 				}
+			}
+			{
+				jPanelButtons = new JPanel();
+				getContentPane().add(jPanelButtons, BorderLayout.SOUTH);
+				jPanelButtons.setPreferredSize(new java.awt.Dimension(400, 67));
 				{
 					jButtonPrevious = new JButton();
-					jPanelBottom.add(jButtonPrevious);
+					jPanelButtons.add(jButtonPrevious);
 					BoxLayout jButtonPreviousLayout = new BoxLayout(jButtonPrevious, javax.swing.BoxLayout.X_AXIS);
 					jButtonPrevious.setLayout(null);
 					jButtonPrevious.setText("Previous");
 					jButtonPrevious.setBounds(15, 56, 101, 28);
 					jButtonPrevious.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/001_23.png")));
+					jButtonPrevious.setPreferredSize(new java.awt.Dimension(93, 28));
 					jButtonPrevious.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
 							jButtonPreviousMouseClicked(evt);
@@ -147,10 +156,11 @@ public class FileSelector extends javax.swing.JFrame {
 				}
 				{
 					jNext = new JButton();
-					jPanelBottom.add(jNext);
+					jPanelButtons.add(jNext);
 					jNext.setText("Next");
 					jNext.setBounds(154, 56, 101, 28);
 					jNext.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/001_21.png")));
+					jNext.setPreferredSize(new java.awt.Dimension(93, 28));
 					jNext.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
 							jNextMouseClicked(evt);
@@ -159,10 +169,11 @@ public class FileSelector extends javax.swing.JFrame {
 				}
 				{
 					jCancel = new JButton();
-					jPanelBottom.add(jCancel);
+					jPanelButtons.add(jCancel);
 					jCancel.setText("Quit");
 					jCancel.setBounds(289, 56, 101, 28);
 					jCancel.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/block_16.png")));
+					jCancel.setPreferredSize(new java.awt.Dimension(93, 28));
 					jCancel.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
 							jCancelMouseClicked(evt);

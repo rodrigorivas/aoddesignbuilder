@@ -1,5 +1,6 @@
 package interfazaod.actions;
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
@@ -19,7 +20,7 @@ import javax.swing.UIManager;
 
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
-
+import javax.swing.border.LineBorder;
 
 /**
 * This code was edited or generated using CloudGarden's Jigloo
@@ -48,9 +49,10 @@ public class ProposedSolution extends javax.swing.JFrame {
 	private JPanel jPanelBottom;
 	private JPanel jPanelLeft;
 	private JLabel jLabel5;
+	private JLabel jLabel1;
+	private JPanel jPanel1;
 	private JPanel jPanelRight;
 	private JLabel jLabel2;
-	private JLabel jLabel1;
 	private JButton jPrevious;
 	private JList jClasses;
 	private JPanel jPanelBR;
@@ -90,32 +92,28 @@ public class ProposedSolution extends javax.swing.JFrame {
 					{
 						//En esta parte del modelo habría que cambiar el String que
 						//se presenta acá por el contenido de nuestro listado de clases
-						ListModel jClassesModel = 
-							new DefaultComboBoxModel(
-									new String[] { "1", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"
-											, "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"});
-						jClasses = new JList();
-						jClasses.setModel(jClassesModel);
-						jClasses.setBounds(55, 54, 233, 269);
-						jClasses.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 						sClasses = new JScrollPane();
 						sClasses.getViewport().setView(jClasses);
-						sClasses.setBounds(55, 54, 233, 269);
+						sClasses.setBounds(55, 25, 233, 237);
 						jPanelLeft.add(sClasses,new GridBagConstraints (3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,GridBagConstraints.NONE ,new Insets(0,0,0,0),0,0));
-
-					}
-					{
-						jLabel1 = new JLabel();
-						jPanelLeft.add(jLabel1);
-						jLabel1.setText("Select the elements to be included in your design:");
-						jLabel1.setBounds(30, 6, 258, 21);
+						{
+							jClasses = new JList();
+							sClasses.setViewportView(jClasses);
+							ListModel jClassesModel = 
+								new DefaultComboBoxModel(
+										new String[] { "1", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"
+												, "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"});
+							jClasses.setModel(jClassesModel);
+							jClasses.setBounds(0, 0, 233, 269);
+							jClasses.setPreferredSize(new java.awt.Dimension(233, 237));
+						}
+						
 					}
 					{
 						jLabel2 = new JLabel();
 						jPanelLeft.add(jLabel2);
-						jPanelLeft.add(getJLabel5());
 						jLabel2.setText("Classes and Aspects");
-						jLabel2.setBounds(55, 38, 98, 14);
+						jLabel2.setBounds(55, 11, 98, 14);
 						jLabel2.setFont(new java.awt.Font("Tahoma",2,11));
 					}
 					cMClasses = new CheckListManager(jClasses); 
@@ -125,35 +123,37 @@ public class ProposedSolution extends javax.swing.JFrame {
 					BorderLayout jPanelRightLayout = new BorderLayout();
 					jPanelRight.setLayout(jPanelRightLayout);
 					jPanelTop.add(jPanelRight, BorderLayout.CENTER);
+					jPanelTop.add(getJPanel1(), BorderLayout.NORTH);
 					{
 						jPanelTR = new JPanel();
 						jPanelRight.add(jPanelTR, BorderLayout.NORTH);
-						jPanelTR.setPreferredSize(new java.awt.Dimension(285, 184));
+						jPanelTR.setPreferredSize(new java.awt.Dimension(287, 138));
 						jPanelTR.setLayout(null);
 						jPanelTR.setOpaque(false);
 						{
 							jLabel3 = new JLabel();
 							jPanelTR.add(jLabel3, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 							jLabel3.setText("Attributes");
-							jLabel3.setBounds(0, 41, 48, 14);
+							jLabel3.setBounds(0, 11, 48, 14);
 							jLabel3.setFont(new java.awt.Font("Tahoma",2,11));
+						}
+						{
+							jAttributes = new JList();
+							jPanelTR.add(jAttributes);
+							ListModel jAttributesModel = 
+								new DefaultComboBoxModel(
+										new String[] { "1", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"});
+							jAttributes.setModel(jAttributesModel);
+							jAttributes.setBounds(0, 25, 238, 102);
 						}
 						{
 							sAttributes = new JScrollPane();
 							jPanelTR.add(sAttributes, new GridBagConstraints(0, 1, 3, 3, 0.0, 0.0, GridBagConstraints.SOUTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 							sAttributes.getViewport().setView(jAttributes);
-							sAttributes.setBounds(0, 55, 240, 127);
-							{
-								jAttributes = new JList();
-								sAttributes.setViewportView(jAttributes);
-								ListModel jAttributesModel = 
-									new DefaultComboBoxModel(
-											new String[] { "1", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"});
-								jAttributes.setModel(jAttributesModel);
-								jAttributes.setBounds(22, 17, 47, 32);
-								jAttributes.setPreferredSize(new java.awt.Dimension(221, 124));
-							}
-							
+							sAttributes.setBounds(0, 25, 240, 102);
+							jPanelTR.add(sAttributes,new GridBagConstraints (3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,GridBagConstraints.NONE ,new Insets(0,0,0,0),0,0));
+							sAttributes.setSize(238, 109);
+
 						}
 					}
 					cMAttributes = new CheckListManager(jAttributes);
@@ -163,27 +163,28 @@ public class ProposedSolution extends javax.swing.JFrame {
 						jPanelBR.setPreferredSize(new java.awt.Dimension(285, 154));
 						jPanelBR.setLayout(null);
 						{
+							jResponsibilities = new JList();
+							jPanelBR.add(jResponsibilities);
+							ListModel jResponsibilitiesModel = 
+								new DefaultComboBoxModel(
+										new String[] { "1", "2", "2", "2", "2"});
+							jResponsibilities.setModel(jResponsibilitiesModel);
+							jResponsibilities.setBounds(0, 15, 238, 110);
+						}
+						{
 							sResponsibilities = new JScrollPane();
 							sResponsibilities.getViewport().setView(jResponsibilities);
-							sResponsibilities.setBounds(0, 21, 243, 118);
+							sResponsibilities.setBounds(0, 15, 235, 110);
 							jPanelBR.add(sResponsibilities,new GridBagConstraints (3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,GridBagConstraints.NONE ,new Insets(0,0,0,0),0,0));
-							{
-								jResponsibilities = new JList();
-								sResponsibilities.setViewportView(jResponsibilities);
-								ListModel jResponsibilitiesModel = 
-									new DefaultComboBoxModel(
-											new String[] { "1", "2", "2", "2", "2"});
-								jResponsibilities.setModel(jResponsibilitiesModel);
-								jResponsibilities.setBounds(0, 0, 23, 47);
-							}
-							
+							sResponsibilities.setSize(238, 109);
+
 						}
 						cMResponsibilities = new CheckListManager (jResponsibilities);
 						{
 							jLabel4 = new JLabel();
 							jPanelBR.add(jLabel4);
 							jLabel4.setText("Responsibilities");
-							jLabel4.setBounds(0, 7, 72, 14);
+							jLabel4.setBounds(0, 1, 72, 14);
 							jLabel4.setFont(new java.awt.Font("Tahoma",2,11));
 						}
 					}
@@ -191,17 +192,18 @@ public class ProposedSolution extends javax.swing.JFrame {
 			}
 			{
 				jPanelBottom = new JPanel();
-				jPanelBottom.setLayout(null);
+				FlowLayout jPanelBottomLayout = new FlowLayout();
 				getContentPane().add(jPanelBottom, BorderLayout.CENTER);
+				jPanelBottom.setLayout(jPanelBottomLayout);
 				jPanelBottom.setPreferredSize(new java.awt.Dimension(583, 72));
 				{
 					jPrevious = new JButton();
-					jPanelBottom.add(jPrevious, "1, 1, 1, 2");
-					jPanelBottom.add(getJNext(), "1, 1, 1, 2");
+					jPanelBottom.add(jPrevious);
+					jPanelBottom.add(getJNext());
 					jPanelBottom.add(getJCancel());
 					jPrevious.setText("Previous");
-					jPrevious.setBounds(101, 19, 101, 28);
 					jPrevious.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/001_23.png")));
+					jPrevious.setPreferredSize(new java.awt.Dimension(93, 28));
 					jPrevious.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
 							jPreviousMouseClicked(evt);
@@ -214,6 +216,7 @@ public class ProposedSolution extends javax.swing.JFrame {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			setLocationRelativeTo(null);
 			this.setTitle("Design Elements");
+			this.setResizable(false);
 			setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -240,8 +243,8 @@ public class ProposedSolution extends javax.swing.JFrame {
 		if(jNext == null) {
 			jNext = new JButton();
 			jNext.setText("Next");
-			jNext.setBounds(245, 19, 101, 28);
 			jNext.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/001_21.png")));
+			jNext.setPreferredSize(new java.awt.Dimension(93, 28));
 			jNext.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent evt) {
 					jNextMouseClicked(evt);
@@ -255,8 +258,8 @@ public class ProposedSolution extends javax.swing.JFrame {
 		if(jCancel == null) {
 			jCancel = new JButton();
 			jCancel.setText("Quit");
-			jCancel.setBounds(392, 19, 101, 28);
 			jCancel.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/block_16.png")));
+			jCancel.setPreferredSize(new java.awt.Dimension(93, 28));
 			jCancel.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent evt) {
 					jCancelMouseClicked(evt);
@@ -273,11 +276,30 @@ public class ProposedSolution extends javax.swing.JFrame {
 			System.exit(NORMAL);
 		}
 	}
-	
+
+	private JPanel getJPanel1() {
+		if(jPanel1 == null) {
+			jPanel1 = new JPanel();
+			jPanel1.setPreferredSize(new java.awt.Dimension(583, 50));
+			jPanel1.setLayout(null);
+			jPanel1.add(getJLabel1());
+			jPanel1.add(getJLabel5());
+		}
+		return jPanel1;
+	}
+	private JLabel getJLabel1() {
+		if (jLabel1 == null) {
+			jLabel1 = new JLabel();
+			jLabel1.setText("Select the elements to be included in your design");
+			jLabel1.setBounds(155, 14, 297, 21);
+			jLabel1.setFont(new java.awt.Font("Tahoma",1,11));
+		}
+		return jLabel1;
+	}
 	private JLabel getJLabel5() {
 		if(jLabel5 == null) {
 			jLabel5 = new JLabel();
-			jLabel5.setBounds(5, 29, 40, 40);
+			jLabel5.setBounds(24, 6, 51, 45);
 			jLabel5.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/Settings.png")));
 		}
 		return jLabel5;
