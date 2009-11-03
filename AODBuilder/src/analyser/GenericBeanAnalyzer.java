@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import factories.aodprofile.AODProfileFactory;
-import factories.uml.UMLFactory;
-
+import util.ContainerManager;
 import beans.aodprofile.AODProfileBean;
-import beans.aodprofile.AODProfileClassContainer;
+import beans.uml.UMLAssociation;
 import beans.uml.UMLBean;
 import beans.uml.UMLGenericBean;
 import beans.uml.UMLStereotype;
 import beans.uml.UMLTaggedValue;
+import factories.aodprofile.AODProfileFactory;
+import factories.uml.UMLFactory;
 
 public class GenericBeanAnalyzer {
 	
@@ -49,44 +49,58 @@ public class GenericBeanAnalyzer {
 	 */
 	public Map<String, UMLBean> preAnalysis(List<UMLGenericBean> list){
 
-		Map<String, UMLBean> map = new HashMap<String, UMLBean>();
-		
+		HashMap<String, UMLBean> umlMapFirstPass = new HashMap<String, UMLBean>();
+				
 		//first pass: convert umlGericBean into specific umlBean
 		for (UMLGenericBean bean: list){
 			UMLBean umlBean = UMLFactory.getInstance().factoryMethod(bean);
 			if (umlBean!=null){
-				map.put(umlBean.getId(), umlBean);
+				umlMapFirstPass.put(umlBean.getId(), umlBean);
 			}
-		}
+		}		
 		
-		Map<String, UMLBean> map2 = new HashMap<String, UMLBean>();
-		
+		HashMap<String, UMLBean> umlMapSecondPass = new HashMap<String, UMLBean>();
 		//second pass: associate umlBean with each other
-		for (Entry<String, UMLBean> entry: map.entrySet()){
+		for (Entry<String, UMLBean> entry: umlMapSecondPass.entrySet()){
 			String key = entry.getKey();
 			UMLBean bean = entry.getValue();
-			bean.associate(map);
+			bean.associate(umlMapFirstPass);
 			if (!filter(bean))
-				map2.put(key, bean);
+				umlMapSecondPass.put(key, bean);
 		}
 		
-		return map2;
+		return umlMapSecondPass;
 	}
 	
 	public Map<String, AODProfileBean> analysis(Map<String, UMLBean> map){
 		Map<String, AODProfileBean> newMap = new HashMap<String, AODProfileBean>();
+		Map<String, UMLAssociation> associations = new HashMap<String, UMLAssociation>();
 		
 		for (Entry<String, UMLBean> entry: map.entrySet()){
 			UMLBean bean = entry.getValue();			
 			
-			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(bean);
+			//associations are processed at the end
+			if (bean instanceof UMLAssociation){
+				associations.put(entry.getKey(), (UMLAssociation) bean);
+				continue;
+			}
 			
+			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(bean);
 			if (aodBean!=null){
-				
 				aodBean.processInnerBeans(newMap);
-				
 				newMap.put(aodBean.getId(), aodBean);
 			}
+		}
+		
+		ContainerManager.getInstance().addCollection("AODProfile", newMap);
+		
+		//process the associations
+		for (Entry<String, UMLAssociation> entry: associations.entrySet()){
+			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(entry.getValue());	
+			if (aodBean!=null){			
+				aodBean.processInnerBeans(newMap);
+				newMap.put(aodBean.getId(), aodBean);
+			}			
 		}
 		
 		return newMap;		
