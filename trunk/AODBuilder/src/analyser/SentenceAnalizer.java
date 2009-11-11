@@ -65,7 +65,7 @@ public class SentenceAnalizer {
 				if (tdl!=null){
 					//Convert the parser output in something more simple to use
 					for (TypedDependency td: tdl){
-						System.out.println(td);
+//						System.out.println(td);
 						NLPDependencyRelation dr = createNLPDependencyRelation(td, words);
 						if (dr!=null){
 							if ("nn".equalsIgnoreCase(dr.getRelationType())){
@@ -98,21 +98,25 @@ public class SentenceAnalizer {
 //				System.out.println("ROOT:"+ClassDetector.getInstance().getRoots(rel.getGovDW()));
 //			}
 			
+			System.out.println("DETECTING CLASSES...");
+			
 			Collection<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
+			
+			System.out.println(classes.size()+" CLASSES DETECTED");
 
 			for (NLPDependencyWord clas: classes){
-				System.out.println("CLASS:");
-				
+				System.out.println("----------------");
+				System.out.println("CLASS:");			
 				System.out.println(clas.getWord());
 				
 				Collection<NLPDependencyWord> attributes = AttributeDetector.getInstance().detectAttribute(relations, clas);
 				
+				System.out.println("ATTRIBUTE:");
 				for (NLPDependencyWord attr: attributes){
-					System.out.println("ATTRIBUTE:");
-					System.out.println(attr);
+					System.out.println(attr.getWord());
 				}
+				System.out.println("----------------");
 			}
-			System.out.println("----------");
 							
 		}		
 		
