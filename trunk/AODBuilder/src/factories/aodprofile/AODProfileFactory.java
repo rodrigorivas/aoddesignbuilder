@@ -59,38 +59,38 @@ public class AODProfileFactory {
 			return aodClassContainer;
 		}
 		else if (bean instanceof UMLAssociation){	
-			UMLAssociation umlAssoc = (UMLAssociation) bean;
-			Map<String, ?> map = ContainerManager.getInstance().getCollection("AODProfile");
-			AODProfileClass source = null;
-			if (!map.containsValue(umlAssoc.getSource())){
-				source = (AODProfileClass) this.factoryMethod(umlAssoc.getSource());
-			}
-			else{
-				source = (AODProfileClass) map.get(umlAssoc.getSource().getId());
-			}
-			
-			if (source!=null){
-				AODProfileAssociation aodAssoc = null;
-				if (!umlAssoc.isCrosscut()){
-					aodAssoc = new AODProfileAssociation();
-				}
-				else{
-					if (!(source instanceof AODProfileAspect)){
-						//TODO: error!!! tiene que ser Aspect el source!!!
-					}
-					aodAssoc = new AODProfilePointcut();
-				}
-				AODProfileBean target = null;
-				if (!map.containsValue(umlAssoc.getTarget())){
-					target = this.factoryMethod(umlAssoc.getTarget());
-				}
-				else{
-					target = (AODProfileClass) map.get(umlAssoc.getTarget().getId());
-				}
-				aodAssoc.setTarget((AODProfileClass) target);
-				
-				source.addAssociation(aodAssoc);
-			}
+//			UMLAssociation umlAssoc = (UMLAssociation) bean;
+//			Map<String, ?> map = ContainerManager.getInstance().getCollection("AODProfile");
+//			AODProfileClass source = null;
+//			if (!map.containsValue(umlAssoc.getSource())){
+//				source = (AODProfileClass) this.factoryMethod(umlAssoc.getSource());
+//			}
+//			else{
+//				source = (AODProfileClass) map.get(umlAssoc.getSource().getId());
+//			}
+//			
+//			if (source!=null){
+//				AODProfileAssociation aodAssoc = null;
+//				if (!umlAssoc.isCrosscut()){
+//					aodAssoc = new AODProfileAssociation();
+//				}
+//				else{
+//					if (!(source instanceof AODProfileAspect)){
+//						//TODO: error!!! tiene que ser Aspect el source!!!
+//					}
+//					aodAssoc = new AODProfilePointcut();
+//				}
+//				AODProfileBean target = null;
+//				if (!map.containsValue(umlAssoc.getTarget())){
+//					target = this.factoryMethod(umlAssoc.getTarget());
+//				}
+//				else{
+//					target = (AODProfileClass) map.get(umlAssoc.getTarget().getId());
+//				}
+//				aodAssoc.setTarget((AODProfileClass) target);
+//				
+//				source.addAssociation(aodAssoc);
+//			}
 		}
 			
 			

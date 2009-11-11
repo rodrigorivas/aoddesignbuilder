@@ -98,13 +98,21 @@ public class SentenceAnalizer {
 //				System.out.println("ROOT:"+ClassDetector.getInstance().getRoots(rel.getGovDW()));
 //			}
 			
-//			ArrayList<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
-//
-//			System.out.println("CLASES:");
-//			for (NLPDependencyWord clas: classes){
-//				System.out.println(clas.getWord());
-//			}
-//			System.out.println("----------");
+			Collection<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
+
+			for (NLPDependencyWord clas: classes){
+				System.out.println("CLASS:");
+				
+				System.out.println(clas.getWord());
+				
+				Collection<NLPDependencyWord> attributes = AttributeDetector.getInstance().detectAttribute(relations, clas);
+				
+				for (NLPDependencyWord attr: attributes){
+					System.out.println("ATTRIBUTE:");
+					System.out.println(attr);
+				}
+			}
+			System.out.println("----------");
 							
 		}		
 		
