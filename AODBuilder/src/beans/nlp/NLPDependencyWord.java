@@ -70,11 +70,11 @@ public class NLPDependencyWord {
 		for (NLPDependencyWord parent: this.getParents()){
 			roots = getRoots(parent, roots, null, visited);
 		}
-		if (roots!=null){
-			for (NLPDependencyWord root: roots.values()){
-				System.out.println(root);
-			}
-		}
+//		if (roots!=null){
+//			for (NLPDependencyWord root: roots.values()){
+//				System.out.println(root);
+//			}
+//		}
 		
 		return roots.values();
 	}
@@ -106,5 +106,15 @@ public class NLPDependencyWord {
 	public boolean isAdjective(){		
 		return (type!=null && type.startsWith("JJ"));
 	}
+	
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (obj!=null && obj instanceof NLPDependencyWord){
+//			NLPDependencyWord word = (NLPDependencyWord) obj;
+//			
+//			return this.getKey().equals(word.getKey());
+//		}
+//		return super.equals(obj);
+//	}
 	
 }

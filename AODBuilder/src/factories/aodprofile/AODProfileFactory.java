@@ -42,21 +42,21 @@ public class AODProfileFactory {
 			return new AODProfileClassBuilder().build(bean);
 		}
 		else if (bean instanceof UMLUseCase){
-			SentenceAnalizer.getInstance().analyze(bean.getDescription());
-			HashMap<String, NLPDependencyWord> words =  SentenceAnalizer.getInstance().getWords();
-			ArrayList<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
-			AODProfileClassContainer aodClassContainer = new AODProfileClassContainer();
-			
-			for (NLPDependencyWord cl: classes){
-				//despues ver que key se pone
-				UMLClass newUMLClass = new UMLClass(cl.getKey(), cl.getWord());
-				newUMLClass.setDescription(bean.getDescription());
-				AODProfileClass aodProfileClass = (AODProfileClass) factoryMethod(newUMLClass);
-				if (aodProfileClass!=null)
-					aodClassContainer.addClass(aodProfileClass);
-			}
-			
-			return aodClassContainer;
+//			SentenceAnalizer.getInstance().analyze(bean.getDescription());
+//			HashMap<String, NLPDependencyWord> words =  SentenceAnalizer.getInstance().getWords();
+//			ArrayList<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
+//			AODProfileClassContainer aodClassContainer = new AODProfileClassContainer();
+//			
+//			for (NLPDependencyWord cl: classes){
+//				//despues ver que key se pone
+//				UMLClass newUMLClass = new UMLClass(cl.getKey(), cl.getWord());
+//				newUMLClass.setDescription(bean.getDescription());
+//				AODProfileClass aodProfileClass = (AODProfileClass) factoryMethod(newUMLClass);
+//				if (aodProfileClass!=null)
+//					aodClassContainer.addClass(aodProfileClass);
+//			}
+//			
+//			return aodClassContainer;
 		}
 		else if (bean instanceof UMLAssociation){	
 //			UMLAssociation umlAssoc = (UMLAssociation) bean;
