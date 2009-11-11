@@ -85,23 +85,30 @@ public class GenericBeanAnalyzer {
 				continue;
 			}
 			
-			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(bean);
-			if (aodBean!=null){
-				aodBean.processInnerBeans(newMap);
-				newMap.put(aodBean.getId(), aodBean);
+			if (!newMap.containsKey(bean.getId())){
+//				if (bean instanceof UMLAssociation){
+//					
+//				}
+				
+				AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(bean);
+			
+				if (aodBean!=null){
+					aodBean.processInnerBeans(newMap);
+					newMap.put(aodBean.getId(), aodBean);
+				}
 			}
 		}
 		
-		ContainerManager.getInstance().addCollection("AODProfile", newMap);
-		
-		//process the associations
-		for (Entry<String, UMLAssociation> entry: associations.entrySet()){
-			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(entry.getValue());	
-			if (aodBean!=null){			
-				aodBean.processInnerBeans(newMap);
-				newMap.put(aodBean.getId(), aodBean);
-			}			
-		}
+//		ContainerManager.getInstance().addCollection("AODProfile", newMap);
+//		
+//		//process the associations
+//		for (Entry<String, UMLAssociation> entry: associations.entrySet()){
+//			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(entry.getValue());	
+//			if (aodBean!=null){			
+//				aodBean.processInnerBeans(newMap);
+//				newMap.put(aodBean.getId(), aodBean);
+//			}			
+//		}
 		
 		return newMap;		
 	}

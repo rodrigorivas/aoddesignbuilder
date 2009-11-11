@@ -20,8 +20,7 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		Collection<NLPDependencyRelation> depList = SentenceAnalizer.getInstance().getRelations();
 		
 		if (depList!=null){
-			
-			
+						
 		}	
 		
 		return aodClass;

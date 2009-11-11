@@ -18,7 +18,7 @@ public class ResponsabilityDetector {
 		return instance;
 	}
 	
-	public String detectClass(Collection<NLPDependencyRelation> relations){
+	public String detectResponsability(Collection<NLPDependencyRelation> relations){
 		return null;
 	}
 	

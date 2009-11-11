@@ -1,6 +1,8 @@
 package beans.nlp;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class NLPDependencyWord {
 	
@@ -61,4 +63,48 @@ public class NLPDependencyWord {
 	public String getKey(){
 		return Integer.toString(position)+"-"+word;
 	}
+	
+	public Collection<NLPDependencyWord> getRoots(){
+		HashMap<String,NLPDependencyWord> roots = new HashMap<String, NLPDependencyWord>();
+		HashMap<String,Boolean> visited = new HashMap<String, Boolean>();
+		for (NLPDependencyWord parent: this.getParents()){
+			roots = getRoots(parent, roots, null, visited);
+		}
+		if (roots!=null){
+			for (NLPDependencyWord root: roots.values()){
+				System.out.println(root);
+			}
+		}
+		
+		return roots.values();
+	}
+
+	private HashMap<String,NLPDependencyWord> getRoots(NLPDependencyWord word, HashMap<String,NLPDependencyWord> roots, NLPDependencyWord lastFound, HashMap<String, Boolean> visited) {
+		if (!visited.containsKey(word.getKey())){
+
+			visited.put(word.getKey(), true);
+			if (word.getType().startsWith("NN")){
+				lastFound = word;
+			}
+	
+			if (word.getParents()==null || word.getParents().size()==0){		
+				if (lastFound!=null && !roots.containsKey(lastFound.getKey())){
+					roots.put(lastFound.getKey(), lastFound);
+					lastFound = null;
+				}
+			}
+			else{
+				for (NLPDependencyWord parent: word.getParents()){
+					getRoots(parent, roots, lastFound, visited);
+				}
+			}
+		}
+		
+		return roots;
+	}
+
+	public boolean isAdjective(){		
+		return (type!=null && type.startsWith("JJ"));
+	}
+	
 }
