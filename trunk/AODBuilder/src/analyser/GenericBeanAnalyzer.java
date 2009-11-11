@@ -61,7 +61,7 @@ public class GenericBeanAnalyzer {
 		
 		HashMap<String, UMLBean> umlMapSecondPass = new HashMap<String, UMLBean>();
 		//second pass: associate umlBean with each other
-		for (Entry<String, UMLBean> entry: umlMapSecondPass.entrySet()){
+		for (Entry<String, UMLBean> entry: umlMapFirstPass.entrySet()){
 			String key = entry.getKey();
 			UMLBean bean = entry.getValue();
 			bean.associate(umlMapFirstPass);
