@@ -11,19 +11,21 @@ import beans.uml.UMLBean;
 import beans.uml.UMLGenericBean;
 
 import util.FileUtil;
+import util.UniqueID;
 import xmi.XMIImporter;
 
 public class TestXMIImporter {
 
 	public static void main(String[] args) {
 		try {
+			
 			List<UMLGenericBean> beans = XMIImporter.parse(new ByteArrayInputStream(FileUtil.readFileAsByte("c:/temp/CSPS.xmi")));
 
 			Map<String, UMLBean> map = GenericBeanAnalyzer.getInstance().preAnalysis(beans);
 						
 //			for (Entry<String, UMLBean> entry: map.entrySet()){
 //				UMLBean bean = entry.getValue();
-//				System.out.println(bean);
+//				System.out.println(System.identityHashCode(bean));
 //			}
 			
 			GenericBeanAnalyzer.getInstance().analysis(map);

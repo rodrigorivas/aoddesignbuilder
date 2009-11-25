@@ -3,6 +3,7 @@ package analyser;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import beans.Attribute;
 import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
 
@@ -25,50 +26,50 @@ public class AttributeDetector {
 		for (NLPDependencyRelation dr: relations){
 			if (dr.getRelationType().equals("advmod")){
 				//System.out.println("REL TYPE: "+dr.getRelationType());
-				if (belongsToClass(dr.getDepDW(), classContainer, true) && dr.getDepDW().isAdjective()){
+				if (dr.getDepDW().isRelated(classContainer, true) && dr.getDepDW().isAdjective()){
 					//System.out.println("ADDING "+dr.getDepDW());
 					attributes.add(dr.getDepDW());
 				}
-				else if (belongsToClass(dr.getGovDW(), classContainer, true) && dr.getGovDW().isAdjective()){
+				else if (dr.getGovDW().isRelated(classContainer, true) && dr.getGovDW().isAdjective()){
 					//System.out.println("ADDING "+dr.getGovDW());
 					attributes.add(dr.getGovDW());
 				}
 			}
 			else if (dr.getRelationType().equals("amod")){
 				//System.out.println("REL TYPE: "+dr.getRelationType());
-				if (belongsToClass(dr.getGovDW(), classContainer, false) && dr.getDepDW().isAdjective()){
+				if (dr.getGovDW().isRelated( classContainer, false) && dr.getDepDW().isAdjective()){
 					//System.out.println("ADDING "+dr.getDepDW());
 					attributes.add(dr.getDepDW());
 				}
 			}
 			else if (dr.getRelationType().startsWith("conj")){
 				//System.out.println("REL TYPE: "+dr.getRelationType());
-				if (belongsToClass(dr.getDepDW(), classContainer, true) && dr.getDepDW().isAdjective()){
+				if (dr.getDepDW().isRelated( classContainer, true) && dr.getDepDW().isAdjective()){
 					//System.out.println("ADDING "+dr.getDepDW());
 					attributes.add(dr.getDepDW());
 				}
-				if (belongsToClass(dr.getGovDW(), classContainer, true) && dr.getGovDW().isAdjective()){
+				if (dr.getGovDW().isRelated( classContainer, true) && dr.getGovDW().isAdjective()){
 					//System.out.println("ADDING "+dr.getGovDW());
 					attributes.add(dr.getGovDW());
 				}				
 			}
 			else if (dr.getRelationType().equals("neg")){
 				//System.out.println("REL TYPE: "+dr.getRelationType());
-				if (belongsToClass(dr.getGovDW(), classContainer, true) && dr.getGovDW().isAdjective()){
+				if (dr.getGovDW().isRelated( classContainer, true) && dr.getGovDW().isAdjective()){
 					//System.out.println("ADDING "+dr.getGovDW());
 					attributes.add(dr.getGovDW());
 				}
 			}
 			else if (dr.getRelationType().equals("nsubj")){
 				//System.out.println("REL TYPE: "+dr.getRelationType());
-				if (belongsToClass(dr.getDepDW(), classContainer, false) && dr.getGovDW().isAdjective()){
+				if (dr.getDepDW().isRelated( classContainer, false) && dr.getGovDW().isAdjective()){
 					//System.out.println("ADDING "+dr.getGovDW());
 					attributes.add(dr.getGovDW());
 				}
 			}
 			else if (dr.getRelationType().equals("poss")){
 				//System.out.println("REL TYPE: "+dr.getRelationType());
-				if (belongsToClass(dr.getGovDW(), classContainer, false) && dr.getDepDW().isAdjective()){
+				if (dr.getGovDW().isRelated( classContainer, false) && dr.getDepDW().isAdjective()){
 					//System.out.println("ADDING "+dr.getDepDW());
 					attributes.add(dr.getDepDW());
 				}
@@ -79,27 +80,56 @@ public class AttributeDetector {
 		return attributes;
 	}
 	
-	private boolean belongsToClass(NLPDependencyWord belongingClass, NLPDependencyWord classContainer, boolean lookupParent){
-		if (!lookupParent){
-			//System.out.println("BELONG:"+belongingClass.getWord()+" = "+classContainer.getWord()+"? "+belongingClass.equals(classContainer));
-			return belongingClass.equals(classContainer);
-		}
-		else{
-			//System.out.println("BELONG:"+belongingClass.getWord()+" = "+classContainer.getWord()+"? "+belongingClass.equals(classContainer));
-			if (belongingClass.equals(classContainer)){
-				return true;
-			}
-			else{
-				Collection<NLPDependencyWord> roots = belongingClass.getRoots();
-				for (NLPDependencyWord root: roots){
-					//System.out.println("BELONG:"+root.getWord()+" = "+classContainer.getWord()+"? "+root.equals(classContainer));
-					if (root.equals(classContainer))
-						return true;
+	public Collection<Attribute> detectAttribute2(Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){
+		Collection<Attribute> attributes = new ArrayList<Attribute>();
+		
+		for (NLPDependencyRelation dr: relations){
+			if (dr.getRelationType().equals("advmod")){
+				if (dr.getDepDW().isRelated(classContainer, true) && dr.getDepDW().isAdjective()){
+					addAttribute(attributes, dr.getDepDW());
+				}
+				else if (dr.getGovDW().isRelated(classContainer, true) && dr.getGovDW().isAdjective()){
+					addAttribute(attributes, dr.getGovDW());
 				}
 			}
-		}
+			else if (dr.getRelationType().equals("amod")){
+				if (dr.getGovDW().isRelated( classContainer, false) && dr.getDepDW().isAdjective()){
+					addAttribute(attributes, dr.getDepDW());
+				}
+			}
+			else if (dr.getRelationType().startsWith("conj")){
+				if (dr.getDepDW().isRelated( classContainer, true) && dr.getDepDW().isAdjective()){
+					addAttribute(attributes, dr.getDepDW());
+				}
+				if (dr.getGovDW().isRelated( classContainer, true) && dr.getGovDW().isAdjective()){
+					addAttribute(attributes, dr.getGovDW());
+				}				
+			}
+			else if (dr.getRelationType().equals("neg")){
+				if (dr.getGovDW().isRelated( classContainer, true) && dr.getGovDW().isAdjective()){
+					addAttribute(attributes, dr.getGovDW());
+				}
+			}
+			else if (dr.getRelationType().equals("nsubj")){
+				if (dr.getDepDW().isRelated( classContainer, false) && dr.getGovDW().isAdjective()){
+					addAttribute(attributes, dr.getGovDW());
+				}
+			}
+			else if (dr.getRelationType().equals("poss")){
+				if (dr.getGovDW().isRelated( classContainer, false) && dr.getDepDW().isAdjective()){
+					addAttribute(attributes, dr.getDepDW());
+				}
+			}
+
+		}	
 		
-		return false;
+		return attributes;
+	}
+
+	private void addAttribute(Collection<Attribute> attributes, NLPDependencyWord dw) {
+		Attribute newAttr = new Attribute();
+		newAttr.setName(dw.getWord());
+		attributes.add(newAttr);
 	}
 	
 	

@@ -1,12 +1,13 @@
 package beans;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Method {
+public class Responsability {
 
 	String name;
 	Class returningType;
-	List<Attribute> parameters;
+	List<Attribute> parameters = new ArrayList<Attribute>();
 	boolean selected;
 	
 	public String getName() {
@@ -32,6 +33,10 @@ public class Method {
 	}
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+	public void addParameter(Attribute parameter){
+		if (parameters!=null)
+			parameters.add(parameter);
 	}
 	
 	

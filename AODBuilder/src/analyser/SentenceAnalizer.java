@@ -37,7 +37,7 @@ public class SentenceAnalizer {
 	
 	private SentenceAnalizer() {
 		lp = new LexicalizedParser("resources/englishPCFG.ser.gz");
-		lp.setOptionFlags(new String[]{"-maxLength", "80", "-retainTmpSubcategories"});
+		lp.setOptionFlags(new String[]{"-maxLength", "70"});
 	}
 	
 	public static SentenceAnalizer getInstance(){
@@ -45,6 +45,10 @@ public class SentenceAnalizer {
 			instance = new SentenceAnalizer();
 		
 		return instance;
+	}
+	
+	public void reset(){
+		lp.reset();
 	}
 	
 	public void analyze(String text){
@@ -91,32 +95,29 @@ public class SentenceAnalizer {
 //			for (NLPDependencyWord word: words.values()){
 //				System.out.println(word);
 //			}
-//			for (NLPDependencyRelation rel: list){
-//				System.out.println(rel.toStringWithRelations());
-//				System.out.println("-----");
-//				System.out.println("WORD:"+rel.getGovDW());
-//				System.out.println("ROOT:"+ClassDetector.getInstance().getRoots(rel.getGovDW()));
-//			}
-			
-			System.out.println("DETECTING CLASSES...");
-			
-			Collection<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
-			
-			System.out.println(classes.size()+" CLASSES DETECTED");
-
-			for (NLPDependencyWord clas: classes){
-				System.out.println("----------------");
-				System.out.println("CLASS:");			
-				System.out.println(clas.getWord());
-				
-				Collection<NLPDependencyWord> attributes = AttributeDetector.getInstance().detectAttribute(relations, clas);
-				
-				System.out.println("ATTRIBUTE:");
-				for (NLPDependencyWord attr: attributes){
-					System.out.println(attr.getWord());
-				}
-				System.out.println("----------------");
+			for (NLPDependencyRelation rel: relations){
+				System.out.println(rel.toStringWithRelations());
 			}
+			
+//			System.out.println("DETECTING CLASSES...");
+//			
+//			Collection<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
+//			
+//			System.out.println(classes.size()+" CLASSES DETECTED");
+//
+//			for (NLPDependencyWord clas: classes){
+//				System.out.println("----------------");
+//				System.out.println("CLASS:");			
+//				System.out.println(clas.getWord());
+//				
+//				Collection<NLPDependencyWord> attributes = AttributeDetector.getInstance().detectAttribute(relations, clas);
+//				
+//				System.out.println("ATTRIBUTE:");
+//				for (NLPDependencyWord attr: attributes){
+//					System.out.println(attr.getWord());
+//				}
+//				System.out.println("----------------");
+//			}
 							
 		}		
 		
@@ -178,6 +179,10 @@ public class SentenceAnalizer {
 	}
 
 	private Collection<TypedDependency> parseNLP(String sentence) {
+		
+//		Runtime r = Runtime.getRuntime();
+//		r.gc();
+
 		if (lp.parse(sentence)){
 			Tree parse = lp.getBestParse();
 	
@@ -187,7 +192,17 @@ public class SentenceAnalizer {
 	
 			Collection<TypedDependency> tdl = gs.typedDependenciesCollapsed();
 			
+			lp.reset();
+			
 			return tdl;
+		}
+		return null;
+	}
+
+	public NLPDependencyWord getWord(String name) {
+		for (NLPDependencyWord word: words.values()){
+			if (word.getWord()!=null && word.getWord().equals(name))
+				return word;
 		}
 		return null;
 	}
