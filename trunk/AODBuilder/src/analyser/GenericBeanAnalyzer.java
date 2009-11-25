@@ -77,6 +77,9 @@ public class GenericBeanAnalyzer {
 		Map<String, UMLAssociation> associations = new HashMap<String, UMLAssociation>();
 		
 		for (Entry<String, UMLBean> entry: map.entrySet()){
+//			Runtime r = Runtime.getRuntime();
+//			r.gc();
+			
 			UMLBean bean = entry.getValue();			
 			
 			//associations are processed at the end
@@ -93,6 +96,7 @@ public class GenericBeanAnalyzer {
 				AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(bean);
 			
 				if (aodBean!=null){
+					System.out.println(aodBean);
 					aodBean.processInnerBeans(newMap);
 					newMap.put(aodBean.getId(), aodBean);
 				}

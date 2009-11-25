@@ -1,13 +1,18 @@
 package factories.aodprofile;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import util.ContainerManager;
 
+import analyser.AttributeDetector;
 import analyser.ClassDetector;
+import analyser.ResponsabilityDetector;
 import analyser.SentenceAnalizer;
+import beans.Attribute;
+import beans.Responsability;
 import beans.aodprofile.AODProfileAspect;
 import beans.aodprofile.AODProfileAssociation;
 import beans.aodprofile.AODProfileBean;
@@ -36,27 +41,66 @@ public class AODProfileFactory {
 
 	public AODProfileBean factoryMethod(UMLBean bean){
 		if (bean instanceof UMLAspect){
-			return new AODProfileAspectBuilder().build(bean);
+//			return new AODProfileAspectBuilder().build(bean);
 		}
 		else if (bean instanceof UMLClass){
-			return new AODProfileClassBuilder().build(bean);
+//			return new AODProfileClassBuilder().build(bean);
 		}
 		else if (bean instanceof UMLUseCase){
-//			SentenceAnalizer.getInstance().analyze(bean.getDescription());
-//			HashMap<String, NLPDependencyWord> words =  SentenceAnalizer.getInstance().getWords();
-//			ArrayList<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
-//			AODProfileClassContainer aodClassContainer = new AODProfileClassContainer();
-//			
-//			for (NLPDependencyWord cl: classes){
-//				//despues ver que key se pone
+			return new AODProfileClassContainerBuilder().build(bean);			
+			
+/*			SentenceAnalizer.getInstance().analyze(bean.getDescription());
+			HashMap<String, NLPDependencyWord> words =  SentenceAnalizer.getInstance().getWords();
+
+//			System.out.println("DETECTING CLASSES...");
+			
+			ArrayList<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
+			AODProfileClassContainer aodClassContainer = new AODProfileClassContainer();
+						
+//			System.out.println(classes.size()+" CLASSES DETECTED");
+
+			for (NLPDependencyWord cl: classes){
+//				System.out.println("----------------");
+//				System.out.println("CLASS:");			
+//				System.out.println(cl.getWord());
+				
+				AODProfileClass possibleClass = new AODProfileClass();
+				possibleClass.setName(cl.getWord());
+				possibleClass.setId(cl.getKey());
+
+				//despues ver que key se pone
+//				Collection<NLPDependencyWord> attributes = AttributeDetector.getInstance().detectAttribute(SentenceAnalizer.getInstance().getRelations(), cl);
+				Collection<Attribute> attributesList = AttributeDetector.getInstance().detectAttribute2(SentenceAnalizer.getInstance().getRelations(), cl);
+				possibleClass.addAttributes(attributesList);
+				
+//				System.out.println("ATTRIBUTE:");
+//				for (NLPDependencyWord attr: attributes){
+//					System.out.println(attr.getWord());
+//				}
+//				System.out.println("----------------");
+
+//				Collection<NLPDependencyWord> responsabilities = ResponsabilityDetector.getInstance().detectResponsability(SentenceAnalizer.getInstance().getRelations(), cl);
+				Collection<Responsability> responsabilitiesList = ResponsabilityDetector.getInstance().detectResponsability2(SentenceAnalizer.getInstance().getRelations(), cl);
+				possibleClass.addResponsabilities(responsabilitiesList);
+				
+//				System.out.println("RESPONSABILITIES:");
+//				for (NLPDependencyWord attr: responsabilities){
+//					System.out.println(attr.getWord());
+//				}
+//				System.out.println("----------------");
+
 //				UMLClass newUMLClass = new UMLClass(cl.getKey(), cl.getWord());
 //				newUMLClass.setDescription(bean.getDescription());
 //				AODProfileClass aodProfileClass = (AODProfileClass) factoryMethod(newUMLClass);
 //				if (aodProfileClass!=null)
 //					aodClassContainer.addClass(aodProfileClass);
-//			}
-//			
-//			return aodClassContainer;
+				
+				aodClassContainer.addClass(possibleClass);
+			}
+			
+			return aodClassContainer;
+			
+			*/
 		}
 		else if (bean instanceof UMLAssociation){	
 //			UMLAssociation umlAssoc = (UMLAssociation) bean;

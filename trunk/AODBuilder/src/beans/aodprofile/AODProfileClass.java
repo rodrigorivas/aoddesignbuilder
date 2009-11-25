@@ -1,22 +1,23 @@
 package beans.aodprofile;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import beans.Attribute;
-import beans.Method;
+import beans.Responsability;
 
 public class AODProfileClass extends AODProfileBean {
 
 	protected List<Attribute> attributes;
-	protected List<Method> methods;
+	protected List<Responsability> responsabilities;
 	protected AODProfileClass baseClass;
 	protected List<AODProfileAssociation> possibleAssociations;
 
 	public AODProfileClass() {
 		attributes = new ArrayList<Attribute>();
-		methods = new ArrayList<Method>();
+		responsabilities = new ArrayList<Responsability>();
 		possibleAssociations = new ArrayList<AODProfileAssociation>();
 	}
 	public List<Attribute> getAttributes() {
@@ -25,17 +26,25 @@ public class AODProfileClass extends AODProfileBean {
 	public void setAttributes(List<Attribute> attributes) {
 		this.attributes = attributes;
 	}
+	public void addAttributes(Collection<Attribute> attributesList) {
+		for (Attribute attr: attributesList)
+			this.addAttribute(attr);
+	}
 	public void addAttribute(Attribute attribute){
 		this.attributes.add(attribute);
 	}
-	public List<Method> getMethods() {
-		return methods;
+	public void addResponsabilities(Collection<Responsability> responsabilitiesList) {
+		for (Responsability resp: responsabilitiesList)
+			this.addResponsability(resp);
 	}
-	public void setMethods(List<Method> methods) {
-		this.methods = methods;
+	public List<Responsability> getResponsabilities() {
+		return responsabilities;
 	}
-	public void addMethod(Method method){
-		this.methods.add(method);
+	public void setResponsabilities(List<Responsability> methods) {
+		this.responsabilities = methods;
+	}
+	public void addResponsability(Responsability method){
+		this.responsabilities.add(method);
 	}
 	public AODProfileClass getBaseClass() {
 		return baseClass;
@@ -74,27 +83,56 @@ public class AODProfileClass extends AODProfileBean {
 	}
 
 	public void merge(AODProfileClass profileClass) {
-		//add non existing attributes from profileClass
-		for (Attribute attr: this.getAttributes()){
-			for (Attribute attr2:profileClass.getAttributes()){
-				if (attr2.getName()!= null && !attr2.getName().equalsIgnoreCase(attr.getName()))
-					this.addAttribute(attr2);
+		if (profileClass!=null){
+			//add non existing attributes from profileClass
+			for (Attribute attr: this.getAttributes()){
+				for (Attribute attr2:profileClass.getAttributes()){
+					if (attr2.getName()!= null && !attr2.getName().equalsIgnoreCase(attr.getName()))
+						this.addAttribute(attr2);
+				}
+			}
+			//add non existing methods from profileClass
+			for (Responsability method: this.getResponsabilities()){
+				for (Responsability method2:profileClass.getResponsabilities()){
+					if (method2.getName()!= null && !method2.getName().equalsIgnoreCase(method.getName()))
+						this.addResponsability(method2);
+				}
+			}
+			//add non existing associations from profileClass
+			for (AODProfileAssociation assoc: this.getPossibleAssociations()){
+				for (AODProfileAssociation assoc2:profileClass.getPossibleAssociations()){
+					if (assoc2.getName()!= null && !assoc2.getName().equalsIgnoreCase(assoc.getName()))
+						this.addAssociation(assoc2);
+				}
 			}
 		}
-		//add non existing methods from profileClass
-		for (Method method: this.getMethods()){
-			for (Method method2:profileClass.getMethods()){
-				if (method2.getName()!= null && !method2.getName().equalsIgnoreCase(method.getName()))
-					this.addMethod(method2);
-			}
+	}
+	
+	@Override
+	public String toString() {
+		String ret = "========CLASS===========\n" +
+				"name:     ["+this.name+"]\n" +
+				"baseClass:["+this.getBaseClass()+"]\n";
+				
+		
+		ret+="=====ATTRIBUTES====\n";		
+		for (Attribute attr: attributes){
+			ret+="attribute:["+attr.getName()+"]\n";
 		}
-		//add non existing associations from profileClass
-		for (AODProfileAssociation assoc: this.getPossibleAssociations()){
-			for (AODProfileAssociation assoc2:profileClass.getPossibleAssociations()){
-				if (assoc2.getName()!= null && !assoc2.getName().equalsIgnoreCase(assoc.getName()))
-					this.addAssociation(assoc2);
+		ret+="=====RESPONSABILITIES====\n";		
+		for (Responsability resp: responsabilities){
+			ret+="responsab:["+resp.getName()+"(";
+			for (Attribute param: resp.getParameters()){
+				ret+=param.getName()+",";
 			}
-		}		
+			ret=ret.substring(0,ret.length()-1)+")"+"]\n";
+		}
+		ret+="=====ASSOCIATIONS====\n";		
+		for (AODProfileAssociation assoc: possibleAssociations){
+			ret+="assoc:    ["+assoc.getName()+"]\n";
+		}
+		
+		return ret;
 	}
 	
 }

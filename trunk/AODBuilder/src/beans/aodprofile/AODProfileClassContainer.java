@@ -39,4 +39,13 @@ public class AODProfileClassContainer extends AODProfileBean{
 			}
 		}
 	}
+	
+	@Override
+	public String toString() {
+		String ret = "";
+		for (AODProfileClass pc: possibleClasses){
+			ret+=pc.toString();
+		}
+		return ret;
+	}
 }
