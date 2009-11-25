@@ -41,10 +41,10 @@ public class AODProfileFactory {
 
 	public AODProfileBean factoryMethod(UMLBean bean){
 		if (bean instanceof UMLAspect){
-//			return new AODProfileAspectBuilder().build(bean);
+			return new AODProfileAspectBuilder().build(bean);
 		}
 		else if (bean instanceof UMLClass){
-//			return new AODProfileClassBuilder().build(bean);
+			return new AODProfileClassBuilder().build(bean);
 		}
 		else if (bean instanceof UMLUseCase){
 			return new AODProfileClassContainerBuilder().build(bean);			

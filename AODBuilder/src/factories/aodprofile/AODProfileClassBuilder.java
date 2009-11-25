@@ -21,18 +21,22 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		aodClass.setId(bean.getId());
 		aodClass.setName(bean.getName());
 		
+		analyzeClass(bean, aodClass);	
+		
+		return aodClass;
+	}
+
+	protected void analyzeClass(UMLBean bean, AODProfileClass aodClass) {
 		SentenceAnalizer.getInstance().analyze(bean.getDescription());
 		Collection<NLPDependencyRelation> depList = SentenceAnalizer.getInstance().getRelations();
 		NLPDependencyWord cl = SentenceAnalizer.getInstance().getWord(aodClass.getName());
 		
 		if (depList!=null && cl!=null){
-			Collection<Attribute> attributesList = AttributeDetector.getInstance().detectAttribute2(depList, cl);		
+			Collection<Attribute> attributesList = AttributeDetector.getInstance().detectAttribute(depList, cl);		
 			aodClass.addAttributes(attributesList);
-			Collection<Responsability> responsabilitiesList = ResponsabilityDetector.getInstance().detectResponsability2(SentenceAnalizer.getInstance().getRelations(), cl);
+			Collection<Responsability> responsabilitiesList = ResponsabilityDetector.getInstance().detectResponsability(SentenceAnalizer.getInstance().getRelations(), cl);
 			aodClass.addResponsabilities(responsabilitiesList);
-		}	
-		
-		return aodClass;
+		}
 	}
 	
 
