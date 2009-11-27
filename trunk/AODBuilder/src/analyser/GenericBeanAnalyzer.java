@@ -72,7 +72,7 @@ public class GenericBeanAnalyzer {
 		return umlMapSecondPass;
 	}
 	
-	public Map<String, AODProfileBean> analysis(Map<String, UMLBean> map){
+	public Map<String, AODProfileBean> analysis(Map<String, UMLBean> map) throws Exception{
 		Map<String, AODProfileBean> newMap = new HashMap<String, AODProfileBean>();
 		Map<String, UMLAssociation> associations = new HashMap<String, UMLAssociation>();
 		
@@ -89,30 +89,32 @@ public class GenericBeanAnalyzer {
 			}
 			
 			if (!newMap.containsKey(bean.getId())){
-//				if (bean instanceof UMLAssociation){
-//					
-//				}
 				
 				AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(bean);
 			
 				if (aodBean!=null){
-					System.out.println(aodBean);
 					aodBean.processInnerBeans(newMap);
-					newMap.put(aodBean.getId(), aodBean);
+					if (!newMap.containsKey(aodBean.getId())){
+						newMap.put(aodBean.getId(), aodBean);
+					}
+					else{
+						AODProfileBean oldBean = newMap.get(aodBean.getId());
+						oldBean.merge(aodBean);
+					}
 				}
 			}
 		}
 		
-//		ContainerManager.getInstance().addCollection("AODProfile", newMap);
-//		
-//		//process the associations
-//		for (Entry<String, UMLAssociation> entry: associations.entrySet()){
-//			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(entry.getValue());	
-//			if (aodBean!=null){			
-//				aodBean.processInnerBeans(newMap);
-//				newMap.put(aodBean.getId(), aodBean);
-//			}			
-//		}
+		ContainerManager.getInstance().addCollection("AODProfile", newMap);
+		
+		//process the associations
+		for (UMLAssociation assoc: associations.values()){
+			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(assoc);	
+			if (aodBean!=null){		
+				if (!newMap.containsKey(aodBean.getId()))
+					newMap.put(aodBean.getId(), aodBean);
+			}			
+		}
 		
 		return newMap;		
 	}

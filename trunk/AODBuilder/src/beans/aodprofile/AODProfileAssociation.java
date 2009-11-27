@@ -2,8 +2,6 @@ package beans.aodprofile;
 
 import java.util.Map;
 
-import beans.uml.UMLBean;
-
 public class AODProfileAssociation extends AODProfileBean {
 
 	AODProfileClass target;
@@ -20,6 +18,28 @@ public class AODProfileAssociation extends AODProfileBean {
 	public void processInnerBeans(Map<String, AODProfileBean> newMap) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj!=null && obj instanceof AODProfileAssociation){
+			AODProfileAssociation assoc = (AODProfileAssociation) obj;
+			if (this.getName()!=null && assoc.getName()!=null && this.getName().equalsIgnoreCase(assoc.getName()))
+				return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public void merge(AODProfileBean aodBean) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String generateId() {
+		return this.getClass().getSimpleName()+"."+this.getName();
 	}
 
 }

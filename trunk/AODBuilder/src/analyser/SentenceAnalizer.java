@@ -64,7 +64,7 @@ public class SentenceAnalizer {
 				
 				ArrayList<NLPDependencyRelation> previousNN = new ArrayList<NLPDependencyRelation>();
 
-				System.out.println(sentence);
+//				System.out.println(sentence);
 
 				if (tdl!=null){
 					//Convert the parser output in something more simple to use
@@ -78,8 +78,8 @@ public class SentenceAnalizer {
 							dr.relateWords();
 							relations.add(dr);
 							
-//							if (dr.getDepDW()!=null && !words.containsKey(dr.getDepDW().getKey()))
-//								words.put(dr.getDepDW().getKey(), dr.getDepDW());
+							if (dr.getDepDW()!=null && !words.containsKey(dr.getDepDW().getKey()))
+								words.put(dr.getDepDW().getKey(), dr.getDepDW());
 
 							if (dr.getGovDW()!=null && !words.containsKey(dr.getGovDW().getKey()))
 								words.put(dr.getGovDW().getKey(),dr.getGovDW());
@@ -95,9 +95,9 @@ public class SentenceAnalizer {
 //			for (NLPDependencyWord word: words.values()){
 //				System.out.println(word);
 //			}
-			for (NLPDependencyRelation rel: relations){
-				System.out.println(rel.toStringWithRelations());
-			}
+//			for (NLPDependencyRelation rel: relations){
+//				System.out.println(rel.toStringWithRelations());
+//			}
 			
 //			System.out.println("DETECTING CLASSES...");
 //			
@@ -205,6 +205,28 @@ public class SentenceAnalizer {
 				return word;
 		}
 		return null;
+	}
+	
+	public HashMap<String,NLPDependencyWord> convertToWords(String sentence){
+		HashMap<String,NLPDependencyWord> words = new HashMap<String,NLPDependencyWord>();
+		
+		//Parse the sentence using Standford parser.
+		Collection<TypedDependency> tdl = parseNLP(sentence);
+		
+		if (tdl!=null){
+			//Convert the parser output in something more simple to use
+			for (TypedDependency td: tdl){
+				NLPDependencyWord dw1 = NLPDependencyWordBuilder.getInstance().build(td.gov());
+				NLPDependencyWord dw2 = NLPDependencyWordBuilder.getInstance().build(td.dep());
+					if (dw1!=null && !words.containsKey(dw1.getWord()))
+						words.put(dw1.getWord(),dw1);											
+					if (dw2!=null && !words.containsKey(dw2.getWord()))
+						words.put(dw2.getWord(), dw2);
+			}
+		}
+		
+		return words;
+		
 	}
 	
 }

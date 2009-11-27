@@ -1,13 +1,6 @@
 package factories.uml;
 
-import beans.uml.UMLAssociation;
-import beans.uml.UMLAssociationEnd;
-import beans.uml.UMLBean;
-import beans.uml.UMLClass;
-import beans.uml.UMLGenericBean;
-import beans.uml.UMLStereotype;
-import beans.uml.UMLTaggedValue;
-import beans.uml.UMLUseCase;
+import beans.uml.*;
 import constants.Constants;
 
 public class UMLFactory {
@@ -49,6 +42,10 @@ public class UMLFactory {
 		}
 		if (bean.getUmlElementType().equals(Constants.UML_TAGGED_VALUE)){
 			return new UMLTaggedValue(bean.getId()+"-"+bean.getModelElement(), bean.getValue(), bean.getModelElement());
+			
+		}
+		if (bean.getUmlElementType().equals(Constants.UML_MODEL)){
+			return new UMLModel(bean.getId(), bean.getName());
 			
 		}
 		return null;
