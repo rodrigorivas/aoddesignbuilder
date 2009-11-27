@@ -38,4 +38,8 @@ public abstract class UMLBean {
 	}
 	
 	public abstract void associate (Map<String,UMLBean> map);
+	
+	public String getKey(){
+		return name;
+	}
 }

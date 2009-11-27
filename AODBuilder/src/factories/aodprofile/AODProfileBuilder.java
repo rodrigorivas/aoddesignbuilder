@@ -5,5 +5,5 @@ import beans.uml.UMLBean;
 
 public abstract interface AODProfileBuilder {
 		
-	public AODProfileBean build (UMLBean bean);
+	public AODProfileBean build (UMLBean bean) throws Exception;
 }

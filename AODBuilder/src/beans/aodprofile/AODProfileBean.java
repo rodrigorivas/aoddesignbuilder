@@ -2,12 +2,11 @@ package beans.aodprofile;
 
 import java.util.Map;
 
-import beans.uml.UMLBean;
-
 
 public abstract class AODProfileBean {
 	String id;
 	String name;
+	
 	boolean selected;
 	
 	public boolean isSelected() {
@@ -28,7 +27,17 @@ public abstract class AODProfileBean {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public abstract void merge(AODProfileBean aodBean);
 	public abstract void processInnerBeans(Map<String, AODProfileBean> newMap);
-	
-	
+	public abstract String generateId();
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof AODProfileBean){
+			AODProfileBean bean = (AODProfileBean) obj;
+			if (this.getId()!=null)
+				return this.getId().equalsIgnoreCase(bean.getId());
+		}
+		return super.equals(obj);
+	}
 }

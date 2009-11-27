@@ -30,7 +30,7 @@ public class AODProfileClassContainerBuilder implements AODProfileBuilder{
 			
 			AODProfileClass possibleClass = new AODProfileClass();
 			possibleClass.setName(cl.getWord());
-			possibleClass.setId(cl.getKey());
+			possibleClass.setId(possibleClass.generateId());
 
 			Collection<Attribute> attributesList = AttributeDetector.getInstance().detectAttribute(SentenceAnalizer.getInstance().getRelations(), cl);
 			possibleClass.addAttributes(attributesList);

@@ -48,4 +48,14 @@ public class AODProfileClassContainer extends AODProfileBean{
 		}
 		return ret;
 	}
+	@Override
+	public void merge(AODProfileBean aodBean) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public String generateId() {
+		return this.getClass().getSimpleName()+"."+this.getName();
+	}
+
 }

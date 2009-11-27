@@ -2,11 +2,16 @@ package beans.aodprofile;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.Inflector;
+
+import analyser.SentenceAnalizer;
 import beans.Attribute;
 import beans.Responsability;
+import beans.nlp.NLPDependencyWord;
 
 public class AODProfileClass extends AODProfileBean {
 
@@ -15,6 +20,11 @@ public class AODProfileClass extends AODProfileBean {
 	protected AODProfileClass baseClass;
 	protected List<AODProfileAssociation> possibleAssociations;
 
+	@Override
+	public void setName(String name) {
+		super.setName(AODProfileClass.convertClassName(name));
+	}
+	
 	public AODProfileClass() {
 		attributes = new ArrayList<Attribute>();
 		responsabilities = new ArrayList<Responsability>();
@@ -81,32 +91,6 @@ public class AODProfileClass extends AODProfileBean {
 	@Override
 	public void processInnerBeans(Map<String, AODProfileBean> newMap) {
 	}
-
-	public void merge(AODProfileClass profileClass) {
-		if (profileClass!=null){
-			//add non existing attributes from profileClass
-			for (Attribute attr: this.getAttributes()){
-				for (Attribute attr2:profileClass.getAttributes()){
-					if (attr2.getName()!= null && !attr2.getName().equalsIgnoreCase(attr.getName()))
-						this.addAttribute(attr2);
-				}
-			}
-			//add non existing methods from profileClass
-			for (Responsability method: this.getResponsabilities()){
-				for (Responsability method2:profileClass.getResponsabilities()){
-					if (method2.getName()!= null && !method2.getName().equalsIgnoreCase(method.getName()))
-						this.addResponsability(method2);
-				}
-			}
-			//add non existing associations from profileClass
-			for (AODProfileAssociation assoc: this.getPossibleAssociations()){
-				for (AODProfileAssociation assoc2:profileClass.getPossibleAssociations()){
-					if (assoc2.getName()!= null && !assoc2.getName().equalsIgnoreCase(assoc.getName()))
-						this.addAssociation(assoc2);
-				}
-			}
-		}
-	}
 	
 	@Override
 	public String toString() {
@@ -135,4 +119,61 @@ public class AODProfileClass extends AODProfileBean {
 		return ret;
 	}
 	
+	public static String convertClassName(String name){
+		String convertedName="";
+		String[] nameParts = name.split(" ");
+		if (nameParts.length<=1)
+			return name;
+		
+		HashMap<String,NLPDependencyWord> words = SentenceAnalizer.getInstance().convertToWords(name);
+		
+		for (String namePart: nameParts){
+			NLPDependencyWord word = words.get(namePart);
+			if (word!=null && word.isNoun()){
+				convertedName+=Inflector.getInstance().singularize(word.getWord())+" ";
+			}
+		}
+		if (convertedName.length()>0){
+			convertedName = convertedName.substring(0,convertedName.length()-1);
+		}
+		
+		return convertedName;
+	}
+
+	@Override
+	public void merge(AODProfileBean aodBean) {
+		if (aodBean instanceof AODProfileClass){
+			AODProfileClass profileClass = (AODProfileClass) aodBean;
+			if (profileClass!=null){
+				//add non existing attributes from profileClass
+				for (Attribute attr: profileClass.getAttributes()){
+					if (!this.getAttributes().contains(attr)){
+							this.addAttribute(attr);
+					}
+				}
+				//add non existing methods from profileClass
+				for (Responsability responsability: profileClass.getResponsabilities()){
+					if (!this.getResponsabilities().contains(responsability)){
+						this.addResponsability(responsability);
+					}
+				}
+				//add non existing associations from profileClass
+				for (AODProfileAssociation assoc: profileClass.getPossibleAssociations()){
+					if (!this.getPossibleAssociations().contains(assoc)){
+							this.addAssociation(assoc);
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public String generateId() {
+		return this.getClass().getSimpleName()+"."+this.getName();
+	}
+	
+	public static String generateId(String name){
+		return AODProfileClass.class.getSimpleName()+"."+AODProfileClass.convertClassName(name);
+	}
+
 }

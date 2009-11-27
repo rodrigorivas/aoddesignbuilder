@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import util.Inflector;
+import beans.aodprofile.AODProfileClass;
 import beans.nlp.NLPDependencyWord;
 
 public class ClassDetector {
 	private static ClassDetector instance = null;
+	
+	String[] reservedWords = {"USECASE", "USE CASE", "SYSTEM", "USE"};
+	
 	
 	private ClassDetector() {
 	}
@@ -27,7 +31,9 @@ public class ClassDetector {
 				if (word.getType().startsWith("NN")){
 					if (!contained(classes, word)){
 						word.setWord(Inflector.getInstance().singularize(word.getWord()));
-						classes.add(word);
+						if (!reservedWord(word.getWord())){
+							classes.add(word);
+						}
 					}
 				}
 			}
@@ -36,33 +42,20 @@ public class ClassDetector {
 		return classes;
 	}
 
-//	public ArrayList<NLPDependencyWord> detectClasses (Collection<NLPDependencyRelation> relations){
-//		ArrayList<NLPDependencyWord> classes = new ArrayList<NLPDependencyWord>();
-//		
-//		for (NLPDependencyRelation dr: relations){
-//			NLPDependencyWord dwGov = dr.getGovDW();
-//			NLPDependencyWord dwRel = dr.getDepDW();
-//			
-//			if (dwGov.getType().startsWith("NN")){
-//				if (!contained(classes, dwGov)){
-//					classes.add(dwGov);
-//				}
-//			}
-//			if (!dr.getRelationType().equalsIgnoreCase("nn") && 
-//					dwRel.getType().startsWith("NN")){
-//				if (!contained(classes, dwRel)){
-//					classes.add(dwRel);
-//				}
-//			}
-//		}
-//		
-//		return classes;
-//	}
+
+	private boolean reservedWord(String word) {
+		if (word!=null){
+			for (String rw: reservedWords){
+				if (rw.equals(word.toUpperCase()))
+					return true;
+			}
+		}
+		return false;
+	}
 
 	private boolean contained(ArrayList<NLPDependencyWord> classes, NLPDependencyWord dwGov) {
 		boolean contained = false;				
 		if (!contains(classes,dwGov)){
-//		if (!classes.contains(dwGov)){
 			if (dwGov.getParents()!=null){
 				for (NLPDependencyWord parent: dwGov.getParents()){
 					if (contains(classes, parent)){
@@ -89,50 +82,15 @@ public class ClassDetector {
 		}
 		return false;
 	}
-
-//	public NLPDependencyWord getRoots(NLPDependencyWord word){
-//		HashMap<String,NLPDependencyWord> roots = new HashMap<String, NLPDependencyWord>();
-//		HashMap<String,Boolean> visited = new HashMap<String, Boolean>();
-//		for (NLPDependencyWord parent: word.getParents()){
-//			roots = getRoots(parent, roots, null, visited);
-//		}
-//		if (roots!=null){
-//			for (NLPDependencyWord root: roots.values()){
-//				System.out.println(root);
-//			}
-//		}
-//		
-//		if (roots.size()>1)
-//			System.out.println("ESTE TIENE MAS DE UN ROOT!!!");
-//
-//		if (roots.size()>0)
-//			return roots.values().iterator().next();
-//		
-//		return null;
-//	}
-//
-//	private HashMap<String,NLPDependencyWord> getRoots(NLPDependencyWord word, HashMap<String,NLPDependencyWord> roots, NLPDependencyWord lastFound, HashMap<String, Boolean> visited) {
-//		if (!visited.containsKey(word.getKey())){
-//
-//			visited.put(word.getKey(), true);
-//			if (word.getType().startsWith("NN")){
-//				lastFound = word;
-//			}
-//	
-//			if (word.getParents()==null || word.getParents().size()==0){		
-//				if (lastFound!=null && !roots.containsKey(lastFound.getKey())){
-//					roots.put(lastFound.getKey(), lastFound);
-//					lastFound = null;
-//				}
-//			}
-//			else{
-//				for (NLPDependencyWord parent: word.getParents()){
-//					getRoots(parent, roots, lastFound, visited);
-//				}
-//			}
-//		}
-//		
-//		return roots;
-//	}
 	
+	public boolean couldBeSameClass(AODProfileClass class1, AODProfileClass class2){
+		if (class1!=null && class2!=null && class1.getName()!=null && class2.getName()!=null){
+			if (class1.getName().toUpperCase().contains(class2.getName().toUpperCase()) ||
+					class2.getName().toUpperCase().contains(class1.getName().toUpperCase())){
+				return true;
+			}
+		}
+		
+		return false;
+	}	
 }

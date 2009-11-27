@@ -32,5 +32,17 @@ public class Attribute {
 		this.selected = selected;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Attribute){
+			Attribute attr = (Attribute)obj;
+			if (this.name!=null && attr.getName()!=null && this.name.equalsIgnoreCase(attr.getName())){
+				return true;
+			}
+		}
+		
+		return false;
+		
+	}
 	
 }
