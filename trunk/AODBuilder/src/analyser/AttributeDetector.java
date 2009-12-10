@@ -3,7 +3,7 @@ package analyser;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import beans.Attribute;
+import beans.aodprofile.AODProfileAttribute;
 import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
 
@@ -20,8 +20,8 @@ public class AttributeDetector {
 		return instance;
 	}
 		
-	public Collection<Attribute> detectAttribute(Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){
-		Collection<Attribute> attributes = new ArrayList<Attribute>();
+	public Collection<AODProfileAttribute> detectAttribute(Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){
+		Collection<AODProfileAttribute> attributes = new ArrayList<AODProfileAttribute>();
 		
 		for (NLPDependencyRelation dr: relations){
 			if (dr.getRelationType().equals("advmod")){
@@ -66,8 +66,8 @@ public class AttributeDetector {
 		return attributes;
 	}
 
-	private void createAttribute(Collection<Attribute> attributes, NLPDependencyWord dw) {
-		Attribute newAttr = new Attribute();
+	private void createAttribute(Collection<AODProfileAttribute> attributes, NLPDependencyWord dw) {
+		AODProfileAttribute newAttr = new AODProfileAttribute();
 		newAttr.setName(dw.getWord());
 		if (!attributes.contains(newAttr)){
 			attributes.add(newAttr);

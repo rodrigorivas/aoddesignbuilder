@@ -10,7 +10,7 @@ import beans.nlp.NLPDependencyWord;
 public class ClassDetector {
 	private static ClassDetector instance = null;
 	
-	String[] reservedWords = {"USECASE", "USE CASE", "SYSTEM", "USE"};
+	String[] reservedWords = {"USECASE", "USE CASE", "SYSTEM", "USE", "CASE", "ASPECT", "CLASS", "ENTITY"};
 	
 	
 	private ClassDetector() {
@@ -28,7 +28,7 @@ public class ClassDetector {
 		
 		if (words != null){
 			for (NLPDependencyWord word: words.values()){			
-				if (word.getType().startsWith("NN")){
+				if (word.getType().toUpperCase().startsWith("NN")){
 					if (!contained(classes, word)){
 						word.setWord(Inflector.getInstance().singularize(word.getWord()));
 						if (!reservedWord(word.getWord())){
@@ -46,7 +46,7 @@ public class ClassDetector {
 	private boolean reservedWord(String word) {
 		if (word!=null){
 			for (String rw: reservedWords){
-				if (rw.equals(word.toUpperCase()))
+				if (rw.equalsIgnoreCase(word))
 					return true;
 			}
 		}

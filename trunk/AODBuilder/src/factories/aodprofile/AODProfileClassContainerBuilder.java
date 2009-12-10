@@ -8,11 +8,11 @@ import analyser.AttributeDetector;
 import analyser.ClassDetector;
 import analyser.ResponsabilityDetector;
 import analyser.SentenceAnalizer;
-import beans.Attribute;
-import beans.Responsability;
+import beans.aodprofile.AODProfileAttribute;
 import beans.aodprofile.AODProfileBean;
 import beans.aodprofile.AODProfileClass;
 import beans.aodprofile.AODProfileClassContainer;
+import beans.aodprofile.AODProfileResponsability;
 import beans.nlp.NLPDependencyWord;
 import beans.uml.UMLBean;
 
@@ -32,10 +32,10 @@ public class AODProfileClassContainerBuilder implements AODProfileBuilder{
 			possibleClass.setName(cl.getWord());
 			possibleClass.setId(possibleClass.generateId());
 
-			Collection<Attribute> attributesList = AttributeDetector.getInstance().detectAttribute(SentenceAnalizer.getInstance().getRelations(), cl);
+			Collection<AODProfileAttribute> attributesList = AttributeDetector.getInstance().detectAttribute(SentenceAnalizer.getInstance().getRelations(), cl);
 			possibleClass.addAttributes(attributesList);
 			
-			Collection<Responsability> responsabilitiesList = ResponsabilityDetector.getInstance().detectResponsability(SentenceAnalizer.getInstance().getRelations(), cl);
+			Collection<AODProfileResponsability> responsabilitiesList = ResponsabilityDetector.getInstance().detectResponsability(SentenceAnalizer.getInstance().getRelations(), cl);
 			possibleClass.addResponsabilities(responsabilitiesList);
 			
 			aodClassContainer.addClass(possibleClass);

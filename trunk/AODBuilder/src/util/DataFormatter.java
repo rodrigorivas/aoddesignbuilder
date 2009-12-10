@@ -14,6 +14,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -469,4 +471,21 @@ public class DataFormatter  {
 		
 		return ret.toString().trim();
 	}
+	
+	public static boolean equalsRegExp(String regExp,String text) {		
+		if (regExp!=null && text!=null){
+			Pattern p = Pattern.compile(regExp);			
+			Matcher m = p.matcher(text);
+			return m.matches();
+		}
+		return false;
+	}
+
+
+	public static boolean equalsRegExpDual(String text1, String text2) {
+		if (equalsRegExp(text1, text2))
+			return true;
+		return equalsRegExp(text2, text1);
+	}
+
 }

@@ -22,7 +22,7 @@ class ParserTest {
 		LexicalizedParser lp = new LexicalizedParser("resources/englishPCFG.ser.gz");
 		lp.setOptionFlags(new String[]{"-maxLength", "80", "-retainTmpSubcategories"});
 
-		String text = "The Advertiser is an entity who pays WebNewsOnLine for displaying advertising content to subscribers and potential subscribers.Advertisers also put advertising content to the Web site.";
+		String text = "Logging occurs before call to class display";
 		String[] sentences= text.split("[.]");
 		for (String sentence: sentences){
 			String[] sent = TextSplitter.split(sentence);

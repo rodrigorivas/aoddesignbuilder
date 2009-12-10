@@ -9,14 +9,12 @@ import java.util.Map;
 import util.Inflector;
 
 import analyser.SentenceAnalizer;
-import beans.Attribute;
-import beans.Responsability;
 import beans.nlp.NLPDependencyWord;
 
 public class AODProfileClass extends AODProfileBean {
 
-	protected List<Attribute> attributes;
-	protected List<Responsability> responsabilities;
+	protected List<AODProfileAttribute> attributes;
+	protected List<AODProfileResponsability> responsabilities;
 	protected AODProfileClass baseClass;
 	protected List<AODProfileAssociation> possibleAssociations;
 
@@ -26,34 +24,34 @@ public class AODProfileClass extends AODProfileBean {
 	}
 	
 	public AODProfileClass() {
-		attributes = new ArrayList<Attribute>();
-		responsabilities = new ArrayList<Responsability>();
+		attributes = new ArrayList<AODProfileAttribute>();
+		responsabilities = new ArrayList<AODProfileResponsability>();
 		possibleAssociations = new ArrayList<AODProfileAssociation>();
 	}
-	public List<Attribute> getAttributes() {
+	public List<AODProfileAttribute> getAttributes() {
 		return attributes;
 	}
-	public void setAttributes(List<Attribute> attributes) {
+	public void setAttributes(List<AODProfileAttribute> attributes) {
 		this.attributes = attributes;
 	}
-	public void addAttributes(Collection<Attribute> attributesList) {
-		for (Attribute attr: attributesList)
+	public void addAttributes(Collection<AODProfileAttribute> attributesList) {
+		for (AODProfileAttribute attr: attributesList)
 			this.addAttribute(attr);
 	}
-	public void addAttribute(Attribute attribute){
+	public void addAttribute(AODProfileAttribute attribute){
 		this.attributes.add(attribute);
 	}
-	public void addResponsabilities(Collection<Responsability> responsabilitiesList) {
-		for (Responsability resp: responsabilitiesList)
+	public void addResponsabilities(Collection<AODProfileResponsability> responsabilitiesList) {
+		for (AODProfileResponsability resp: responsabilitiesList)
 			this.addResponsability(resp);
 	}
-	public List<Responsability> getResponsabilities() {
+	public List<AODProfileResponsability> getResponsabilities() {
 		return responsabilities;
 	}
-	public void setResponsabilities(List<Responsability> methods) {
+	public void setResponsabilities(List<AODProfileResponsability> methods) {
 		this.responsabilities = methods;
 	}
-	public void addResponsability(Responsability method){
+	public void addResponsability(AODProfileResponsability method){
 		this.responsabilities.add(method);
 	}
 	public AODProfileClass getBaseClass() {
@@ -100,20 +98,17 @@ public class AODProfileClass extends AODProfileBean {
 				
 		
 		ret+="=====ATTRIBUTES====\n";		
-		for (Attribute attr: attributes){
-			ret+="attribute:["+attr.getName()+"]\n";
+		for (AODProfileAttribute attr: attributes){
+			ret+=attr.toString()+"\n";
 		}
 		ret+="=====RESPONSABILITIES====\n";		
-		for (Responsability resp: responsabilities){
-			ret+="responsab:["+resp.getName()+"(";
-			for (Attribute param: resp.getParameters()){
-				ret+=param.getName()+",";
-			}
-			ret=ret.substring(0,ret.length()-1)+")"+"]\n";
+		for (AODProfileResponsability resp: responsabilities){
+			ret+=resp.toString()+"\n";
 		}
+
 		ret+="=====ASSOCIATIONS====\n";		
 		for (AODProfileAssociation assoc: possibleAssociations){
-			ret+="assoc:    ["+assoc.getName()+"]\n";
+			ret+=assoc.toString()+"\n";
 		}
 		
 		return ret;
@@ -146,13 +141,13 @@ public class AODProfileClass extends AODProfileBean {
 			AODProfileClass profileClass = (AODProfileClass) aodBean;
 			if (profileClass!=null){
 				//add non existing attributes from profileClass
-				for (Attribute attr: profileClass.getAttributes()){
+				for (AODProfileAttribute attr: profileClass.getAttributes()){
 					if (!this.getAttributes().contains(attr)){
 							this.addAttribute(attr);
 					}
 				}
 				//add non existing methods from profileClass
-				for (Responsability responsability: profileClass.getResponsabilities()){
+				for (AODProfileResponsability responsability: profileClass.getResponsabilities()){
 					if (!this.getResponsabilities().contains(responsability)){
 						this.addResponsability(responsability);
 					}

@@ -42,4 +42,9 @@ public class AODProfileAssociation extends AODProfileBean {
 		return this.getClass().getSimpleName()+"."+this.getName();
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
+
 }

@@ -21,6 +21,7 @@ public class NLPDependencyRelationBuilder {
 	public NLPDependencyRelation build(GrammaticalRelation reln, NLPDependencyWord dw1, NLPDependencyWord dw2){
 		NLPDependencyRelation dr = new NLPDependencyRelation();
 		dr.setRelationType(reln.getShortName());
+		dr.setSpecific(reln.getSpecific());
 		dr.setGovDW(dw1);
 		dr.setDepDW(dw2);		
 		

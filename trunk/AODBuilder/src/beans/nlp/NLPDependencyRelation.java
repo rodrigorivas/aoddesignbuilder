@@ -5,7 +5,14 @@ public class NLPDependencyRelation {
 	NLPDependencyWord govDW;
 	NLPDependencyWord depDW;
 	String relationType;
+	String specific;
 	
+	public String getSpecific() {
+		return specific;
+	}
+	public void setSpecific(String specific) {
+		this.specific = specific;
+	}
 	public NLPDependencyWord getGovDW() {
 		return govDW;
 	}
@@ -39,13 +46,19 @@ public class NLPDependencyRelation {
 	
 	@Override
 	public String toString() {
-		String ret = relationType+"("+govDW.toString()+","+depDW.toString()+")";
+		String relType = relationType;
+		if (specific!=null)
+			relType+="_"+specific;
+		String ret = relType+"("+govDW.toString()+","+depDW.toString()+")";
 		
 		return ret;
 	}
 	
 	public String toStringWithRelations() {
-		String ret = relationType+"("+govDW.toStringWithRelations()+","+depDW.toStringWithRelations()+")";
+		String relType = relationType;
+		if (specific!=null)
+			relType+="_"+specific;
+		String ret = relType+"("+govDW.toStringWithRelations()+","+depDW.toStringWithRelations()+")";
 		
 		return ret;
 	}

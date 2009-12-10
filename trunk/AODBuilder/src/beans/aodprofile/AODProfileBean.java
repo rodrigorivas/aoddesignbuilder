@@ -7,6 +7,8 @@ public abstract class AODProfileBean {
 	String id;
 	String name;
 	
+	public static final String ANY_MATCH = ".*";
+	
 	boolean selected;
 	
 	public boolean isSelected() {
@@ -29,7 +31,10 @@ public abstract class AODProfileBean {
 	}
 	public abstract void merge(AODProfileBean aodBean);
 	public abstract void processInnerBeans(Map<String, AODProfileBean> newMap);
-	public abstract String generateId();
+	
+	public String generateId(){
+		return name;
+	}
 
 	@Override
 	public boolean equals(Object obj) {

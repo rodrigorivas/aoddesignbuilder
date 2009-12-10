@@ -1,14 +1,27 @@
 package factories.aodprofile;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import util.ContainerManager;
+import analyser.AdviceDetector;
+import analyser.AttributeDetector;
+import analyser.JoinPointDetector;
+import analyser.ResponsabilityDetector;
+import analyser.SentenceAnalizer;
+import beans.aodprofile.AODProfileAdvice;
 import beans.aodprofile.AODProfileAspect;
-import beans.aodprofile.AODProfileAssociation;
+import beans.aodprofile.AODProfileAttribute;
 import beans.aodprofile.AODProfileBean;
 import beans.aodprofile.AODProfileClass;
+import beans.aodprofile.AODProfileJoinPoint;
 import beans.aodprofile.AODProfilePointcut;
+import beans.aodprofile.AODProfileResponsability;
+import beans.nlp.NLPDependencyRelation;
+import beans.nlp.NLPDependencyWord;
 import beans.uml.UMLAspect;
 import beans.uml.UMLAssociation;
 import beans.uml.UMLBean;
@@ -27,26 +40,42 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 	}
 
 
-	public AODProfileBean build(UMLAspect bean) {
+	public AODProfileBean build(UMLAspect bean) throws Exception {
 		AODProfileAspect aspect = new AODProfileAspect();
 		aspect.setName(bean.getName());
 		aspect.setId(aspect.generateId());
 		
-		analyzeClass(bean, aspect);
-		
-		transform(aspect);
-		//TODO: hacer los cambios a lo de aspectos. Transformar asociaciones en pointcuts, ver los advices, etc. 
+		analyzeClass(bean, aspect);		
 		
 		return aspect;
 	}
-
-	private void transform(AODProfileAspect aspect) {
-		for (AODProfileAssociation assoc: aspect.getPossibleAssociations()){
-			
-		}
-		
-	}
 	
+	protected void analyzeClass(UMLBean bean, AODProfileAspect aodClass) throws Exception {
+		SentenceAnalizer.getInstance().analyze(bean.getDescription());
+		Collection<NLPDependencyRelation> relations = SentenceAnalizer.getInstance().getRelations();
+		HashMap<String, NLPDependencyWord> wordsHM = SentenceAnalizer.getInstance().getWords();
+		NLPDependencyWord cl = SentenceAnalizer.getInstance().getWord(aodClass.getName());
+		
+		if (relations!=null && cl!=null){
+			/* Detect Attributes */
+			Collection<AODProfileAttribute> attributes = AttributeDetector.getInstance().detectAttribute(relations, cl);		
+			aodClass.addAttributes(attributes);
+			/* Detect Responsabilities */
+			Collection<AODProfileResponsability> responsabilities = ResponsabilityDetector.getInstance().detectResponsability(relations, cl);
+			aodClass.addResponsabilities(responsabilities);
+			/* Detect JoinPoints */
+			Collection<AODProfileJoinPoint> joinPoints = JoinPointDetector.getInstance().detectJoinPoints(relations, cl);
+			JoinPointDetector.getInstance().completeJoinPoints(joinPoints, wordsHM.values(), relations);
+			JoinPointDetector.getInstance().completeJoinPoints(joinPoints, responsabilities);
+			aodClass.setUnassociatedJoinPoint((List<AODProfileJoinPoint>) joinPoints);
+			/* Detect Advices */
+			Collection<AODProfileAdvice> advices = AdviceDetector.getInstance().detectAdvices(relations, cl);		
+			AdviceDetector.getInstance().completeAdvices(advices, wordsHM.values(), relations);
+			aodClass.setUnassociatedAdvices((List<AODProfileAdvice>) advices);			
+		}
+	}
+
+
 	public AODProfileBean build(UMLAssociation bean) throws Exception {
 		UMLAssociation umlAssoc = (UMLAssociation) bean;
 		Map<String, ?> map = ContainerManager.getInstance().getCollection("AODProfile");
@@ -67,14 +96,27 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 			ArrayList<AODProfileClass> targets = getTargets(umlAssoc, map, targetKey);
 			/* Create the association from source to targets */
 			for (AODProfileClass targetFromList: targets){
-				AODProfileAssociation aodAssoc = new AODProfilePointcut();
+				AODProfilePointcut aodAssoc = new AODProfilePointcut();
 	
 				aodAssoc.setTarget((AODProfileClass) targetFromList);
 				aodAssoc.setId(umlAssoc.getId());
 				aodAssoc.setName("->"+targetFromList.getName());
+		
+				aodAssoc.addJoinPoint((new AODProfileJoinPointBuilder()).build("target", targetFromList.getName()));
+				for (AODProfileJoinPoint joinPoint: source.getUnassociatedJoinPoint()){
+					if (joinPoint.applies(source, aodAssoc))
+						aodAssoc.addJoinPoint(joinPoint);
+				}
+				
+				for (AODProfileAdvice advice: source.getUnassociatedAdvices()){
+					if (advice.applies(aodAssoc)){
+						aodAssoc.addAdvice(advice);
+					}
+				}
 			
 				if (!source.getPossibleAssociations().contains(aodAssoc))
 					source.addAssociation(aodAssoc);
+
 			}			
 		}
 		return source;
