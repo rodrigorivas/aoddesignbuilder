@@ -3,7 +3,6 @@ package tests;
 import java.util.HashMap;
 import java.util.Map;
 
-import util.ContainerManager;
 import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLAspect;
 import beans.uml.UMLAssociation;
@@ -30,8 +29,6 @@ class AspectTest {
 			bean = AODProfileFactory.getInstance().factoryMethod(cl);
 			newMap.put(bean.getId(), bean);
 			
-			ContainerManager.getInstance().addCollection("AODProfile", newMap);
-
 			bean = AODProfileFactory.getInstance().factoryMethod(assoc);
 			
 			for (AODProfileBean bean2: newMap.values()){
