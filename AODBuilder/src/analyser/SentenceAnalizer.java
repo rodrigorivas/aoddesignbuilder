@@ -23,11 +23,11 @@ public class SentenceAnalizer {
 	public static final String PARSER_ENGLISH = "resources/englishPCFG.ser.gz";
 	private LexicalizedParser lp;
 	ArrayList<NLPDependencyRelation> relations;
+	HashMap<String,NLPDependencyWord> words;
+
 	public ArrayList<NLPDependencyRelation> getRelations() {
 		return relations;
 	}
-
-	HashMap<String,NLPDependencyWord> words;
 
 	public HashMap<String, NLPDependencyWord> getWords() {
 		return words;
@@ -38,6 +38,8 @@ public class SentenceAnalizer {
 	private SentenceAnalizer() {
 		lp = new LexicalizedParser("resources/englishPCFG.ser.gz");
 		lp.setOptionFlags(new String[]{"-maxLength", "70"});
+		relations = new ArrayList<NLPDependencyRelation>();
+		words = new HashMap<String,NLPDependencyWord>();
 	}
 	
 	public static SentenceAnalizer getInstance(){
@@ -49,13 +51,16 @@ public class SentenceAnalizer {
 	
 	public void reset(){
 		lp.reset();
+		relations.clear();
+		words.clear();
 	}
 	
 	public void analyze(String text){
 		if (text !=null && text.length()>0){
+			/* reset all properties before starting*/
+			reset();
+			
 			String[] sentences = text.split("[.]");
-			relations = new ArrayList<NLPDependencyRelation>();
-			words = new HashMap<String,NLPDependencyWord>();
 			
 			for (String sentence: sentences){
 				
@@ -64,7 +69,7 @@ public class SentenceAnalizer {
 				
 				ArrayList<NLPDependencyRelation> previousNN = new ArrayList<NLPDependencyRelation>();
 
-//				System.out.println(sentence);
+				System.out.println(sentence);
 
 				if (tdl!=null){
 					//Convert the parser output in something more simple to use
@@ -95,9 +100,9 @@ public class SentenceAnalizer {
 //			for (NLPDependencyWord word: words.values()){
 //				System.out.println(word);
 //			}
-//			for (NLPDependencyRelation rel: relations){
-//				System.out.println(rel.toStringWithRelations());
-//			}
+			for (NLPDependencyRelation rel: relations){
+				System.out.println(rel.toStringWithRelations());
+			}
 			
 //			System.out.println("DETECTING CLASSES...");
 //			
@@ -180,9 +185,6 @@ public class SentenceAnalizer {
 
 	private Collection<TypedDependency> parseNLP(String sentence) {
 		
-//		Runtime r = Runtime.getRuntime();
-//		r.gc();
-
 		if (lp.parse(sentence)){
 			Tree parse = lp.getBestParse();
 	
@@ -191,9 +193,7 @@ public class SentenceAnalizer {
 			GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
 	
 			Collection<TypedDependency> tdl = gs.typedDependenciesCollapsed();
-			
-			lp.reset();
-			
+						
 			return tdl;
 		}
 		return null;

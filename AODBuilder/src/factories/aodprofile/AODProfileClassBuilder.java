@@ -8,12 +8,12 @@ import util.ContainerManager;
 import analyser.AttributeDetector;
 import analyser.ResponsabilityDetector;
 import analyser.SentenceAnalizer;
-import beans.Attribute;
-import beans.Responsability;
 import beans.aodprofile.AODProfileAssociation;
+import beans.aodprofile.AODProfileAttribute;
 import beans.aodprofile.AODProfileBean;
 import beans.aodprofile.AODProfileClass;
 import beans.aodprofile.AODProfileClassContainer;
+import beans.aodprofile.AODProfileResponsability;
 import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
 import beans.uml.UMLAssociation;
@@ -49,9 +49,9 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		NLPDependencyWord cl = SentenceAnalizer.getInstance().getWord(aodClass.getName());
 		
 		if (depList!=null && cl!=null){
-			Collection<Attribute> attributesList = AttributeDetector.getInstance().detectAttribute(depList, cl);		
+			Collection<AODProfileAttribute> attributesList = AttributeDetector.getInstance().detectAttribute(depList, cl);		
 			aodClass.addAttributes(attributesList);
-			Collection<Responsability> responsabilitiesList = ResponsabilityDetector.getInstance().detectResponsability(SentenceAnalizer.getInstance().getRelations(), cl);
+			Collection<AODProfileResponsability> responsabilitiesList = ResponsabilityDetector.getInstance().detectResponsability(SentenceAnalizer.getInstance().getRelations(), cl);
 			aodClass.addResponsabilities(responsabilitiesList);
 		}
 	}

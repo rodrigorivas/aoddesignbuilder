@@ -64,21 +64,30 @@ public class NLPDependencyWord {
 		return Integer.toString(position)+"-"+word;
 	}
 	
-	public Collection<NLPDependencyWord> getRoots(){
+	public Collection<NLPDependencyWord> getRelatedVerbs(){
 		HashMap<String,NLPDependencyWord> roots = new HashMap<String, NLPDependencyWord>();
 		HashMap<String,Boolean> visited = new HashMap<String, Boolean>();
 		for (NLPDependencyWord parent: this.getParents()){
-			roots = getRoots(parent, roots, null, visited);
+			roots = getRelatedWords(parent, roots, null, visited, "VB", true);
+		}
+		return roots.values();
+	}
+
+	public Collection<NLPDependencyWord> getRelatedNouns(){
+		HashMap<String,NLPDependencyWord> roots = new HashMap<String, NLPDependencyWord>();
+		HashMap<String,Boolean> visited = new HashMap<String, Boolean>();
+		for (NLPDependencyWord parent: this.getParents()){
+			roots = getRelatedWords(parent, roots, null, visited, "NN", false);
 		}
 		
 		return roots.values();
 	}
 
-	private HashMap<String,NLPDependencyWord> getRoots(NLPDependencyWord word, HashMap<String,NLPDependencyWord> roots, NLPDependencyWord lastFound, HashMap<String, Boolean> visited) {
+	private HashMap<String,NLPDependencyWord> getRelatedWords(NLPDependencyWord word, HashMap<String,NLPDependencyWord> roots, NLPDependencyWord lastFound, HashMap<String, Boolean> visited, String type, boolean firstMatch) {
 		if (!visited.containsKey(word.getKey())){
 
 			visited.put(word.getKey(), true);
-			if (word.isNoun()){
+			if (word.type!=null && word.type.toUpperCase().startsWith(type)){
 				lastFound = word;
 			}
 	
@@ -88,9 +97,13 @@ public class NLPDependencyWord {
 					lastFound = null;
 				}
 			}
+			else if (firstMatch &&lastFound!=null && !roots.containsKey(lastFound.getKey())){
+					roots.put(lastFound.getKey(), lastFound);
+					lastFound = null;				
+			}
 			else{
 				for (NLPDependencyWord parent: word.getParents()){
-					getRoots(parent, roots, lastFound, visited);
+					getRelatedWords(parent, roots, lastFound, visited, type, firstMatch);
 				}
 			}
 		}
@@ -109,7 +122,11 @@ public class NLPDependencyWord {
 	public boolean isNoun(){
 		return (type!=null && type.toUpperCase().startsWith("NN"));		
 	}
-	
+
+	public boolean isDeterminer() {
+		return (type!=null && type.equalsIgnoreCase("DT"));		
+	}
+
 	public boolean isRelated(NLPDependencyWord classContainer, boolean lookupParent){
 		if (!lookupParent){
 			return this.equals(classContainer);
@@ -119,7 +136,7 @@ public class NLPDependencyWord {
 				return true;
 			}
 			else{
-				Collection<NLPDependencyWord> roots = this.getRoots();
+				Collection<NLPDependencyWord> roots = this.getRelatedNouns();
 				for (NLPDependencyWord root: roots){
 					if (root.equals(classContainer))
 						return true;
@@ -129,7 +146,19 @@ public class NLPDependencyWord {
 		
 		return false;
 	}
+	
+	public boolean isParent(NLPDependencyWord word){
+		return parents.contains(word);
+	}
 
+	public boolean isParent(String word){
+		for (NLPDependencyWord parent: parents){
+			if (parent.getWord().equalsIgnoreCase(word))
+					return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		//TODO: Ver si no hay problemas con este equals!!!

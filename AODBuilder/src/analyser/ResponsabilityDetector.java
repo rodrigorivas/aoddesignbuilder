@@ -2,11 +2,14 @@ package analyser;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-import beans.Attribute;
-import beans.Responsability;
+import util.ListUtils;
+
+import beans.aodprofile.AODProfileResponsability;
 import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
+import factories.aodprofile.AODProfileResponsabilityBuilder;
 
 public class ResponsabilityDetector {
 	private static ResponsabilityDetector instance = null;
@@ -21,121 +24,61 @@ public class ResponsabilityDetector {
 		return instance;
 	}
 	
-	public Collection<Responsability> detectResponsability(Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){
-		Collection<Responsability> responsabilities = new ArrayList<Responsability>();
+	public Collection<AODProfileResponsability> detectResponsability(Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){
+		Collection<AODProfileResponsability> responsabilities = new ArrayList<AODProfileResponsability>();
 		
 		for (NLPDependencyRelation dr: relations){
 			if (dr.getRelationType().equals("agent")){
-				if (dr.getGovDW().isRelated(classContainer, false) && dr.getDepDW().isVerb()){
-					Responsability newResponsability = createResponsability(dr.getDepDW());
-					if (!responsabilities.contains(newResponsability)){
-						responsabilities.add(newResponsability);
-					}
-
-				}				
+				processResponsability(responsabilities, dr.getGovDW(), dr.getDepDW(), classContainer, null, false);
 			}
 			else if (dr.getRelationType().equals("xsubj")){
-				if (dr.getGovDW().isRelated(classContainer, false) && dr.getDepDW().isVerb()){
-					Responsability newResponsability = createResponsability(dr.getDepDW());
-					if (!responsabilities.contains(newResponsability)){
-						responsabilities.add(newResponsability);
-					}
-				}				
+				processResponsability(responsabilities, dr.getGovDW(), dr.getDepDW(), classContainer, null, false);
 			}
 			else if (dr.getRelationType().equals("nsubj")){
-				if (dr.getGovDW().isRelated(classContainer, false) && dr.getDepDW().isVerb()){
-					Responsability newResponsability = createResponsability(dr.getDepDW());
-					if (!responsabilities.contains(newResponsability)){
-						responsabilities.add(newResponsability);
-					}
-				}				
+				processResponsability(responsabilities, dr.getGovDW(), dr.getDepDW(), classContainer, null, false);
 			}
 			else if (dr.getRelationType().startsWith("conj")){
-				if (dr.getDepDW().isRelated(classContainer, true) && dr.getDepDW().isVerb()){
-					Responsability newResponsability = createResponsability(dr.getDepDW());
-					if (!responsabilities.contains(newResponsability)){
-						responsabilities.add(newResponsability);
-					}
-				}
-				if (dr.getGovDW().isRelated(classContainer, true) && dr.getGovDW().isVerb()){
-					Responsability newResponsability = createResponsability(dr.getGovDW());
-					if (!responsabilities.contains(newResponsability)){
-						responsabilities.add(newResponsability);
-					}
-				}
+				processResponsability(responsabilities, dr.getDepDW(), dr.getDepDW(), classContainer, null, true);
+				processResponsability(responsabilities, dr.getGovDW(), dr.getGovDW(), classContainer, null, true);
 			}
 			else if (dr.getRelationType().equals("dobj")){
-				if (dr.getGovDW().isRelated(classContainer, true) && dr.getGovDW().isVerb()){
-					Attribute newAttr = new Attribute();
-					newAttr.setName(dr.getDepDW().getWord());
-					Responsability newResponsability = createResponsability(dr.getGovDW(), newAttr);
-					if (!responsabilities.contains(newResponsability)){
-						responsabilities.add(newResponsability);
-					}
-				}				
+				processResponsability(responsabilities, dr.getGovDW(), dr.getGovDW(), classContainer, dr.getDepDW(), true);
 			}
 			else if (dr.getRelationType().equals("infmod")){
-				if (dr.getGovDW().isRelated(classContainer, true) && dr.getGovDW().isVerb()){
-					Attribute newAttr = new Attribute();
-					newAttr.setName(dr.getDepDW().getWord());
-					Responsability newResponsability = createResponsability(dr.getGovDW(), newAttr);
-					if (!responsabilities.contains(newResponsability)){
-						responsabilities.add(newResponsability);
-					}
-				}				
+				processResponsability(responsabilities, dr.getGovDW(), dr.getGovDW(), classContainer, dr.getDepDW(), true);
 			}
 			else if (dr.getRelationType().equals("iobj")){
-				if (dr.getGovDW().isRelated(classContainer, true) && dr.getGovDW().isVerb()){
-					Attribute newAttr = new Attribute();
-					newAttr.setName(dr.getDepDW().getWord());
-					Responsability newResponsability = createResponsability(dr.getGovDW(), newAttr);
-					if (!responsabilities.contains(newResponsability)){
-						responsabilities.add(newResponsability);
-					}
-				}				
+				processResponsability(responsabilities, dr.getGovDW(), dr.getGovDW(), classContainer, dr.getDepDW(), true);
 			}
 			else if (dr.getRelationType().equals("neg")){
-				if (dr.getGovDW().isRelated(classContainer, true) && dr.getGovDW().isVerb()){
-					Attribute newAttr = new Attribute();
-					newAttr.setName(dr.getDepDW().getWord());
-					Responsability newResponsability = createResponsability(dr.getGovDW(), newAttr);
-					if (!responsabilities.contains(newResponsability)){
-						responsabilities.add(newResponsability);
-					}
-				}				
+				processResponsability(responsabilities, dr.getGovDW(), dr.getGovDW(), classContainer, dr.getDepDW(), true);
 			}
 			else if (dr.getRelationType().equals("rcmod")){
-				if (dr.getDepDW().isRelated(classContainer, true) && dr.getDepDW().isVerb()){
-					Attribute newAttr = new Attribute();
-					newAttr.setName(dr.getDepDW().getWord());
-					Responsability newResponsability = createResponsability(dr.getGovDW(), newAttr);
-					if (!responsabilities.contains(newResponsability)){
-						responsabilities.add(newResponsability);
-					}
-				}				
+				processResponsability(responsabilities, dr.getDepDW(), dr.getDepDW(), classContainer, dr.getGovDW(), true);
 			}
 			else if (dr.getRelationType().equals("prt")){
-				if (dr.getGovDW().isRelated(classContainer, true) && dr.getGovDW().isVerb()){
-					dr.getGovDW().setWord(dr.getGovDW().getWord()+" "+dr.getDepDW().getWord());
-					Responsability newResponsability = createResponsability(dr.getGovDW());
-					if (!responsabilities.contains(newResponsability)){
-						responsabilities.add(newResponsability);
-					}
-				}				
+				dr.getGovDW().setWord(dr.getGovDW().getWord()+" "+dr.getDepDW().getWord());
+				processResponsability(responsabilities, dr.getGovDW(), dr.getGovDW(), classContainer, null, true);
 			}
 		}	
 		
 		return responsabilities;
 	}
 
-	private Responsability createResponsability(NLPDependencyWord dw, Attribute... params) {
-		Responsability newResponsability = new Responsability();
-		newResponsability.setName(dw.getWord());
-		for (Attribute param: params){
-			newResponsability.addParameter(param);
-		}
+	private void processResponsability(Collection<AODProfileResponsability> responsabilities, NLPDependencyWord relatedWord, NLPDependencyWord respWord, NLPDependencyWord classContainer, NLPDependencyWord param, boolean lookupParent) {
+		if (relatedWord.isRelated(classContainer, lookupParent) && respWord.isVerb()){
+			AODProfileResponsability newResponsability = (new AODProfileResponsabilityBuilder()).build(respWord,param);
+			if (newResponsability!=null){
+				if (!responsabilities.contains(newResponsability)){
+					responsabilities.add(newResponsability);
+				}
+				else{
+					AODProfileResponsability oldResponsability = (AODProfileResponsability) ListUtils.get((List<AODProfileResponsability>) responsabilities, newResponsability);
+					oldResponsability.merge(newResponsability);
+				}
+			}
+		}				
 		
-		return newResponsability;
 	}
 
 }

@@ -3,15 +3,30 @@ package beans.aodprofile;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.Position;
-
-import beans.Attribute;
-import beans.Responsability;
 
 public class AODProfileAspect extends AODProfileClass {
 	private List<AODProfileAspect> dominates;
 	protected List<AODProfilePointcut> possiblePointcuts = new ArrayList<AODProfilePointcut>();
+	private List<AODProfileAdvice> unassociatedAdvices = new ArrayList<AODProfileAdvice>();
+	private List<AODProfileJoinPoint> unassociatedJoinPoint = new ArrayList<AODProfileJoinPoint>();
 	
+	public List<AODProfileJoinPoint> getUnassociatedJoinPoint() {
+		return unassociatedJoinPoint;
+	}
+
+	public void setUnassociatedJoinPoint(
+			List<AODProfileJoinPoint> unassociatedJoinPoint) {
+		this.unassociatedJoinPoint = unassociatedJoinPoint;
+	}
+
+	public List<AODProfileAdvice> getUnassociatedAdvices() {
+		return unassociatedAdvices;
+	}
+
+	public void setUnassociatedAdvices(List<AODProfileAdvice> unassociatedAdvices) {
+		this.unassociatedAdvices = unassociatedAdvices;
+	}
+
 	public List<AODProfileAspect> getDominates() {
 		return dominates;
 	}
@@ -46,20 +61,16 @@ public class AODProfileAspect extends AODProfileClass {
 				
 		
 		ret+="=====ATTRIBUTES====\n";		
-		for (Attribute attr: attributes){
-			ret+="attribute:["+attr.getName()+"]\n";
+		for (AODProfileAttribute attr: attributes){
+			ret+=attr.toString()+"\n";
 		}
 		ret+="=====RESPONSABILITIES====\n";		
-		for (Responsability resp: responsabilities){
-			ret+="responsab:["+resp.getName()+"(";
-			for (Attribute param: resp.getParameters()){
-				ret+=param.getName()+",";
-			}
-			ret=ret.substring(0,ret.length()-1)+")"+"]\n";
+		for (AODProfileResponsability resp: responsabilities){
+			ret+=resp.toString()+"\n";
 		}
 		ret+="=====POINTCUTS====\n";		
 		for (AODProfileAssociation assoc: possiblePointcuts){
-			ret+="assoc:    ["+assoc.getName()+"]\n";
+			ret+=assoc.toString()+"\n";
 		}
 		
 		return ret;
@@ -75,4 +86,5 @@ public class AODProfileAspect extends AODProfileClass {
 			super.addAssociation(assoc);
 		}
 	}
+
 }
