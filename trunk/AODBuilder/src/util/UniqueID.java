@@ -5,9 +5,11 @@ import java.util.Vector;
 
 public class UniqueID
 {
-    private static Vector IDlist = new Vector();
+    @SuppressWarnings("unchecked")
+	private static Vector IDlist = new Vector();
 
-    public static String generateUniqueID()
+    @SuppressWarnings("unchecked")
+	public static String generateUniqueID()
     {
     	Random rnd = new Random();
     	
