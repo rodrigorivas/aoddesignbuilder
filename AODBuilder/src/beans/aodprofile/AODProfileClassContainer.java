@@ -3,8 +3,6 @@ package beans.aodprofile;
 import java.util.ArrayList;
 import java.util.Map;
 
-import beans.uml.UMLBean;
-
 public class AODProfileClassContainer extends AODProfileBean{
 
 	ArrayList<AODProfileClass> possibleClasses = new ArrayList<AODProfileClass>();	

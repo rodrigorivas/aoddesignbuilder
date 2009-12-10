@@ -89,6 +89,7 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		return source;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected ArrayList<AODProfileClass> getTargets(UMLAssociation umlAssoc, 
 			Map<String, ?> map, String targetKey) throws Exception {
 		AODProfileBean target;

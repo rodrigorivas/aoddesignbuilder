@@ -18,6 +18,7 @@ public class NLPDependencyWordBuilder {
 		return instance;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public NLPDependencyWord build(TreeGraphNode t){
 		NLPDependencyWord dw = new NLPDependencyWord();
 		CyclicCoreLabel label = t.label();
