@@ -69,7 +69,7 @@ public class SentenceAnalizer {
 				
 				ArrayList<NLPDependencyRelation> previousNN = new ArrayList<NLPDependencyRelation>();
 
-				System.out.println(sentence);
+//				System.out.println(sentence);
 
 				if (tdl!=null){
 					//Convert the parser output in something more simple to use

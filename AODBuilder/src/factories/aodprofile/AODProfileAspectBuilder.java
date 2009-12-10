@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import util.ContainerManager;
 import analyser.AdviceDetector;
 import analyser.AttributeDetector;
 import analyser.JoinPointDetector;
 import analyser.ResponsabilityDetector;
 import analyser.SentenceAnalizer;
+import analyser.UMLBeanAnalyzer;
 import beans.aodprofile.AODProfileAdvice;
 import beans.aodprofile.AODProfileAspect;
 import beans.aodprofile.AODProfileAttribute;
@@ -78,7 +78,7 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 
 	public AODProfileBean build(UMLAssociation bean) throws Exception {
 		UMLAssociation umlAssoc = (UMLAssociation) bean;
-		Map<String, ?> map = ContainerManager.getInstance().getCollection("AODProfile");
+		Map<String, AODProfileBean> map = UMLBeanAnalyzer.getInstance().getAodProfileMap();
 		/* Get source */
 		AODProfileAspect source = null;
 		String sourceKey = AODProfileAspect.generateId(umlAssoc.getSource().getName());

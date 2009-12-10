@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import util.ContainerManager;
 import analyser.AttributeDetector;
 import analyser.ResponsabilityDetector;
 import analyser.SentenceAnalizer;
+import analyser.UMLBeanAnalyzer;
 import beans.aodprofile.AODProfileAssociation;
 import beans.aodprofile.AODProfileAttribute;
 import beans.aodprofile.AODProfileBean;
@@ -58,7 +58,7 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 	
 	public AODProfileBean build(UMLAssociation bean) throws Exception {
 		UMLAssociation umlAssoc = (UMLAssociation) bean;
-		Map<String, ?> map = ContainerManager.getInstance().getCollection("AODProfile");
+		Map<String, AODProfileBean> map = UMLBeanAnalyzer.getInstance().getAodProfileMap();
 		/* Get source */
 		AODProfileClass source = null;
 		String sourceKey = AODProfileClass.generateId(umlAssoc.getSource().getName());
@@ -89,9 +89,8 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		return source;
 	}
 
-	@SuppressWarnings("unchecked")
 	protected ArrayList<AODProfileClass> getTargets(UMLAssociation umlAssoc, 
-			Map<String, ?> map, String targetKey) throws Exception {
+			Map<String, AODProfileBean> map, String targetKey) throws Exception {
 		AODProfileBean target;
 		ArrayList<AODProfileClass> targets = new ArrayList<AODProfileClass>();
 		if (map.containsKey(targetKey)){
@@ -103,7 +102,7 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		
 		if (target instanceof AODProfileClassContainer){
 			AODProfileClassContainer classContainer = (AODProfileClassContainer) target;
-			classContainer.processInnerBeans((Map<String, AODProfileBean>) map);
+			classContainer.processInnerBeans(map);
 			for (AODProfileClass classesFromCont: classContainer.getPossibleClasses()){
 				targets.add(classesFromCont);
 			}

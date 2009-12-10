@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import analyser.GenericBeanAnalyzer;
+import analyser.UMLBeanAnalyzer;
 import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLBean;
 import beans.uml.UMLGenericBean;
@@ -22,13 +23,13 @@ public class TestXMIImporter {
 			
 			List<UMLGenericBean> beans = XMIImporter.parse(new ByteArrayInputStream(FileUtil.readFileAsByte("c:/temp/CSPS.xmi")));
 
-			Map<String, UMLBean> map = GenericBeanAnalyzer.getInstance().preAnalysis(beans);
+			Map<String, UMLBean> map = GenericBeanAnalyzer.getInstance().process(beans);
 						
 //			for (UMLBean bean: map.values()){
 //				System.out.println(bean);
 //			}
 			
-			Map <String, AODProfileBean> mapAOD = GenericBeanAnalyzer.getInstance().analysis(map);
+			Map <String, AODProfileBean> mapAOD = UMLBeanAnalyzer.getInstance().process(map);
 			
 			for (AODProfileBean bean: mapAOD.values()){
 				System.out.println(bean.toString());
