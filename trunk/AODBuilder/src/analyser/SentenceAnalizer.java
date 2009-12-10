@@ -100,9 +100,9 @@ public class SentenceAnalizer {
 //			for (NLPDependencyWord word: words.values()){
 //				System.out.println(word);
 //			}
-			for (NLPDependencyRelation rel: relations){
-				System.out.println(rel.toStringWithRelations());
-			}
+//			for (NLPDependencyRelation rel: relations){
+//				System.out.println(rel.toStringWithRelations());
+//			}
 			
 //			System.out.println("DETECTING CLASSES...");
 //			

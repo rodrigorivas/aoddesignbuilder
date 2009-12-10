@@ -1,19 +1,13 @@
 package analyser;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import util.ContainerManager;
 import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLAssociation;
 import beans.uml.UMLBean;
-import beans.uml.UMLGenericBean;
-import beans.uml.UMLStereotype;
-import beans.uml.UMLTaggedValue;
 import factories.aodprofile.AODProfileFactory;
-import factories.uml.UMLFactory;
 
 public class UMLBeanAnalyzer {
 	
