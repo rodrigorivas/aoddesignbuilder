@@ -66,7 +66,7 @@ public class AODProfileAttribute extends AODProfileBean{
 	
 	@Override
 	public String toString() {
-		return type+" "+name;
+		return type.replaceAll("[.]", "")+" "+name;
 	}
 
 }

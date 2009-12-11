@@ -2,6 +2,7 @@ package factories.aodprofile;
 
 import java.util.Collection;
 
+import util.DataFormatter;
 import util.ListUtils;
 import beans.aodprofile.AODProfileAttribute;
 import beans.aodprofile.AODProfileBean;
@@ -21,12 +22,12 @@ public class AODProfileResponsabilityBuilder {
 		if (ListUtils.contains(returnKeyWords, resp.getWord())){
 			Collection<NLPDependencyWord> relVerbs = resp.getRelatedVerbs();
 			if (relVerbs!=null && relVerbs.size()>0)
-				newResponsability.setName(relVerbs.iterator().next().getWord());
+				newResponsability.setName(DataFormatter.javanize(relVerbs.iterator().next().getWord(),false));
 			else
 				return null;
 		}
 		else{
-			newResponsability.setName(resp.getWord());
+			newResponsability.setName(DataFormatter.javanize(resp.getWord(),false));
 		}
 		if (param!=null){
 			if (ListUtils.contains(returnTypes, param.getWord())){
@@ -34,7 +35,8 @@ public class AODProfileResponsabilityBuilder {
 			}
 			else if (!ListUtils.contains(methodsKeyWords, param.getWord()) && !ListUtils.contains(classKeyWords, param.getWord())){
 				AODProfileAttribute newAttr = new AODProfileAttribute();
-				newAttr.setName(param.getWord());
+				newAttr.setName(DataFormatter.javanize(param.getWord(),false));
+				newAttr.setType(DataFormatter.javanize(param.getWord(),true));
 				newResponsability.addParameter(newAttr);
 			}
 		}

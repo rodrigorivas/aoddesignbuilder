@@ -3,6 +3,8 @@ package analyser;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import util.DataFormatter;
+
 import beans.aodprofile.AODProfileAdvice;
 import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
@@ -48,7 +50,7 @@ public class AdviceDetector {
 			}
 			else if (dr.getRelationType().equalsIgnoreCase("prep")){
 				if (dr.getDepDW().isRelated(classContainer, true)){
-					AODProfileAdvice newAdvice = (new AODProfileAdviceBuilder()).build(dr.getDepDW().getWord(), dr.getSpecific());
+					AODProfileAdvice newAdvice = (new AODProfileAdviceBuilder()).build(dr.getSpecific(), dr.getDepDW().getWord());
 					if (newAdvice!=null){
 						if ("before".equalsIgnoreCase(dr.getSpecific()))
 							newAdvice.setType(AODProfileAdvice.advice_type.BEFORE);
@@ -83,17 +85,17 @@ public class AdviceDetector {
 
 		for (NLPDependencyWord word: words){
 			for (AODProfileAdvice advice: advices){
-				if (word.isParent(advice.getName()) && word.isVerb()){
+				if (word.isParent(advice.getJoinPointType()) && word.isVerb()){
 					for (NLPDependencyRelation dr: dobjList){
 						if (dr.getGovDW().equals(word)){
 							if ("class".equalsIgnoreCase(dr.getDepDW().getWord()) || 
 									"object".equalsIgnoreCase(dr.getDepDW().getWord()) || 
 									"instance".equalsIgnoreCase(dr.getDepDW().getWord())){
-								advice.setTargetClassName(word.getWord());
+								advice.setTargetClassName(DataFormatter.javanize(word.getWord(),true));
 							}
 						}
 					}	
-					advice.setTargetMethodName(word.getWord());
+					advice.setTargetMethodName(DataFormatter.javanize(word.getWord(),false));
 				}	
 			}
 		}

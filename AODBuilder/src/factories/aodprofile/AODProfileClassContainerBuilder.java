@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import util.DataFormatter;
+
 import analyser.AttributeDetector;
 import analyser.ClassDetector;
 import analyser.ResponsabilityDetector;
@@ -29,7 +31,7 @@ public class AODProfileClassContainerBuilder implements AODProfileBuilder{
 		for (NLPDependencyWord cl: classes){
 			
 			AODProfileClass possibleClass = new AODProfileClass();
-			possibleClass.setName(cl.getWord());
+			possibleClass.setName(DataFormatter.javanize(cl.getWord(),true));
 			possibleClass.setId(possibleClass.generateId());
 
 			Collection<AODProfileAttribute> attributesList = AttributeDetector.getInstance().detectAttribute(SentenceAnalizer.getInstance().getRelations(), cl);

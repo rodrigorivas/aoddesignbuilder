@@ -3,7 +3,9 @@ package analyser;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import util.DataFormatter;
 import util.Inflector;
+import util.ListUtils;
 import beans.aodprofile.AODProfileClass;
 import beans.nlp.NLPDependencyWord;
 
@@ -30,8 +32,8 @@ public class ClassDetector {
 			for (NLPDependencyWord word: words.values()){			
 				if (word.getType().toUpperCase().startsWith("NN")){
 					if (!contained(classes, word)){
-						word.setWord(Inflector.getInstance().singularize(word.getWord()));
-						if (!reservedWord(word.getWord())){
+						word.setWord(DataFormatter.javanize(Inflector.getInstance().singularize(word.getWord()),true));
+						if (!ListUtils.contains(reservedWords, word.getWord())){
 							classes.add(word);
 						}
 					}
@@ -40,17 +42,6 @@ public class ClassDetector {
 		}
 		
 		return classes;
-	}
-
-
-	private boolean reservedWord(String word) {
-		if (word!=null){
-			for (String rw: reservedWords){
-				if (rw.equalsIgnoreCase(word))
-					return true;
-			}
-		}
-		return false;
 	}
 
 	private boolean contained(ArrayList<NLPDependencyWord> classes, NLPDependencyWord dwGov) {

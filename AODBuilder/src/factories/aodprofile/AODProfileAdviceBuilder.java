@@ -8,7 +8,7 @@ public class AODProfileAdviceBuilder{
 
 	public AODProfileAdvice build(String word, String param) {
 		AODProfileAdvice newAdvice = null;
-		if (AODProfileJoinPointBuilder.isknownJoinPoint(word)){
+		if (AODProfileJoinPointBuilder.isknownJoinPoint(param)){
 			newAdvice = buildDefault();
 			newAdvice.setName(word);
 			if (param != null){			

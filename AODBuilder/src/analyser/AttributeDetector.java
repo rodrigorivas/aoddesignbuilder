@@ -3,6 +3,8 @@ package analyser;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import util.DataFormatter;
+
 import beans.aodprofile.AODProfileAttribute;
 import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
@@ -68,7 +70,7 @@ public class AttributeDetector {
 
 	private void createAttribute(Collection<AODProfileAttribute> attributes, NLPDependencyWord dw) {
 		AODProfileAttribute newAttr = new AODProfileAttribute();
-		newAttr.setName(dw.getWord());
+		newAttr.setName(DataFormatter.javanize(dw.getWord(),false));
 		if (!attributes.contains(newAttr)){
 			attributes.add(newAttr);
 		}
