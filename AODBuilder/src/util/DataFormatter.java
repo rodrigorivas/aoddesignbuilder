@@ -157,13 +157,21 @@ public class DataFormatter  {
 		return word;
 	}
 
+	public static String unCapitalize(String word) {
+		if (word!=null){
+			String firstLetter = Character.toString(word.charAt(0)).toLowerCase();
+			word = firstLetter+word.substring(1, word.length());
+		}
+		return word;
+	}
+	
 	public static String javanize(String text, boolean className){
 		String ret = "";
 		if (text!=null && !ListUtils.contains(returnTypes, text)){
 			String[] words = text.split(" ");
 			for (String word: words){
 				if (ret.equals("") && !className)
-					ret=word.toLowerCase();
+					ret=unCapitalize(word);
 				else
 					ret+=capitalize(word);
 			}
