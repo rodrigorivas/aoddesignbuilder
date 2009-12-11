@@ -16,6 +16,7 @@ public class DataFormatter  {
 	private static final String JAVA_UTIL_DATE_FIELD = "java.util.Date";
 	private static final String INTEGER_FIELD = "Integer";
 	private static final String BOOLEAN_FIELD = "boolean";
+	private static final String[] returnTypes = {"int", "float", "void", "boolean", "char", "String"};
 	
 	private static String BEAN_CONVERTED_DATE_FORMAT="yyyy-MM-dd'T'HH:mm:ss";
 	private static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
@@ -146,4 +147,27 @@ public class DataFormatter  {
 		return equalsRegExp(text2, text1);
 	}
 
+
+	public static String capitalize(String word) {
+		if (word!=null){
+//			word = word.toLowerCase();
+			String firstLetter = Character.toString(word.charAt(0)).toUpperCase();
+			word = firstLetter+word.substring(1, word.length());
+		}
+		return word;
+	}
+
+	public static String javanize(String text, boolean className){
+		String ret = "";
+		if (text!=null && !ListUtils.contains(returnTypes, text)){
+			String[] words = text.split(" ");
+			for (String word: words){
+				if (ret.equals("") && !className)
+					ret=word.toLowerCase();
+				else
+					ret+=capitalize(word);
+			}
+		}
+		return ret;
+	}
 }

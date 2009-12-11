@@ -13,8 +13,10 @@ public class TestAODBuilder {
 		try {
 			Map<String, AODProfileBean> mapAOD = AODBuilder.getInstance().process("c:/temp/CSPS.xmi");
 
+			int i=1;
 			for (AODProfileBean bean: mapAOD.values()){
-				System.out.println(bean.toString());
+				System.out.println(i+bean.toString());
+				i++;
 			}
 } catch (IOException e) {
 			// TODO Auto-generated catch block

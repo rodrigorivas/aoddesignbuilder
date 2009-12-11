@@ -3,17 +3,22 @@ package tests;
 import java.util.HashMap;
 import java.util.Map;
 
+import util.DataFormatter;
+
+import analyser.UMLBeanAnalyzer;
 import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLAspect;
 import beans.uml.UMLAssociation;
+import beans.uml.UMLBean;
 import beans.uml.UMLClass;
-import factories.aodprofile.AODProfileFactory;
 
 class AspectTest {
-	public static void main(String[] args) {
-						
+	public static void main(String[] args) {		
+		
+		System.out.println(DataFormatter.javanize("profile information",true));
+		
 		UMLAspect asp = new UMLAspect("1", "Logging");
-		asp.setDescription("Logging occurs around call to system class");
+		asp.setDescription("Logging occurs before call to getY method returning int");
 		UMLClass cl = new UMLClass("2", "System");
 		cl.setDescription("The System do a lot of funny stuff");
 		
@@ -21,15 +26,14 @@ class AspectTest {
 		assoc.setCrosscut(true);
 		assoc.setSource(asp);
 		assoc.setTarget(cl);
-		
+		Map<String, UMLBean> map = new HashMap<String, UMLBean>();
+		map.put(asp.getId(), asp);
+		map.put(cl.getId(), cl);
+		map.put(assoc.getId(), assoc);
 		Map<String, AODProfileBean> newMap = new HashMap<String, AODProfileBean>();
 		try {
-			AODProfileBean bean = AODProfileFactory.getInstance().factoryMethod(asp);
-			newMap.put(bean.getId(), bean);
-			bean = AODProfileFactory.getInstance().factoryMethod(cl);
-			newMap.put(bean.getId(), bean);
-			
-			bean = AODProfileFactory.getInstance().factoryMethod(assoc);
+
+			newMap = UMLBeanAnalyzer.getInstance().process(map);
 			
 			for (AODProfileBean bean2: newMap.values()){
 				System.out.println(bean2);

@@ -3,6 +3,8 @@ package analyser;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import util.DataFormatter;
+
 import beans.aodprofile.AODProfileJoinPoint;
 import beans.aodprofile.AODProfileResponsability;
 import beans.nlp.NLPDependencyRelation;
@@ -67,11 +69,11 @@ public class JoinPointDetector {
 							if ("class".equalsIgnoreCase(dr.getDepDW().getWord()) || 
 									"object".equalsIgnoreCase(dr.getDepDW().getWord()) || 
 									"instance".equalsIgnoreCase(dr.getDepDW().getWord())){
-								joinPoint.setClassName(word.getWord());
+								joinPoint.setClassName(DataFormatter.javanize(word.getWord(),true));
 							}
 						}
 					}	
-					joinPoint.setMethodName(word.getWord());
+					joinPoint.setMethodName(DataFormatter.javanize(word.getWord(),false));
 				}	
 			}
 		}

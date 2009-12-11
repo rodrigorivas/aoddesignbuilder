@@ -1,5 +1,6 @@
 package factories.aodprofile;
 
+import util.DataFormatter;
 import beans.aodprofile.AODProfileBean;
 import beans.aodprofile.AODProfileComplexJoinPoint;
 import beans.aodprofile.AODProfileJoinPoint;
@@ -19,13 +20,13 @@ public class AODProfileJoinPointBuilder{
 			if (word.equalsIgnoreCase("call") || word.equalsIgnoreCase("execution") || word.equalsIgnoreCase("new")){
 				jp = buildComplexDefault();
 				if (param!=null){
-					((AODProfileComplexJoinPoint)jp).setResponsabilityName(param);
+					((AODProfileComplexJoinPoint)jp).setResponsabilityName(DataFormatter.javanize(param,true));
 				}
 			}
 			else{
 				jp = buildSimpleDefault();
 				if (param!=null){
-					((AODProfileSimpleJoinPoint)jp).setParam(param);
+					((AODProfileSimpleJoinPoint)jp).setParam(DataFormatter.javanize(param,true));
 				}
 			}
 	
@@ -58,7 +59,7 @@ public class AODProfileJoinPointBuilder{
 
 	public static boolean isknownJoinPoint(String word) {
 		for (String jp: knownJoinPoints){
-			if (jp.equals(word))
+			if (jp.equalsIgnoreCase(word))
 				return true;
 		}
 		return false;

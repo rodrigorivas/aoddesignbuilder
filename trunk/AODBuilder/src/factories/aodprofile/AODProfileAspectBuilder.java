@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.DataFormatter;
+
 import analyser.AdviceDetector;
 import analyser.AttributeDetector;
 import analyser.JoinPointDetector;
@@ -42,7 +44,7 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 
 	public AODProfileBean build(UMLAspect bean) throws Exception {
 		AODProfileAspect aspect = new AODProfileAspect();
-		aspect.setName(bean.getName());
+		aspect.setName(DataFormatter.javanize(bean.getName(),true));
 		aspect.setId(aspect.generateId());
 		
 		analyzeClass(bean, aspect);		
@@ -81,8 +83,8 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 		Map<String, AODProfileBean> map = UMLBeanAnalyzer.getInstance().getAodProfileMap();
 		/* Get source */
 		AODProfileAspect source = null;
-		String sourceKey = AODProfileAspect.generateId(umlAssoc.getSource().getName());
-		String targetKey = AODProfileClass.generateId(umlAssoc.getTarget().getName());
+		String sourceKey = AODProfileAspect.generateId(DataFormatter.javanize(umlAssoc.getSource().getName(), true));
+		String targetKey = AODProfileClass.generateId(DataFormatter.javanize(umlAssoc.getTarget().getName(), true));
 
 		if (map.containsKey(sourceKey)){
 			source = (AODProfileAspect) map.get(sourceKey);
@@ -100,7 +102,7 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 	
 				aodAssoc.setTarget((AODProfileClass) targetFromList);
 				aodAssoc.setId(umlAssoc.getId());
-				aodAssoc.setName("->"+targetFromList.getName());
+				aodAssoc.setName("->"+DataFormatter.javanize(targetFromList.getName(), true));
 		
 				aodAssoc.addJoinPoint((new AODProfileJoinPointBuilder()).build("target", targetFromList.getName()));
 				for (AODProfileJoinPoint joinPoint: source.getUnassociatedJoinPoint()){

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import util.DataFormatter;
+
 import analyser.AttributeDetector;
 import analyser.ResponsabilityDetector;
 import analyser.SentenceAnalizer;
@@ -35,7 +37,7 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 
 	public AODProfileBean build(UMLClass bean) {
 		AODProfileClass aodClass = new AODProfileClass();
-		aodClass.setName(bean.getName());
+		aodClass.setName(DataFormatter.javanize(bean.getName(),true));
 		aodClass.setId(aodClass.generateId());
 		
 		analyzeClass(bean, aodClass);	
@@ -61,8 +63,8 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		Map<String, AODProfileBean> map = UMLBeanAnalyzer.getInstance().getAodProfileMap();
 		/* Get source */
 		AODProfileClass source = null;
-		String sourceKey = AODProfileClass.generateId(umlAssoc.getSource().getName());
-		String targetKey = AODProfileClass.generateId(umlAssoc.getTarget().getName());
+		String sourceKey = AODProfileClass.generateId(DataFormatter.javanize(umlAssoc.getSource().getName(), true));
+		String targetKey = AODProfileClass.generateId(DataFormatter.javanize(umlAssoc.getTarget().getName(), true));
 
 		if (map.containsKey(sourceKey)){
 			source = (AODProfileClass) map.get(sourceKey);
@@ -80,7 +82,7 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 	
 				aodAssoc.setTarget((AODProfileClass) targetFromList);
 				aodAssoc.setId(umlAssoc.getId());
-				aodAssoc.setName("->"+targetFromList.getName());
+				aodAssoc.setName("->"+DataFormatter.javanize(targetFromList.getName(), true));
 			
 				if (!source.getPossibleAssociations().contains(aodAssoc))
 					source.addAssociation(aodAssoc);
