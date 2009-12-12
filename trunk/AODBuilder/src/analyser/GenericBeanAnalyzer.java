@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLBean;
 import beans.uml.UMLGenericBean;
 import beans.uml.UMLStereotype;
@@ -52,8 +53,9 @@ public class GenericBeanAnalyzer {
 	 * 
 	 * @param list 
 	 * @return Map with new UMLBeans
+	 * @throws Exception 
 	 */
-	public Map<String, UMLBean> process(List<UMLGenericBean> list){
+	public Map<String, AODProfileBean> process(List<UMLGenericBean> list) throws Exception{
 
 		HashMap<String, UMLBean> umlMapFirstPass = new HashMap<String, UMLBean>();
 				
@@ -75,7 +77,7 @@ public class GenericBeanAnalyzer {
 				umlBeanMap.put(key, bean);
 		}
 		
-		return umlBeanMap;
+		return UMLBeanAnalyzer.getInstance().process(umlBeanMap);
 	}
 	
 }

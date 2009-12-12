@@ -28,8 +28,8 @@ public class JoinPointDetector {
 		Collection<AODProfileJoinPoint> joinPoints = new ArrayList<AODProfileJoinPoint>();
 		
 		for (NLPDependencyRelation dr: relations){
-			if (dr.getRelationType().equals("mark") ||  
-					dr.getRelationType().equals("pcomp")){
+			if (dr.getRelationType().equalsIgnoreCase("mark") ||  
+					dr.getRelationType().equalsIgnoreCase("pcomp")){
 				if (dr.getGovDW().isRelated(classContainer, true)){
 					AODProfileJoinPoint newJoinPoint = (new AODProfileJoinPointBuilder()).build(dr.getGovDW().getWord());
 					if (newJoinPoint!=null && !joinPoints.contains(newJoinPoint)){
@@ -56,7 +56,7 @@ public class JoinPointDetector {
 		
 		/* From dobj relation we can figure if the joinPoint refers to a class or a method */
 		for (NLPDependencyRelation dr: relations){
-			if (dr.getRelationType().equals("dobj")){
+			if (dr.getRelationType().equalsIgnoreCase("dobj")){
 				dobjList.add(dr);
 			}
 		}

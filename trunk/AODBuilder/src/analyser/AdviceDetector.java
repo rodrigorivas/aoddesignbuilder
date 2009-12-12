@@ -27,8 +27,8 @@ public class AdviceDetector {
 		Collection<AODProfileAdvice> advices = new ArrayList<AODProfileAdvice>();
 		
 		for (NLPDependencyRelation dr: relations){
-			if (dr.getRelationType().equals("mark") ||  
-					dr.getRelationType().equals("pcomp")){
+			if (dr.getRelationType().equalsIgnoreCase("mark") ||  
+					dr.getRelationType().equalsIgnoreCase("pcomp")){
 				if (dr.getGovDW().isRelated(classContainer, true)){
 					AODProfileAdvice newAdvice = (new AODProfileAdviceBuilder()).build(dr.getDepDW().getWord(),dr.getGovDW().getWord());
 					if (newAdvice!=null){
@@ -38,7 +38,8 @@ public class AdviceDetector {
 							newAdvice.setType(AODProfileAdvice.advice_type.AFTER);
 						else if ("around".equalsIgnoreCase(dr.getDepDW().getWord()) ||
 								"on".equalsIgnoreCase(dr.getDepDW().getWord()) ||
-								"in".equalsIgnoreCase(dr.getDepDW().getWord()))
+								"in".equalsIgnoreCase(dr.getDepDW().getWord()) ||
+								"at".equalsIgnoreCase(dr.getDepDW().getWord()))
 							newAdvice.setType(AODProfileAdvice.advice_type.AROUND);
 						else
 							break;
@@ -51,20 +52,8 @@ public class AdviceDetector {
 			else if (dr.getRelationType().equalsIgnoreCase("prep")){
 				if (dr.getDepDW().isRelated(classContainer, true)){
 					AODProfileAdvice newAdvice = (new AODProfileAdviceBuilder()).build(dr.getSpecific(), dr.getDepDW().getWord());
-					if (newAdvice!=null){
-						if ("before".equalsIgnoreCase(dr.getSpecific()))
-							newAdvice.setType(AODProfileAdvice.advice_type.BEFORE);
-						else if ("after".equalsIgnoreCase(dr.getSpecific()))
-							newAdvice.setType(AODProfileAdvice.advice_type.AFTER);
-						else if ("around".equalsIgnoreCase(dr.getSpecific()) || 
-								"on".equalsIgnoreCase(dr.getSpecific()) || 
-								"in".equalsIgnoreCase(dr.getSpecific()))
-							newAdvice.setType(AODProfileAdvice.advice_type.AROUND);
-						else
-							break;
-						if (!advices.contains(newAdvice)){
-							advices.add(newAdvice);
-						}
+					if (newAdvice!=null && !advices.contains(newAdvice)){
+						advices.add(newAdvice);
 					}
 				}
 			}
@@ -78,7 +67,7 @@ public class AdviceDetector {
 		
 		/* From dobj relation we can figure if the joinPoint refers to a class or a method */
 		for (NLPDependencyRelation dr: relations){
-			if (dr.getRelationType().equals("dobj")){
+			if (dr.getRelationType().equalsIgnoreCase("dobj")){
 				dobjList.add(dr);
 			}
 		}

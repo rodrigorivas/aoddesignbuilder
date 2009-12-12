@@ -28,8 +28,7 @@ public class AODBuilder {
 	
 	public Map <String, AODProfileBean> process(String filePath) throws IOException, Exception{
 		List<UMLGenericBean> beans = XMIImporter.parse(new ByteArrayInputStream(FileUtil.readFileAsByte(filePath)));
-		Map<String, UMLBean> map = GenericBeanAnalyzer.getInstance().process(beans);		
-		return UMLBeanAnalyzer.getInstance().process(map);
+		return GenericBeanAnalyzer.getInstance().process(beans);		
 	}
 
 }

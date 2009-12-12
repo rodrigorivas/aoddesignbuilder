@@ -23,13 +23,13 @@ public class TestXMIImporter {
 			
 			List<UMLGenericBean> beans = XMIImporter.parse(new ByteArrayInputStream(FileUtil.readFileAsByte("c:/temp/CSPS.xmi")));
 
-			Map<String, UMLBean> map = GenericBeanAnalyzer.getInstance().process(beans);
+			Map <String, AODProfileBean> mapAOD = GenericBeanAnalyzer.getInstance().process(beans);
 						
 //			for (UMLBean bean: map.values()){
 //				System.out.println(bean);
 //			}
 			
-			Map <String, AODProfileBean> mapAOD = UMLBeanAnalyzer.getInstance().process(map);
+//			Map <String, AODProfileBean> mapAOD = UMLBeanAnalyzer.getInstance().process(map);
 			
 			for (AODProfileBean bean: mapAOD.values()){
 				System.out.println(bean.toString());

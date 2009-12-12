@@ -102,12 +102,12 @@ public class UMLGenericBean {
 				"========== "+umlElementType+" ==========\n" +
 					"ID: "+id+"\n" +
 					"NAME: "+name+"\n";
-		if (umlElementType.equals(Constants.UML_TAGGED_VALUE)){
+		if (umlElementType.equalsIgnoreCase(Constants.UML_TAGGED_VALUE)){
 			ret+="TAG: "+tag+"\n" +
 				 "VALUE: "+value+"\n" +
 				 "MODEL ELEMENT: "+modelElement+"\n";
 		}
-		if (umlElementType.equals(Constants.UML_STEREOTYPE)){
+		if (umlElementType.equalsIgnoreCase(Constants.UML_STEREOTYPE)){
 			ret+="EXTENDED ELEMENT: "+extendedElement+"\n";
 		}
 		if (childs!=null&&childs.size()>0){

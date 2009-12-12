@@ -165,7 +165,7 @@ public class NLPDependencyWord {
 		if (obj!=null && obj instanceof NLPDependencyWord){
 			NLPDependencyWord word = (NLPDependencyWord) obj;
 			
-			return this.getWord().equals(word.getWord());
+			return this.getWord().equalsIgnoreCase(word.getWord());
 		}
 		return super.equals(obj);
 	}
