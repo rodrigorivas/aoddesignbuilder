@@ -27,11 +27,11 @@ public class XMIImporterHandler extends DefaultHandler {
 	
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		if (qName.equals(Constants.UML_ACTOR)||qName.equals(Constants.UML_CLASS)||
-				qName.equals(Constants.UML_ASSOCIATION)||qName.equals(Constants.UML_ASSOCIATION_END)||
-				qName.equals(Constants.UML_GENERALIZATION)||qName.equals(Constants.UML_MODEL)||
-				qName.equals(Constants.UML_STEREOTYPE)||qName.equals(Constants.UML_USECASE)||
-				qName.equals(Constants.UML_TAGGED_VALUE)){
+		if (qName.equalsIgnoreCase(Constants.UML_ACTOR)||qName.equalsIgnoreCase(Constants.UML_CLASS)||
+				qName.equalsIgnoreCase(Constants.UML_ASSOCIATION)||qName.equalsIgnoreCase(Constants.UML_ASSOCIATION_END)||
+				qName.equalsIgnoreCase(Constants.UML_GENERALIZATION)||qName.equalsIgnoreCase(Constants.UML_MODEL)||
+				qName.equalsIgnoreCase(Constants.UML_STEREOTYPE)||qName.equalsIgnoreCase(Constants.UML_USECASE)||
+				qName.equalsIgnoreCase(Constants.UML_TAGGED_VALUE)){
 			try {
 				UMLGenericBean bean = createUMLGenericBean(qName, attributes);
 				if (bean != null){
@@ -48,7 +48,7 @@ public class XMIImporterHandler extends DefaultHandler {
 				e.printStackTrace();
 			}
 		}
-		else if (qName.equals(Constants.UML_ASSOCIATION_CONNECTION)){
+		else if (qName.equalsIgnoreCase(Constants.UML_ASSOCIATION_CONNECTION)){
 			childs = true;
 		}
 	}
@@ -56,7 +56,7 @@ public class XMIImporterHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String name)
 			throws SAXException {
-		if (name.equals(Constants.UML_ASSOCIATION_CONNECTION)){
+		if (name.equalsIgnoreCase(Constants.UML_ASSOCIATION_CONNECTION)){
 			childs = false;
 		}
 

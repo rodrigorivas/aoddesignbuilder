@@ -201,7 +201,7 @@ public class SentenceAnalizer {
 
 	public NLPDependencyWord getWord(String name) {
 		for (NLPDependencyWord word: words.values()){
-			if (word.getWord()!=null && word.getWord().equals(name))
+			if (word.getWord()!=null && word.getWord().equalsIgnoreCase(name))
 				return word;
 		}
 		return null;

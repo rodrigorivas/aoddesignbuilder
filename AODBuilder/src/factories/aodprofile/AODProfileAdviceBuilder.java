@@ -10,6 +10,23 @@ public class AODProfileAdviceBuilder{
 		AODProfileAdvice newAdvice = null;
 		if (AODProfileJoinPointBuilder.isknownJoinPoint(param)){
 			newAdvice = buildDefault();
+			if ("before".equalsIgnoreCase(word)){
+				newAdvice.setType(AODProfileAdvice.advice_type.BEFORE);
+			}
+			else if ("after".equalsIgnoreCase(word)){
+				newAdvice.setType(AODProfileAdvice.advice_type.AFTER);
+			}
+			else if ("around".equalsIgnoreCase(word) || 
+					"on".equalsIgnoreCase(word) || 
+					"in".equalsIgnoreCase(word) || 
+					"at".equalsIgnoreCase(word)){
+				newAdvice.setType(AODProfileAdvice.advice_type.AROUND);
+				word = "around";
+			}
+			else{
+				return null;
+			}
+
 			newAdvice.setName(word);
 			if (param != null){			
 				newAdvice.setJoinPointType(param);

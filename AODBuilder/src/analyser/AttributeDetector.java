@@ -26,7 +26,7 @@ public class AttributeDetector {
 		Collection<AODProfileAttribute> attributes = new ArrayList<AODProfileAttribute>();
 		
 		for (NLPDependencyRelation dr: relations){
-			if (dr.getRelationType().equals("advmod")){
+			if (dr.getRelationType().equalsIgnoreCase("advmod")){
 				if (dr.getDepDW().isRelated(classContainer, true) && dr.getDepDW().isAdjective()){
 					createAttribute(attributes, dr.getDepDW());
 				}
@@ -34,7 +34,7 @@ public class AttributeDetector {
 					createAttribute(attributes, dr.getGovDW());
 				}
 			}
-			else if (dr.getRelationType().equals("amod")){
+			else if (dr.getRelationType().equalsIgnoreCase("amod")){
 				if (dr.getGovDW().isRelated( classContainer, false) && dr.getDepDW().isAdjective()){
 					createAttribute(attributes, dr.getDepDW());
 				}
@@ -47,17 +47,17 @@ public class AttributeDetector {
 					createAttribute(attributes, dr.getGovDW());
 				}				
 			}
-			else if (dr.getRelationType().equals("neg")){
+			else if (dr.getRelationType().equalsIgnoreCase("neg")){
 				if (dr.getGovDW().isRelated( classContainer, true) && dr.getGovDW().isAdjective()){
 					createAttribute(attributes, dr.getGovDW());
 				}
 			}
-			else if (dr.getRelationType().equals("nsubj")){
+			else if (dr.getRelationType().equalsIgnoreCase("nsubj")){
 				if (dr.getDepDW().isRelated( classContainer, false) && dr.getGovDW().isAdjective()){
 					createAttribute(attributes, dr.getGovDW());
 				}
 			}
-			else if (dr.getRelationType().equals("poss")){
+			else if (dr.getRelationType().equalsIgnoreCase("poss")){
 				if (dr.getGovDW().isRelated( classContainer, false) && dr.getDepDW().isAdjective()){
 					createAttribute(attributes, dr.getDepDW());
 				}

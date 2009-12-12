@@ -17,19 +17,19 @@ public class UMLFactory {
 	}
 
 	public UMLBean factoryMethod(UMLGenericBean bean){
-		if (bean.getUmlElementType().equals(Constants.UML_CLASS)){
+		if (bean.getUmlElementType().equalsIgnoreCase(Constants.UML_CLASS)){
 			return new UMLClass(bean.getId(), bean.getName(), false);		
 		}
-		if (bean.getUmlElementType().equals(Constants.UML_STEREOTYPE)){
+		if (bean.getUmlElementType().equalsIgnoreCase(Constants.UML_STEREOTYPE)){
 			return new UMLStereotype(bean.getId()+"-"+bean.getExtendedElement(), bean.getName(), bean.getExtendedElement());
 		}
-		if (bean.getUmlElementType().equals(Constants.UML_ACTOR)){
+		if (bean.getUmlElementType().equalsIgnoreCase(Constants.UML_ACTOR)){
 			return new UMLClass(bean.getId(), bean.getName(), false);
 		}
-		if (bean.getUmlElementType().equals(Constants.UML_USECASE)){
+		if (bean.getUmlElementType().equalsIgnoreCase(Constants.UML_USECASE)){
 			return new UMLUseCase(bean.getId(), bean.getName());
 		}
-		if (bean.getUmlElementType().equals(Constants.UML_ASSOCIATION)){
+		if (bean.getUmlElementType().equalsIgnoreCase(Constants.UML_ASSOCIATION)){
 			UMLAssociation association = new UMLAssociation(bean.getId(), bean.getName());
 			if (bean.getChilds()!=null && bean.getChilds().size()>1){
 				association.setSource(UMLFactory.getInstance().factoryMethod(bean.getChilds().get(0)));
@@ -37,14 +37,14 @@ public class UMLFactory {
 			}
 			return association;
 		}
-		if (bean.getUmlElementType().equals(Constants.UML_ASSOCIATION_END)){
+		if (bean.getUmlElementType().equalsIgnoreCase(Constants.UML_ASSOCIATION_END)){
 			return new UMLAssociationEnd(bean.getId(), bean.getName(),bean.getType());
 		}
-		if (bean.getUmlElementType().equals(Constants.UML_TAGGED_VALUE)){
+		if (bean.getUmlElementType().equalsIgnoreCase(Constants.UML_TAGGED_VALUE)){
 			return new UMLTaggedValue(bean.getId()+"-"+bean.getModelElement(), bean.getValue(), bean.getModelElement());
 			
 		}
-		if (bean.getUmlElementType().equals(Constants.UML_MODEL)){
+		if (bean.getUmlElementType().equalsIgnoreCase(Constants.UML_MODEL)){
 			return new UMLModel(bean.getId(), bean.getName());
 			
 		}

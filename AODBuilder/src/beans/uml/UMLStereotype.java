@@ -15,7 +15,7 @@ public class UMLStereotype extends UMLBean {
 	public void associate(Map<String, UMLBean> map) {
 		UMLBean bean = map.get(this.getExtendedElement());
 		if (bean!=null){
-			if (this.getName().equals("crosscut") && (bean instanceof UMLAssociation)){
+			if (this.getName().equalsIgnoreCase("crosscut") && (bean instanceof UMLAssociation)){
 					((UMLAssociation)bean).setCrosscut(true);
 			}
 			else if (bean instanceof UMLClass){

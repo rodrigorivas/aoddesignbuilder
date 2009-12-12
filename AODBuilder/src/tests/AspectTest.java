@@ -3,8 +3,6 @@ package tests;
 import java.util.HashMap;
 import java.util.Map;
 
-import util.DataFormatter;
-
 import analyser.UMLBeanAnalyzer;
 import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLAspect;
@@ -14,11 +12,9 @@ import beans.uml.UMLClass;
 
 class AspectTest {
 	public static void main(String[] args) {		
-		
-		System.out.println(DataFormatter.javanize("profile information",true));
-		
+				
 		UMLAspect asp = new UMLAspect("1", "Logging");
-		asp.setDescription("Logging occurs before call to getY method returning int");
+		asp.setDescription("Logging occurs before call to getY method and saves info in a file.");
 		UMLClass cl = new UMLClass("2", "System");
 		cl.setDescription("The System do a lot of funny stuff");
 		
