@@ -11,9 +11,7 @@ import util.FileUtil;
 import util.Log4jConfigurator;
 import xmi.XMIImporter;
 import analyser.GenericBeanAnalyzer;
-import analyser.UMLBeanAnalyzer;
 import beans.aodprofile.AODProfileBean;
-import beans.uml.UMLBean;
 import beans.uml.UMLGenericBean;
 
 public class AODBuilder {
