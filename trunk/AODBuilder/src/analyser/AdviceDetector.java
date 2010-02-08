@@ -3,7 +3,10 @@ package analyser;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
+
 import util.DataFormatter;
+import util.Log4jConfigurator;
 
 import beans.aodprofile.AODProfileAdvice;
 import beans.nlp.NLPDependencyRelation;
@@ -12,8 +15,10 @@ import factories.aodprofile.AODProfileAdviceBuilder;
 
 public class AdviceDetector {
 	private static AdviceDetector instance = null;
+	Logger logger;
 	
 	private AdviceDetector() {
+		logger = Log4jConfigurator.getLogger();
 	}
 	
 	public static AdviceDetector getInstance(){
@@ -24,6 +29,8 @@ public class AdviceDetector {
 	}
 	
 	public Collection<AODProfileAdvice> detectAdvices(Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){
+		logger.info("Starting advices detection for "+classContainer.getWord()+"...");
+
 		Collection<AODProfileAdvice> advices = new ArrayList<AODProfileAdvice>();
 		
 		for (NLPDependencyRelation dr: relations){
@@ -44,6 +51,7 @@ public class AdviceDetector {
 						else
 							break;
 						if (!advices.contains(newAdvice)){
+							logger.info("Found new advice: "+newAdvice);
 							advices.add(newAdvice);
 						}
 					}
@@ -53,12 +61,13 @@ public class AdviceDetector {
 				if (dr.getDepDW().isRelated(classContainer, true)){
 					AODProfileAdvice newAdvice = (new AODProfileAdviceBuilder()).build(dr.getSpecific(), dr.getDepDW().getWord());
 					if (newAdvice!=null && !advices.contains(newAdvice)){
+						logger.info("Found new advice: "+newAdvice);
 						advices.add(newAdvice);
 					}
 				}
 			}
 		}
-		
+		logger.info("Advices detection completed.");
 		return advices;
 	}
 
@@ -81,10 +90,12 @@ public class AdviceDetector {
 									"object".equalsIgnoreCase(dr.getDepDW().getWord()) || 
 									"instance".equalsIgnoreCase(dr.getDepDW().getWord())){
 								advice.setTargetClassName(DataFormatter.javanize(word.getWord(),true));
+								logger.info("Refining advice: "+advice);
 							}
 						}
 					}	
 					advice.setTargetMethodName(DataFormatter.javanize(word.getWord(),false));
+					logger.info("Refining advice: "+advice);
 				}	
 			}
 		}

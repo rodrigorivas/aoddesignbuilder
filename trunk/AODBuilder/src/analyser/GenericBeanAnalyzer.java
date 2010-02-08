@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
+
+import util.Log4jConfigurator;
 import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLBean;
 import beans.uml.UMLGenericBean;
@@ -17,7 +20,8 @@ public class GenericBeanAnalyzer {
 	private static GenericBeanAnalyzer instance;
 	private Map<String, UMLBean> umlBeanMap;
 	
-	private GenericBeanAnalyzer() {}
+	private GenericBeanAnalyzer() {
+	}
 	
 	public static GenericBeanAnalyzer getInstance(){
 		if (instance == null)
@@ -56,7 +60,9 @@ public class GenericBeanAnalyzer {
 	 * @throws Exception 
 	 */
 	public Map<String, AODProfileBean> process(List<UMLGenericBean> list) throws Exception{
-
+		Logger logger = Log4jConfigurator.getLogger();
+		logger.info("Starting GenericBeanAnalizer processing...");
+		
 		HashMap<String, UMLBean> umlMapFirstPass = new HashMap<String, UMLBean>();
 				
 		//first pass: convert umlGericBean into specific umlBean
@@ -69,15 +75,20 @@ public class GenericBeanAnalyzer {
 		
 		umlBeanMap = new HashMap<String, UMLBean>();
 		//second pass: associate umlBean with each other
+		logger.info("Starting UMLBean associations...");
 		for (Entry<String, UMLBean> entry: umlMapFirstPass.entrySet()){
 			String key = entry.getKey();
 			UMLBean bean = entry.getValue();
 			bean.associate(umlMapFirstPass);
-			if (!filter(bean))
+			if (!filter(bean)){
 				umlBeanMap.put(key, bean);
+			}
 		}
 		
-		return UMLBeanAnalyzer.getInstance().process(umlBeanMap);
+		Map<String, AODProfileBean> map = UMLBeanAnalyzer.getInstance().process(umlBeanMap);	
+	
+		logger.info("GenericBeanAnalizar ended.");
+		return map;
 	}
 	
 }

@@ -1,17 +1,17 @@
 package xmi;
 
 import java.lang.reflect.Field;
-import java.text.ParseException;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import beans.uml.UMLGenericBean;
-
 import util.DataFormatter;
-
+import util.ExceptionUtil;
+import util.Log4jConfigurator;
+import beans.uml.UMLGenericBean;
 import constants.Constants;
 
 
@@ -20,13 +20,31 @@ public class XMIImporterHandler extends DefaultHandler {
 	ArrayList<UMLGenericBean> list;
 	UMLGenericBean lastBean = null;
 	boolean childs = false;
+	Logger logger;
 	
 	public XMIImporterHandler() {
+		logger = Log4jConfigurator.getLogger("Parser");
+		logger.info("Creating handler...");
 		list = new ArrayList<UMLGenericBean>();
 	}
 	
 	@Override
+	public void startDocument() throws SAXException {
+		logger.info("**************************************");
+		logger.info("Starting document parsing...");
+		super.startDocument();
+	}
+	
+	@Override
+	public void endDocument() throws SAXException {
+		logger.info("Document parsing ended.");
+		logger.info("**************************************");
+		super.endDocument();
+	}
+	
+	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+		logger.info("Start element " + qName);
 		if (qName.equalsIgnoreCase(Constants.UML_ACTOR)||qName.equalsIgnoreCase(Constants.UML_CLASS)||
 				qName.equalsIgnoreCase(Constants.UML_ASSOCIATION)||qName.equalsIgnoreCase(Constants.UML_ASSOCIATION_END)||
 				qName.equalsIgnoreCase(Constants.UML_GENERALIZATION)||qName.equalsIgnoreCase(Constants.UML_MODEL)||
@@ -44,8 +62,7 @@ public class XMIImporterHandler extends DefaultHandler {
 					}
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(ExceptionUtil.getTrace(e));
 			}
 		}
 		else if (qName.equalsIgnoreCase(Constants.UML_ASSOCIATION_CONNECTION)){
@@ -59,11 +76,12 @@ public class XMIImporterHandler extends DefaultHandler {
 		if (name.equalsIgnoreCase(Constants.UML_ASSOCIATION_CONNECTION)){
 			childs = false;
 		}
-
+		logger.info("End element " + name);
 	}
 	
 	@SuppressWarnings("unchecked")
 	private UMLGenericBean createUMLGenericBean (String type, Attributes attributes) throws Exception{
+		logger.info("Creating umlGenericBean: "+type);
 		UMLGenericBean bean=new UMLGenericBean();
 		
 		/* Get id first */
@@ -90,15 +108,9 @@ public class XMIImporterHandler extends DefaultHandler {
 							setField(bean,lookup,value);
 						}
 					}
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SAXException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (Exception e) {
+					logger.error(ExceptionUtil.getTrace(e));
+					throw e;
 				}
 			}
 		}
@@ -116,8 +128,9 @@ public class XMIImporterHandler extends DefaultHandler {
 	 * @throws GSException 
 	 */
 	@SuppressWarnings("unchecked")
-	private void setField(Object bean, String field, Object value) throws SAXException {
+	private void setField(Object bean, String field, Object value) throws Exception {
 		if (field != null){
+			logger.info("Setting field '" + field+"' with value '"+value+"' to object '"+bean.getClass().getSimpleName()+"'.");
 			Field f = null;
 			try {			
 				f = bean.getClass().getDeclaredField(field);
@@ -128,21 +141,9 @@ public class XMIImporterHandler extends DefaultHandler {
 					convertedValue = DataFormatter.convertValue(fieldType, (String)value);
 				f.set(bean, convertedValue);
 				
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchFieldException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e) {
+				logger.error(ExceptionUtil.getTrace(e));
+				throw e;
 			}
 		}else{
 			throw new SAXException("The bean to set the mapping to is empty");

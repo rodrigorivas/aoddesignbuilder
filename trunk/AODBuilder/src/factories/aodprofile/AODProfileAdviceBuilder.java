@@ -1,5 +1,6 @@
 package factories.aodprofile;
 
+import util.Log4jConfigurator;
 import beans.aodprofile.AODProfileAdvice;
 import beans.aodprofile.AODProfileBean;
 import beans.aodprofile.AODProfileAdvice.advice_type;
@@ -7,6 +8,7 @@ import beans.aodprofile.AODProfileAdvice.advice_type;
 public class AODProfileAdviceBuilder{
 
 	public AODProfileAdvice build(String word, String param) {
+		Log4jConfigurator.getLogger().info("Building new Advice...");
 		AODProfileAdvice newAdvice = null;
 		if (AODProfileJoinPointBuilder.isknownJoinPoint(param)){
 			newAdvice = buildDefault();
@@ -32,11 +34,12 @@ public class AODProfileAdviceBuilder{
 				newAdvice.setJoinPointType(param);
 			}
 		}
-		
+		Log4jConfigurator.getLogger().info("Build complete. Advice: "+newAdvice);
 		return newAdvice;
 	}
 	
 	private AODProfileAdvice buildDefault() {
+		Log4jConfigurator.getLogger().info("Building default advice.");
 		AODProfileAdvice advice = new AODProfileAdvice();
 		/* set default values */
 		advice.setType(advice_type.AROUND);
@@ -44,6 +47,7 @@ public class AODProfileAdviceBuilder{
 		/* regular expresion to match any name */
 		advice.setTargetMethodName(AODProfileBean.ANY_MATCH);
 		
+		Log4jConfigurator.getLogger().info("Build complete.");
 		return advice;
 	}	
 }

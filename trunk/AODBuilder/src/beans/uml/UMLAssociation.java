@@ -2,6 +2,8 @@ package beans.uml;
 
 import java.util.Map;
 
+import util.Log4jConfigurator;
+
 public class UMLAssociation extends UMLBean {
 
 	UMLBean target;
@@ -39,23 +41,32 @@ public class UMLAssociation extends UMLBean {
 	@Override
 	public void associate(Map<String, UMLBean> map) {
 		if (this.getSource()!=null && this.getTarget()!=null){
+			Log4jConfigurator.getLogger().info("Starting association on UMLAssociation to source: "+((UMLAssociationEnd) this.getSource()).getReferences());
 			UMLBean sourceBean = map.get(((UMLAssociationEnd) this.getSource()).getReferences());
 			if (crosscut && !(sourceBean instanceof UMLAspect)){
+				Log4jConfigurator.getLogger().info("Source is an Aspect");
 				sourceBean = new UMLAspect(sourceBean);
 				map.put(sourceBean.getId(), sourceBean);
 			}
-			if (sourceBean!=null)
+			if (sourceBean!=null){
+				Log4jConfigurator.getLogger().info("Setting source from: "+sourceBean.getName());
 				setSource(sourceBean);
-			else
-				System.out.println("No bean for: "+((UMLAssociationEnd) this.getSource()).getReferences());
+			}
+			else{
+				Log4jConfigurator.getLogger().warn("No bean for: "+((UMLAssociationEnd) this.getSource()).getReferences());
+			}
+			Log4jConfigurator.getLogger().info("Starting association on UMLAssociation to target: "+((UMLAssociationEnd) this.getTarget()).getReferences());
 			UMLBean targetBean = map.get(((UMLAssociationEnd) this.getTarget()).getReferences());
-			if (sourceBean!=null)
+			if (sourceBean!=null){
+				Log4jConfigurator.getLogger().info("Setting target to: "+targetBean.getName());
 				setTarget(targetBean);
-			else
-				System.out.println("No bean for: "+((UMLAssociationEnd) this.getTarget()).getReferences());
+			}
+			else{
+				Log4jConfigurator.getLogger().warn("No bean for: "+((UMLAssociationEnd) this.getTarget()).getReferences());
+			}
 		}
 		else{
-			System.out.println("Source or Target null for bean:"+this.getId());
+			Log4jConfigurator.getLogger().warn("Source or Target null for bean:"+this.getId());
 		}
 	}
 	

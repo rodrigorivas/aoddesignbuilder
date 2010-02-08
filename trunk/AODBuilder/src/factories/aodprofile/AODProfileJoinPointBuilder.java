@@ -1,6 +1,7 @@
 package factories.aodprofile;
 
 import util.DataFormatter;
+import util.Log4jConfigurator;
 import beans.aodprofile.AODProfileBean;
 import beans.aodprofile.AODProfileComplexJoinPoint;
 import beans.aodprofile.AODProfileJoinPoint;
@@ -15,6 +16,7 @@ public class AODProfileJoinPointBuilder{
 	}	
 
 	public AODProfileJoinPoint build(String word, String param) throws Exception {
+		Log4jConfigurator.getLogger().info("Building new JoinPoint...");
 		AODProfileJoinPoint jp = null;
 		if (isknownJoinPoint(word)){
 			if (word.equalsIgnoreCase("call") || word.equalsIgnoreCase("execution") || word.equalsIgnoreCase("new")){
@@ -35,25 +37,30 @@ public class AODProfileJoinPointBuilder{
 			jp.setType(word);
 		}		
 		
+		Log4jConfigurator.getLogger().info("Build complete. JoinPoint: "+jp);
 		return jp;
 		
 	}
 	
 	private AODProfileJoinPoint buildComplexDefault() {
+		Log4jConfigurator.getLogger().info("Building new default Complex JoinPoint.");
 		AODProfileComplexJoinPoint jp = new AODProfileComplexJoinPoint();
 		/* set default values */
 		jp.setType("call");
 		jp.setResponsability((new AODProfileResponsabilityBuilder()).buildDefault());
 		
+		Log4jConfigurator.getLogger().info("Build complete.");
 		return jp;
 	}
 
 	private AODProfileJoinPoint buildSimpleDefault() {
+		Log4jConfigurator.getLogger().info("Building new default Simple JoinPoint.");
 		AODProfileSimpleJoinPoint jp = new AODProfileSimpleJoinPoint();
 		/* set default values */
 		jp.setType("call");
 		jp.setParam(AODProfileBean.ANY_MATCH);
 		
+		Log4jConfigurator.getLogger().info("Build complete.");
 		return jp;
 	}
 

@@ -3,7 +3,10 @@ package analyser;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
+
 import util.DataFormatter;
+import util.Log4jConfigurator;
 
 import beans.aodprofile.AODProfileAttribute;
 import beans.nlp.NLPDependencyRelation;
@@ -11,8 +14,9 @@ import beans.nlp.NLPDependencyWord;
 
 public class AttributeDetector {
 	private static AttributeDetector instance = null;
-	
+	Logger logger;
 	private AttributeDetector() {
+		logger = Log4jConfigurator.getLogger();
 	}
 	
 	public static AttributeDetector getInstance(){
@@ -23,6 +27,7 @@ public class AttributeDetector {
 	}
 		
 	public Collection<AODProfileAttribute> detectAttribute(Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){
+		logger.info("Starting attributes detection for "+classContainer.getWord()+"...");
 		Collection<AODProfileAttribute> attributes = new ArrayList<AODProfileAttribute>();
 		
 		for (NLPDependencyRelation dr: relations){
@@ -65,6 +70,7 @@ public class AttributeDetector {
 
 		}	
 		
+		logger.info("Attributes detection completed.");
 		return attributes;
 	}
 
@@ -72,6 +78,7 @@ public class AttributeDetector {
 		AODProfileAttribute newAttr = new AODProfileAttribute();
 		newAttr.setName(DataFormatter.javanize(dw.getWord(),false));
 		if (!attributes.contains(newAttr)){
+			logger.info("Found new attribute: "+newAttr);
 			attributes.add(newAttr);
 		}
 	}

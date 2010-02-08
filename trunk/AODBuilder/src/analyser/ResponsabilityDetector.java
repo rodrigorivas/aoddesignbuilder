@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import util.ListUtils;
+import util.Log4jConfigurator;
 
 import beans.aodprofile.AODProfileResponsability;
 import beans.nlp.NLPDependencyRelation;
@@ -15,8 +18,10 @@ public class ResponsabilityDetector {
 	private static ResponsabilityDetector instance = null;
 	
 	private static final String[] reservedWords = {"occurs","happens","do","is"};
+	Logger logger;
 	
 	private ResponsabilityDetector() {
+		logger = Log4jConfigurator.getLogger();
 	}
 	
 	public static ResponsabilityDetector getInstance(){
@@ -27,6 +32,7 @@ public class ResponsabilityDetector {
 	}
 	
 	public Collection<AODProfileResponsability> detectResponsability(Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){
+		logger.info("Starting responsabilities detection for "+classContainer.getWord()+"...");
 		Collection<AODProfileResponsability> responsabilities = new ArrayList<AODProfileResponsability>();
 		
 		for (NLPDependencyRelation dr: relations){
@@ -66,6 +72,7 @@ public class ResponsabilityDetector {
 				processResponsability(responsabilities, dr.getGovDW(), dr.getGovDW(), classContainer, null, true);
 			}
 		}	
+		logger.info("Responsabilities detection completed.");
 		
 		return responsabilities;
 	}
@@ -75,9 +82,11 @@ public class ResponsabilityDetector {
 			AODProfileResponsability newResponsability = (new AODProfileResponsabilityBuilder()).build(respWord,param);
 			if (newResponsability!=null && !ListUtils.contains(reservedWords, newResponsability.getName())){
 				if (!responsabilities.contains(newResponsability)){
+					logger.info("Found new responsability: "+ newResponsability);
 					responsabilities.add(newResponsability);
 				}
 				else{
+					logger.info("Found existing responsability: "+newResponsability+". Merging.");
 					AODProfileResponsability oldResponsability = (AODProfileResponsability) ListUtils.get((List<AODProfileResponsability>) responsabilities, newResponsability);
 					oldResponsability.merge(newResponsability);
 				}

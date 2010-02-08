@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import util.DataFormatter;
+import util.Log4jConfigurator;
 
 import analyser.AttributeDetector;
 import analyser.ClassDetector;
@@ -22,6 +23,7 @@ public class AODProfileClassContainerBuilder implements AODProfileBuilder{
 
 	@Override
 	public AODProfileBean build(UMLBean bean) {
+		Log4jConfigurator.getLogger().info("Building new ClassContainer...");
 		SentenceAnalizer.getInstance().analyze(bean.getDescription());
 		HashMap<String, NLPDependencyWord> words =  SentenceAnalizer.getInstance().getWords();
 		
@@ -43,6 +45,7 @@ public class AODProfileClassContainerBuilder implements AODProfileBuilder{
 			aodClassContainer.addClass(possibleClass);
 		}
 		
+		Log4jConfigurator.getLogger().info("Build complete.\n"+aodClassContainer);
 		return aodClassContainer;
 	}
 	

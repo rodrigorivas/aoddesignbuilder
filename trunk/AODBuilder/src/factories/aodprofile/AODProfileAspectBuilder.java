@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import util.DataFormatter;
+import util.Log4jConfigurator;
 
 import analyser.AdviceDetector;
 import analyser.AttributeDetector;
@@ -43,12 +46,14 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 
 
 	public AODProfileBean build(UMLAspect bean) throws Exception {
+		Log4jConfigurator.getLogger().info("Building new Aspect...");
 		AODProfileAspect aspect = new AODProfileAspect();
 		aspect.setName(DataFormatter.javanize(bean.getName(),true));
 		aspect.setId(aspect.generateId());
 		
 		analyzeClass(bean, aspect);		
 		
+		Log4jConfigurator.getLogger().info("Build complete.\n"+aspect);
 		return aspect;
 	}
 	
@@ -79,6 +84,8 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 
 
 	public AODProfileBean build(UMLAssociation bean) throws Exception {
+		Logger logger = Log4jConfigurator.getLogger();
+		logger.info("Building new Aspect from Association...");
 		UMLAssociation umlAssoc = (UMLAssociation) bean;
 		Map<String, AODProfileBean> map = UMLBeanAnalyzer.getInstance().getAodProfileMap();
 		/* Get source */
@@ -94,6 +101,7 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 		}
 		
 		if (source!=null){
+			logger.info("Found source: "+source);
 			/* Get targets */
 			ArrayList<AODProfileClass> targets = getTargets(umlAssoc, map, targetKey);
 			/* Create the association from source to targets */
@@ -119,8 +127,11 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 				if (!source.getPossibleAssociations().contains(aodAssoc))
 					source.addAssociation(aodAssoc);
 
+				logger.info("Target found: "+targetFromList);
 			}			
 		}
+		
+		logger.info("Build complete.\n"+source);
 		return source;
 	}
 
