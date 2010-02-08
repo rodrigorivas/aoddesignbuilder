@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
+
+import util.Log4jConfigurator;
+
 import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLAssociation;
 import beans.uml.UMLBean;
@@ -34,6 +38,9 @@ public class UMLBeanAnalyzer {
 
 	
 	public Map<String, AODProfileBean> process(Map<String, UMLBean> map) throws Exception{
+		Logger logger = Log4jConfigurator.getLogger();
+		logger.info("Starting UMLBeanAnalizer processing...");
+
 		aodProfileMap = new HashMap<String, AODProfileBean>();
 		Map<String, UMLAssociation> associations = new HashMap<String, UMLAssociation>();
 		
@@ -63,7 +70,8 @@ public class UMLBeanAnalyzer {
 				}
 			}
 		}
-				
+		
+		logger.info("Starting Association Processing");
 		//process the associations
 		for (UMLAssociation assoc: associations.values()){
 			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(assoc);	
@@ -72,6 +80,8 @@ public class UMLBeanAnalyzer {
 					aodProfileMap.put(aodBean.getId(), aodBean);
 			}			
 		}
+		
+		logger.info("UMLBean Analizer ended.");
 		
 		return aodProfileMap;		
 	}

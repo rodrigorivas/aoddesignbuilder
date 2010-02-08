@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import util.DataFormatter;
+import util.Log4jConfigurator;
 
 import analyser.AttributeDetector;
 import analyser.ResponsabilityDetector;
@@ -36,12 +39,14 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 	}
 
 	public AODProfileBean build(UMLClass bean) {
+		Log4jConfigurator.getLogger().info("Building new Class...");
 		AODProfileClass aodClass = new AODProfileClass();
 		aodClass.setName(DataFormatter.javanize(bean.getName(),true));
 		aodClass.setId(aodClass.generateId());
 		
 		analyzeClass(bean, aodClass);	
 		
+		Log4jConfigurator.getLogger().info("Build complete.\n"+aodClass);
 		return aodClass;
 	}
 
@@ -59,6 +64,8 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 	}
 	
 	public AODProfileBean build(UMLAssociation bean) throws Exception {
+		Logger logger = Log4jConfigurator.getLogger();
+		logger.info("Building new Class from Association...");
 		UMLAssociation umlAssoc = (UMLAssociation) bean;
 		Map<String, AODProfileBean> map = UMLBeanAnalyzer.getInstance().getAodProfileMap();
 		/* Get source */
@@ -74,6 +81,7 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		}
 		
 		if (source!=null){
+			logger.info("Found source: "+source);
 			/* Get targets */
 			ArrayList<AODProfileClass> targets = getTargets(umlAssoc, map, targetKey);
 			/* Create the association from source to targets */
@@ -86,13 +94,17 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 			
 				if (!source.getPossibleAssociations().contains(aodAssoc))
 					source.addAssociation(aodAssoc);
+
+				logger.info("Found target: "+targetFromList);
 			}			
 		}
+		logger.info("Build complete.\n"+source);
 		return source;
 	}
 
 	protected ArrayList<AODProfileClass> getTargets(UMLAssociation umlAssoc, 
 			Map<String, AODProfileBean> map, String targetKey) throws Exception {
+		Log4jConfigurator.getLogger().info("Getting targets...");
 		AODProfileBean target;
 		ArrayList<AODProfileClass> targets = new ArrayList<AODProfileClass>();
 		if (map.containsKey(targetKey)){
@@ -112,6 +124,8 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		else if (target instanceof AODProfileClass){
 			targets.add((AODProfileClass) target);
 		}
+		
+		Log4jConfigurator.getLogger().info("Found "+targets.size()+" targets.");
 		return targets;
 	}
 	

@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import util.DataFormatter;
 import util.ListUtils;
+import util.Log4jConfigurator;
 import beans.aodprofile.AODProfileAttribute;
 import beans.aodprofile.AODProfileBean;
 import beans.aodprofile.AODProfileResponsability;
@@ -17,6 +18,7 @@ public class AODProfileResponsabilityBuilder {
 	private String[] classKeyWords = {"class", "instance", "object"};
 	
 	public AODProfileResponsability build(NLPDependencyWord resp, NLPDependencyWord param) {
+		Log4jConfigurator.getLogger().info("Building new Responsability...");
 		AODProfileResponsability newResponsability = new AODProfileResponsability();
 
 		if (ListUtils.contains(returnKeyWords, resp.getWord())){
@@ -41,14 +43,17 @@ public class AODProfileResponsabilityBuilder {
 			}
 		}
 		
+		Log4jConfigurator.getLogger().info("Build complete. Responsability: "+newResponsability);
 		return newResponsability;
 	}
 	
 	public AODProfileResponsability buildDefault() {
+		Log4jConfigurator.getLogger().info("Building new default Responsability.");
 		AODProfileResponsability responsability = new AODProfileResponsability();
 		responsability.setName("");
 		responsability.setReturningType(AODProfileBean.ANY_MATCH);
 		
+		Log4jConfigurator.getLogger().info("Build complete.");
 		return responsability;
 	}
 

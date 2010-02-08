@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
+import util.Log4jConfigurator;
+
 import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
@@ -24,6 +28,7 @@ public class SentenceAnalizer {
 	private LexicalizedParser lp;
 	ArrayList<NLPDependencyRelation> relations;
 	HashMap<String,NLPDependencyWord> words;
+	Logger logger;
 
 	public ArrayList<NLPDependencyRelation> getRelations() {
 		return relations;
@@ -40,6 +45,7 @@ public class SentenceAnalizer {
 		lp.setOptionFlags(new String[]{"-maxLength", "70"});
 		relations = new ArrayList<NLPDependencyRelation>();
 		words = new HashMap<String,NLPDependencyWord>();
+		logger = Log4jConfigurator.getLogger();
 	}
 	
 	public static SentenceAnalizer getInstance(){
@@ -56,6 +62,7 @@ public class SentenceAnalizer {
 	}
 	
 	public void analyze(String text){
+		logger.info("Starting SentenceAnalizer...");
 		if (text !=null && text.length()>0){
 			/* reset all properties before starting*/
 			reset();
@@ -69,12 +76,11 @@ public class SentenceAnalizer {
 				
 				ArrayList<NLPDependencyRelation> previousNN = new ArrayList<NLPDependencyRelation>();
 
-//				System.out.println(sentence);
 
 				if (tdl!=null){
 					//Convert the parser output in something more simple to use
+					logger.info("Converting parsing tree into something more simple...");
 					for (TypedDependency td: tdl){
-//						System.out.println(td);
 						NLPDependencyRelation dr = createNLPDependencyRelation(td, words);
 						if (dr!=null){
 							if ("nn".equalsIgnoreCase(dr.getRelationType())){
@@ -89,43 +95,13 @@ public class SentenceAnalizer {
 							if (dr.getGovDW()!=null && !words.containsKey(dr.getGovDW().getKey()))
 								words.put(dr.getGovDW().getKey(),dr.getGovDW());
 														
-//							System.out.println(dr.toStringWithRelations());
 						}
 					}
+					logger.info("Convertion complete.");
 				}			
-			}
-			
-//			System.out.println("--------");
-//			//Associate words with each other
-//			for (NLPDependencyWord word: words.values()){
-//				System.out.println(word);
-//			}
-//			for (NLPDependencyRelation rel: relations){
-//				System.out.println(rel.toStringWithRelations());
-//			}
-			
-//			System.out.println("DETECTING CLASSES...");
-//			
-//			Collection<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
-//			
-//			System.out.println(classes.size()+" CLASSES DETECTED");
-//
-//			for (NLPDependencyWord clas: classes){
-//				System.out.println("----------------");
-//				System.out.println("CLASS:");			
-//				System.out.println(clas.getWord());
-//				
-//				Collection<NLPDependencyWord> attributes = AttributeDetector.getInstance().detectAttribute(relations, clas);
-//				
-//				System.out.println("ATTRIBUTE:");
-//				for (NLPDependencyWord attr: attributes){
-//					System.out.println(attr.getWord());
-//				}
-//				System.out.println("----------------");
-//			}
-							
+			}					
 		}		
-		
+		logger.info("Sentence analisis completed.");
 	}
 
 	private boolean processNN(NLPDependencyRelation dr, ArrayList<NLPDependencyRelation> previousNN, int position) {
@@ -178,13 +154,13 @@ public class SentenceAnalizer {
 			dw2 = words.get(dw2.getKey());
 
 		NLPDependencyRelation tnr = NLPDependencyRelationBuilder.getInstance().build(reln, dw1, dw2);
-		
+
 		return tnr;
 						
 	}
 
 	private Collection<TypedDependency> parseNLP(String sentence) {
-		
+		logger.info("Parsing sentence: "+ sentence);
 		if (lp.parse(sentence)){
 			Tree parse = lp.getBestParse();
 	
@@ -193,7 +169,8 @@ public class SentenceAnalizer {
 			GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
 	
 			Collection<TypedDependency> tdl = gs.typedDependenciesCollapsed();
-						
+			
+			logger.info("Parsing sentence ended.");
 			return tdl;
 		}
 		return null;

@@ -3,9 +3,12 @@ package analyser;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 import util.DataFormatter;
 import util.Inflector;
 import util.ListUtils;
+import util.Log4jConfigurator;
 import beans.aodprofile.AODProfileClass;
 import beans.nlp.NLPDependencyWord;
 
@@ -13,9 +16,10 @@ public class ClassDetector {
 	private static ClassDetector instance = null;
 	
 	String[] reservedWords = {"USECASE", "USE CASE", "SYSTEM", "USE", "CASE", "ASPECT", "CLASS", "ENTITY"};
-	
+	Logger logger;
 	
 	private ClassDetector() {
+		logger = Log4jConfigurator.getLogger();
 	}
 	
 	public static ClassDetector getInstance(){
@@ -26,6 +30,7 @@ public class ClassDetector {
 	}
 
 	public ArrayList<NLPDependencyWord> detectClasses (HashMap<String, NLPDependencyWord> words){
+		logger.info("Starting classes detection...");
 		ArrayList<NLPDependencyWord> classes = new ArrayList<NLPDependencyWord>();
 		
 		if (words != null){
@@ -34,12 +39,14 @@ public class ClassDetector {
 					if (!contained(classes, word)){
 						word.setWord(DataFormatter.javanize(Inflector.getInstance().singularize(word.getWord()),true));
 						if (!ListUtils.contains(reservedWords, word.getWord())){
+							logger.info("Found new class :"+word.getWord());
 							classes.add(word);
 						}
 					}
 				}
 			}
 		}
+		logger.info("Classes detection completed.");
 		
 		return classes;
 	}

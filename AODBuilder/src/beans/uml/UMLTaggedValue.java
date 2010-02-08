@@ -2,6 +2,8 @@ package beans.uml;
 
 import java.util.Map;
 
+import util.Log4jConfigurator;
+
 public class UMLTaggedValue extends UMLBean {
 
 	private String umlModelElement;
@@ -22,11 +24,13 @@ public class UMLTaggedValue extends UMLBean {
 	@Override
 	public void associate(Map<String, UMLBean> map) {
 		UMLBean bean = map.get(this.getUmlModelElement());
-		if (bean!=null)
+		if (bean!=null){
 			bean.associateTaggedValue(this);
-		else
-			System.out.println("No bean for:"+this.getUmlModelElement());
-		
+			Log4jConfigurator.getLogger().info(bean.getName()+" is associate to taggedValue: "+this.getName());
+		}
+		else{
+			Log4jConfigurator.getLogger().warn("No bean for:"+this.getUmlModelElement());
+		}
 	}
 
 	public String toString() {

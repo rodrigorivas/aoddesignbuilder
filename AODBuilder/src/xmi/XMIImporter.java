@@ -1,36 +1,37 @@
 package xmi;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import util.ExceptionUtil;
+import util.Log4jConfigurator;
 import beans.uml.UMLGenericBean;
 
 
 public class XMIImporter extends DefaultHandler {
 	
 	public static ArrayList<UMLGenericBean> parse(InputStream xml) throws Exception {
+		Logger logger = null;
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		try {
+			logger = Log4jConfigurator.getLogger();
 			SAXParser saxParser = factory.newSAXParser();
 			XMIImporterHandler handler = new XMIImporterHandler();
+			logger.info("Starting XMI parsing...");
 			saxParser.parse(new InputSource(xml), handler);
 			ArrayList<UMLGenericBean> list = handler.getList();
+			logger.info("XMI parsing finished. "+ list.size() +" elements have bean identified.");
 			return list;
-		} catch (SAXException saxE) {
-			saxE.printStackTrace();
-		} catch (IOException ioE) {
-			ioE.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ExceptionUtil.getTrace(e));
+			throw e;
 		}
-		return null;
 	}
 }
