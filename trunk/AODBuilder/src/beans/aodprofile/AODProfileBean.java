@@ -3,11 +3,15 @@ package beans.aodprofile;
 import java.util.Map;
 
 
-public abstract class AODProfileBean {
+public abstract class AODProfileBean implements Comparable{
 	String id;
 	String name;
 	
 	public static final String ANY_MATCH = ".*";
+	
+	public int compareTo (Object o) {
+		return 0;
+	}
 	
 	boolean selected;
 	
