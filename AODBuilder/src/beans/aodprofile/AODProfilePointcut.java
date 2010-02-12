@@ -3,12 +3,18 @@ package beans.aodprofile;
 import java.util.ArrayList;
 import java.util.List;
 
+import util.UniqueID;
+
 
 public class AODProfilePointcut extends AODProfileAssociation{
 
 	private List<AODProfileAdvice> advices = new ArrayList<AODProfileAdvice>();
 	private List<AODProfileJoinPoint> joinPoints = new ArrayList<AODProfileJoinPoint>();
 	
+	public AODProfilePointcut() {
+		setId(UniqueID.generateUniqueID());
+	}
+
 	public void addAdvice(AODProfileAdvice advice){
 		if (advices!=null)
 			advices.add(advice);
