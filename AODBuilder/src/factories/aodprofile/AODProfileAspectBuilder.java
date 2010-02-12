@@ -109,7 +109,7 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 				AODProfilePointcut aodAssoc = new AODProfilePointcut();
 	
 				aodAssoc.setTarget((AODProfileClass) targetFromList);
-				aodAssoc.setId(umlAssoc.getId());
+//				aodAssoc.setId(umlAssoc.getId());
 				aodAssoc.setName("->"+DataFormatter.javanize(targetFromList.getName(), true));
 		
 				aodAssoc.addJoinPoint((new AODProfileJoinPointBuilder()).build("target", targetFromList.getName()));
