@@ -1,13 +1,16 @@
 package analyser;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import util.Log4jConfigurator;
+import constants.Constants;
 
+import util.Log4jConfigurator;
+import util.ResourceLoader;
 import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
@@ -24,7 +27,8 @@ import factories.nlp.NLPDependencyWordBuilder;
 
 public class SentenceAnalizer {
 	
-	public static final String PARSER_ENGLISH = "resources/englishPCFG.ser.gz";
+	public static final String PARSER_ENGLISH = "englishPCFG.ser.gz";
+	public static final String PARSER_ENGLISH_FULL_PATH = "C:/workspaces/eclipse/AODBuilder/bin/englishPCFG.ser.gz";
 	private LexicalizedParser lp;
 	ArrayList<NLPDependencyRelation> relations;
 	HashMap<String,NLPDependencyWord> words;
@@ -41,7 +45,12 @@ public class SentenceAnalizer {
 	private static SentenceAnalizer instance = null;
 	
 	private SentenceAnalizer() {
-		lp = new LexicalizedParser("resources/englishPCFG.ser.gz");
+		URL url = Constants.PARSER_ENGLISH_RESOURCE_URL;
+		if (url==null){
+			//get local resource URL
+			url = ResourceLoader.getResourceURL(PARSER_ENGLISH);
+		}
+		lp = new LexicalizedParser(url.getFile());
 		lp.setOptionFlags(new String[]{"-maxLength", "70"});
 		relations = new ArrayList<NLPDependencyRelation>();
 		words = new HashMap<String,NLPDependencyWord>();

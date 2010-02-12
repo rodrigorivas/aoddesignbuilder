@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 
 import util.Log4jConfigurator;
+import util.ProcessingProgress;
 import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLBean;
 import beans.uml.UMLGenericBean;
@@ -62,7 +63,7 @@ public class GenericBeanAnalyzer {
 	public Map<String, AODProfileBean> process(List<UMLGenericBean> list) throws Exception{
 		Logger logger = Log4jConfigurator.getLogger();
 		logger.info("Starting GenericBeanAnalizer processing...");
-		
+				
 		HashMap<String, UMLBean> umlMapFirstPass = new HashMap<String, UMLBean>();
 				
 		//first pass: convert umlGericBean into specific umlBean
@@ -71,8 +72,11 @@ public class GenericBeanAnalyzer {
 			if (umlBean!=null){
 				umlMapFirstPass.put(umlBean.getId(), umlBean);
 			}
+			//every 5% we inform the progress
 		}		
-		
+
+		ProcessingProgress.getInstance().incrementProgress(10);				
+
 		umlBeanMap = new HashMap<String, UMLBean>();
 		//second pass: associate umlBean with each other
 		logger.info("Starting UMLBean associations...");
@@ -85,6 +89,7 @@ public class GenericBeanAnalyzer {
 			}
 		}
 		
+		ProcessingProgress.getInstance().incrementProgress(10);				
 		Map<String, AODProfileBean> map = UMLBeanAnalyzer.getInstance().process(umlBeanMap);	
 	
 		logger.info("GenericBeanAnalizar ended.");

@@ -1,5 +1,7 @@
 package constants;
 
+import java.net.URL;
+
 public class Constants {
 	public static final String UML_MODEL = "UML:Model";
 	public static final String UML_CLASS = "UML:Class";
@@ -41,7 +43,7 @@ public class Constants {
 	public static final String TIPO_ADVERBIO = "ADV";
 	public static final String TIPO_DESCONOCIDO = "DSC";
 	
-
+	public static URL PARSER_ENGLISH_RESOURCE_URL = null;
 	
 	
 }
