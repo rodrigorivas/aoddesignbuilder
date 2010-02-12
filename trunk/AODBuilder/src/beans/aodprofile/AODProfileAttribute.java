@@ -3,6 +3,7 @@ package beans.aodprofile;
 import java.util.Map;
 
 import util.DataFormatter;
+import util.UniqueID;
 
 public class AODProfileAttribute extends AODProfileBean{
 
@@ -12,6 +13,7 @@ public class AODProfileAttribute extends AODProfileBean{
 	
 	public AODProfileAttribute() {
 		setName("");
+		setId(UniqueID.generateUniqueID());
 		setType(ANY_MATCH);
 	}
 	

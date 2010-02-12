@@ -2,9 +2,15 @@ package beans.aodprofile;
 
 import java.util.Map;
 
+import util.UniqueID;
+
 public class AODProfileAssociation extends AODProfileBean {
 
 	AODProfileClass target;
+	
+	public AODProfileAssociation() {
+		setId(UniqueID.generateUniqueID());
+	}
 	
 	public AODProfileClass getTarget() {
 		return target;
@@ -39,7 +45,7 @@ public class AODProfileAssociation extends AODProfileBean {
 
 	@Override
 	public String generateId() {
-		return this.getClass().getSimpleName()+"."+this.getName();
+		return this.getName();
 	}
 
 	@Override

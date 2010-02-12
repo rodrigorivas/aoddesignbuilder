@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import factories.aodprofile.AODProfileResponsabilityBuilder;
 
 import util.DataFormatter;
+import util.UniqueID;
 
 public class AODProfileComplexJoinPoint extends AODProfileJoinPoint {
 
 	private AODProfileResponsability responsability;
 	
 	public AODProfileComplexJoinPoint() {
+		setId(UniqueID.generateUniqueID());
 	}
 
 	public AODProfileResponsability getResponsability() {

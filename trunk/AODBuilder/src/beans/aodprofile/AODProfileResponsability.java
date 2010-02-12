@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import util.DataFormatter;
+import util.UniqueID;
 
 
 public class AODProfileResponsability extends AODProfileBean{
@@ -15,6 +16,7 @@ public class AODProfileResponsability extends AODProfileBean{
 	
 	public AODProfileResponsability() {
 		setName("");
+		setId(UniqueID.generateUniqueID());
 		setReturningType(ANY_MATCH);
 	}
 	

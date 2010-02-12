@@ -1,6 +1,7 @@
 package beans.aodprofile;
 
 import util.DataFormatter;
+import util.UniqueID;
 
 public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 
@@ -11,6 +12,7 @@ public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 		type = "this";
 		/* regular expresion to match any input */
 		param = ANY_MATCH;
+		setId(UniqueID.generateUniqueID());
 	}
 	public String getParam() {
 		return param;
