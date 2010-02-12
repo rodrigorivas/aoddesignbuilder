@@ -40,7 +40,7 @@ public class AODProfileClassContainer extends AODProfileBean{
 	
 	@Override
 	public String toString() {
-		String ret = "";
+		String ret = "=== CLASS CONTAINER ===\n";
 		for (AODProfileClass pc: possibleClasses){
 			ret+=pc.toString();
 		}
