@@ -88,10 +88,6 @@ public class AODProfileResponsability extends AODProfileBean{
 			}
 		}
 	}
-	@Override
-	public void processInnerBeans(Map<String, AODProfileBean> newMap) {
-		
-	}
 	
 	@Override
 	public String toString() {

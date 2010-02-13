@@ -25,7 +25,7 @@ public class AODProfileClassContainer extends AODProfileBean{
 			possibleClasses.add(aodProfileClass);
 	}
 	@Override
-	public void processInnerBeans(Map<String, AODProfileBean> map) {
+	public boolean processInnerBeans(Map<String, AODProfileBean> map) {
 		if (possibleClasses!=null){
 			for (AODProfileClass aodclass: possibleClasses){
 				if (!map.containsValue(aodclass)){
@@ -35,7 +35,9 @@ public class AODProfileClassContainer extends AODProfileBean{
 					aodclass.merge((AODProfileClass) map.get(aodclass.getId()));
 				}
 			}
+			return true;
 		}
+		return false;
 	}
 	
 	@Override

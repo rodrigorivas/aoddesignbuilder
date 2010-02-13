@@ -19,12 +19,6 @@ public class AODProfileAssociation extends AODProfileBean {
 	public void setTarget(AODProfileClass target) {
 		this.target = target;
 	}
-
-	@Override
-	public void processInnerBeans(Map<String, AODProfileBean> newMap) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	@Override
 	public boolean equals(Object obj) {

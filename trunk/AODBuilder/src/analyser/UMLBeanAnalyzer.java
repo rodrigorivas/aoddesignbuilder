@@ -66,13 +66,14 @@ public class UMLBeanAnalyzer {
 				AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(bean);
 			
 				if (aodBean!=null){
-					aodBean.processInnerBeans(aodProfileMap);
-					if (!aodProfileMap.containsKey(aodBean.getId())){
-						aodProfileMap.put(aodBean.getId(), aodBean);
-					}
-					else{
-						AODProfileBean oldBean = aodProfileMap.get(aodBean.getId());
-						oldBean.merge(aodBean);
+					if (!aodBean.processInnerBeans(aodProfileMap)){
+						if (!aodProfileMap.containsKey(aodBean.getId())){
+							aodProfileMap.put(aodBean.getId(), aodBean);
+						}
+						else{
+							AODProfileBean oldBean = aodProfileMap.get(aodBean.getId());
+							oldBean.merge(aodBean);
+						}
 					}
 				}
 			}

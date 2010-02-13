@@ -53,11 +53,7 @@ public class AODProfileAttribute extends AODProfileBean{
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
-	public void processInnerBeans(Map<String, AODProfileBean> newMap) {
-		// TODO Auto-generated method stub
-		
-	}
+
 	public static AODProfileAttribute createDefaultAttribute() {
 		AODProfileAttribute attr = new AODProfileAttribute();
 		attr.setName("");
