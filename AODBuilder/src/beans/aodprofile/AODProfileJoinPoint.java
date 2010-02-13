@@ -21,11 +21,6 @@ public abstract class AODProfileJoinPoint extends AODProfileBean{
 	
 	}
 
-	@Override
-	public void processInnerBeans(Map<String, AODProfileBean> newMap) {
-		
-	}
-
 	public boolean applies(AODProfileBean source, AODProfilePointcut aodAssoc) {
 		return true;
 	}
