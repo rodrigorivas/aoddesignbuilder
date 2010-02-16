@@ -1,6 +1,5 @@
 package beans.aodprofile;
 
-import util.UniqueID;
 
 
 
@@ -13,7 +12,7 @@ public class AODProfileAdvice extends AODProfileResponsability {
 	private String targetMethodName;
 	
 	public AODProfileAdvice() {
-		setId(UniqueID.generateUniqueID());
+		super();
 	}
 	public String getJoinPointType() {
 		return joinPointType;
@@ -66,4 +65,9 @@ public class AODProfileAdvice extends AODProfileResponsability {
 		return ret;
 	}
 
+	@Override
+	public void setId(String id) {
+		// TODO Auto-generated method stub
+		super.setId(id);
+	}
 }
