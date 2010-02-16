@@ -95,6 +95,7 @@ public class AdviceDetector {
 						}
 					}	
 					advice.setTargetMethodName(DataFormatter.javanize(word.getWord(),false));
+					advice.setName(advice.getTargetMethodName());
 					logger.info("Refining advice: "+advice);
 				}	
 			}
