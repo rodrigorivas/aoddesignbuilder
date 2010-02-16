@@ -13,10 +13,8 @@ package interfazaod.perspectives;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.console.IConsoleConstants;
-import org.eclipse.jdt.ui.JavaUI;
 
-import com.cea.papyrus.core.*;
+import com.cea.papyrus.core.IPapyrusUIConstants;
 import com.cea.papyrus.core.ui.wizards.CreateModelFromFileWizard;
 import com.cea.papyrus.core.ui.wizards.CreateModelLibraryWizard;
 import com.cea.papyrus.core.ui.wizards.CreateModelWizard;
