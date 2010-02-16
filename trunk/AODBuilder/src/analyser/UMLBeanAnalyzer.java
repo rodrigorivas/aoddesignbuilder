@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import main.AODBuilderRunner;
+
 import org.apache.log4j.Logger;
 
 import util.Log4jConfigurator;
-import util.ProcessingProgress;
-
 import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLAssociation;
 import beans.uml.UMLBean;
@@ -16,6 +16,7 @@ import factories.aodprofile.AODProfileFactory;
 
 public class UMLBeanAnalyzer {
 	
+	private static final int DEFAULT_PROGRESS = 5;
 	private static UMLBeanAnalyzer instance;
 	private Map<String, AODProfileBean> aodProfileMap;
 	
@@ -39,6 +40,7 @@ public class UMLBeanAnalyzer {
 
 	
 	public Map<String, AODProfileBean> process(Map<String, UMLBean> map) throws Exception{
+		AODBuilderRunner runner = AODBuilderRunner.getInstance();
 		Logger logger = Log4jConfigurator.getLogger();
 		logger.info("Starting UMLBeanAnalizer processing...");
 
@@ -46,11 +48,11 @@ public class UMLBeanAnalyzer {
 		Map<String, UMLAssociation> associations = new HashMap<String, UMLAssociation>();
 		
 		//calcule progress of processing according to list size to process
-		double incProgress = 0.0;
+		double incProgress = 1.0;
 		if (map!=null && map.values().size()>0)
-			incProgress = 70.0/map.values().size();	
+			incProgress = 80.0/map.values().size();	
 		double actualProgess = 0.0;
-
+		
 		for (Entry<String, UMLBean> entry: map.entrySet()){
 			
 			UMLBean bean = entry.getValue();			
@@ -78,21 +80,15 @@ public class UMLBeanAnalyzer {
 				}
 			}
 			
-			//every 5% we inform the progress
-			actualProgess+=incProgress;
-			if (actualProgess>=5){
-				ProcessingProgress.getInstance().incrementProgress(5);				
-				actualProgess = 0.0;
-			}
+			setProgress(runner, incProgress, actualProgess);
 		}
 		
-		ProcessingProgress.getInstance().incrementProgress(5);				
 		logger.info("Starting Association Processing");
 
 		//calcule progress of processing according to list size to process
-		incProgress = 0.0;
+		incProgress = 1.0;
 		if (associations.values()!=null && associations.values().size()>0)
-			incProgress = 20.0/associations.values().size();	
+			incProgress = 15.0/associations.values().size();	
 		actualProgess = 0.0;
 
 		//process the associations
@@ -101,18 +97,25 @@ public class UMLBeanAnalyzer {
 			if (aodBean!=null){		
 				if (!aodProfileMap.containsKey(aodBean.getId()))
 					aodProfileMap.put(aodBean.getId(), aodBean);
-			}			
-			//every 5% we inform the progress
-			actualProgess+=incProgress;
-			if (actualProgess>=5){
-				ProcessingProgress.getInstance().incrementProgress(5);				
-				actualProgess = 0.0;
-			}
+			}		
+			setProgress(runner, incProgress, actualProgess);
 		}
 		
 		logger.info("UMLBean Analizer ended.");
 		
 		return aodProfileMap;		
+	}
+
+	private void setProgress(AODBuilderRunner runner, double incProgress,
+			double actualProgess) {
+		if (runner!=null){
+			//every <DEFAULT_PROGRESS>% we inform the progress
+			actualProgess+=incProgress;
+			if (actualProgess>=DEFAULT_PROGRESS){
+				runner.incrementProgress(DEFAULT_PROGRESS);
+				actualProgess -= DEFAULT_PROGRESS;
+			}
+		}
 	}
 
 }
