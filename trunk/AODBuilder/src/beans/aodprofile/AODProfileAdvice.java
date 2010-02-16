@@ -65,9 +65,4 @@ public class AODProfileAdvice extends AODProfileResponsability {
 		return ret;
 	}
 
-	@Override
-	public void setId(String id) {
-		// TODO Auto-generated method stub
-		super.setId(id);
-	}
 }
