@@ -90,7 +90,7 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 	
 				aodAssoc.setTarget((AODProfileClass) targetFromList);
 //				aodAssoc.setId(umlAssoc.getId());
-				aodAssoc.setName("->"+DataFormatter.javanize(targetFromList.getName(), true));
+				aodAssoc.setName(source.getName()+"->"+DataFormatter.javanize(targetFromList.getName(), true));
 			
 				if (!source.getPossibleAssociations().contains(aodAssoc))
 					source.addAssociation(aodAssoc);
