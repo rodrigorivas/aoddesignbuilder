@@ -7,6 +7,13 @@ Bundle-Activator: interfazaod.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.console,
- org.eclipse.jdt.ui
+ org.eclipse.jdt.ui,
+ com.cea.papyrus.core;bundle-version="1.11.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: lib/AODBuilder.jar,
+ lib/log4j-1.2.8.jar,
+ lib/stanford-parser.jar,
+ resources/,
+ bin/,
+ lib/aspectjtools-1.5.3.jar
