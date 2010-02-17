@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import util.Inflector;
-
 import analyser.SentenceAnalizer;
 import beans.nlp.NLPDependencyWord;
 
@@ -68,7 +66,8 @@ public class AODProfileClass extends AODProfileBean {
 		this.possibleAssociations = possibleAssociations;
 	}
 	public void addAssociation(AODProfileAssociation assoc){
-		this.possibleAssociations.add(assoc);		
+		if (possibleAssociations!=null && !possibleAssociations.contains(assoc))
+			this.possibleAssociations.add(assoc);		
 	}
 
 	@Override

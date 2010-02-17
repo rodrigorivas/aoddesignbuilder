@@ -93,5 +93,16 @@ public class AODProfileComplexJoinPoint extends AODProfileJoinPoint {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof AODProfileComplexJoinPoint){
+			AODProfileComplexJoinPoint cjp = (AODProfileComplexJoinPoint) obj;
+			if (this.getType().equals(cjp.getType()) && this.getResponsability().equals(cjp.getResponsability()))
+				return true;
+		}
+		return false;
+	}
+
 
 }

@@ -69,4 +69,35 @@ public class AODProfilePointcut extends AODProfileAssociation{
 
 		return name+": "+joinpointsStr+";\n"+advicesStr;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof AODProfilePointcut){
+			AODProfilePointcut pct = (AODProfilePointcut) obj;
+			boolean equalTarget = false;
+			boolean equalJP = true;
+			boolean equalAdv = true;
+			if (this.getTarget()!=null && pct.getTarget()!=null && this.getTarget().equals(pct.getTarget()))
+				equalTarget = true;
+			if (this.getAdvices().size()!=pct.getAdvices().size())
+				equalAdv = false;
+			else{
+				for (AODProfileAdvice adv: this.getAdvices()){
+					if (!pct.getAdvices().contains(adv))
+						equalAdv = false;
+				}
+			}
+			if (this.getJoinPoints().size()!=pct.getJoinPoints().size())
+				equalJP = false;
+			else{
+				for (AODProfileJoinPoint jp: this.getJoinPoints()){
+					if (!pct.getJoinPoints().contains(jp))
+						equalJP = false;
+				}
+			}
+			
+			return equalAdv&&equalJP&&equalTarget;
+		}
+		return false;
+	}
 }

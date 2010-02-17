@@ -13,16 +13,16 @@ public class AODProfileAdviceBuilder{
 		if (AODProfileJoinPointBuilder.isknownJoinPoint(param)){
 			newAdvice = buildDefault();
 			if ("before".equalsIgnoreCase(word)){
-				newAdvice.setType(AODProfileAdvice.advice_type.BEFORE);
+				newAdvice.setType(AODProfileAdvice.advice_type.before);
 			}
 			else if ("after".equalsIgnoreCase(word)){
-				newAdvice.setType(AODProfileAdvice.advice_type.AFTER);
+				newAdvice.setType(AODProfileAdvice.advice_type.after);
 			}
 			else if ("around".equalsIgnoreCase(word) || 
 					"on".equalsIgnoreCase(word) || 
 					"in".equalsIgnoreCase(word) || 
 					"at".equalsIgnoreCase(word)){
-				newAdvice.setType(AODProfileAdvice.advice_type.AROUND);
+				newAdvice.setType(AODProfileAdvice.advice_type.around);
 				word = "around";
 			}
 			else{
@@ -42,7 +42,7 @@ public class AODProfileAdviceBuilder{
 		Log4jConfigurator.getLogger().info("Building default advice.");
 		AODProfileAdvice advice = new AODProfileAdvice();
 		/* set default values */
-		advice.setType(advice_type.AROUND);
+		advice.setType(advice_type.around);
 		advice.setJoinPointType("call");
 		/* regular expresion to match any name */
 		advice.setTargetMethodName(AODProfileBean.ANY_MATCH);

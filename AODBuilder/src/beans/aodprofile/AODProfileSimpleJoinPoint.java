@@ -68,5 +68,14 @@ public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 		return null;		
 	}
 
-	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof AODProfileSimpleJoinPoint){
+			AODProfileSimpleJoinPoint sjp = (AODProfileSimpleJoinPoint) obj;
+			if (this.getType().equals(sjp.getType()) && this.getParam().equals(sjp.getParam()))
+				return true;
+		}
+		return false;
+	}
+
 }
