@@ -105,29 +105,23 @@ public class ProposedSolution extends javax.swing.JFrame {
 					jPanelLeft = new JPanel();
 					jPanelLeft.setLayout(null);
 					jPanelTop.add(jPanelLeft, BorderLayout.WEST);
-					jPanelLeft.setPreferredSize(new java.awt.Dimension(298, 323));
-					{
-						jClasses = new JList();
-//						sClasses.setViewportView(jClasses);
-						ListModel jClassesModel = new DefaultComboBoxModel();
-						jClasses.setModel(jClassesModel);
-						jClasses.setCellRenderer(new ClassCellRenderer());
-						jClasses.setBounds(0, 0, 233, 269);
-						jClasses.setPreferredSize(new java.awt.Dimension(233, 237));
-						jClasses.setListData(aodClasses);
+                    jPanelLeft.setPreferredSize(new java.awt.Dimension(298, 323));
+                    {
+                         ListModel jClassesModel =
+                            new DefaultComboBoxModel(aodClasses);
+                        jClasses = new JList();
+                        jClasses.setModel(jClassesModel);
+                        jClasses.setCellRenderer(new ClassCellRenderer());
+                        jClasses.setBounds(55, 54, 233, 269);
+                        jClasses.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 						jClasses.setSelectionBackground(new java.awt.Color(128,255,128));
 						jClasses.setSelectionForeground(new java.awt.Color(0,0,255));
-//						jClasses.setVisibleRowCount(100);
-						jClasses.addMouseListener(new MouseAdapter() {
-							public void mouseClicked(MouseEvent evt) {
-								jClassesMouseClicked(evt);
-							}
-						});
-						sClasses = new JScrollPane(jClasses);
-						sClasses.setBounds(55, 25, 233, 237);
-						sClasses.setAutoscrolls(true);
-						jPanelLeft.add(sClasses,new GridBagConstraints (3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,GridBagConstraints.NONE ,new Insets(0,0,0,0),0,0));
-					}
+                        sClasses = new JScrollPane();
+                        sClasses.getViewport().setView(jClasses);
+                        sClasses.setBounds(14, 31, 252, 231);
+                        jPanelLeft.add(sClasses,new GridBagConstraints (3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,GridBagConstraints.NONE ,new Insets(0,0,0,0),0,0));
+
+                    }
 					{
 						jLabel2 = new JLabel();
 						jPanelLeft.add(jLabel2);
@@ -168,9 +162,8 @@ public class ProposedSolution extends javax.swing.JFrame {
 							sAttributes = new JScrollPane();
 							jPanelTR.add(sAttributes, new GridBagConstraints(0, 1, 3, 3, 0.0, 0.0, GridBagConstraints.SOUTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 							sAttributes.getViewport().setView(jAttributes);
-							sAttributes.setBounds(0, 25, 240, 102);
+							sAttributes.setBounds(0, 25, 238, 101);
 							jPanelTR.add(sAttributes,new GridBagConstraints (3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,GridBagConstraints.NONE ,new Insets(0,0,0,0),0,0));
-							sAttributes.setSize(238, 109);
 
 						}
 					}
