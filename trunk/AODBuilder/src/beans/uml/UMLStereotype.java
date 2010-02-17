@@ -2,7 +2,6 @@ package beans.uml;
 
 import java.util.Map;
 
-import util.ExceptionUtil;
 import util.Log4jConfigurator;
 
 public class UMLStereotype extends UMLBean {
