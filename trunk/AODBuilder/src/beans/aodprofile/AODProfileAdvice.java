@@ -4,7 +4,7 @@ package beans.aodprofile;
 
 
 public class AODProfileAdvice extends AODProfileResponsability {
-	public enum advice_type {AFTER, BEFORE, AROUND};
+	public enum advice_type {after, before, around};
 
 	private advice_type type;
 	private String joinPointType;
@@ -60,9 +60,31 @@ public class AODProfileAdvice extends AODProfileResponsability {
 		if (targetMethodName!=null)
 			target += targetMethodName;
 		
-		String ret = "advice " + name + " "+joinPointType + " "+ target.replaceAll("[.]", "");
+		String ret = "advice " + type + " "+joinPointType + " "+ target.replaceAll("[.]", "");
 		
 		return ret;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof AODProfileAdvice){
+			AODProfileAdvice adv = (AODProfileAdvice) obj;
+			boolean equalsType=false;
+			boolean equalsJoinpointType=false;
+			boolean equalsTargetClassName=false;
+			boolean equalsTargetMethodName=false;
+			if (this.getType().equals(adv.getType()))
+				equalsType = true;
+			if (this.getJoinPointType().equals(adv.getJoinPointType()))
+				equalsJoinpointType = true;
+			if ((this.getTargetMethodName()==null && adv.getTargetMethodName()==null) || this.getTargetMethodName().equals(adv.getTargetMethodName()))
+				equalsTargetMethodName = true;
+			if ((this.getTargetClassName()==null && adv.getTargetClassName()==null) ||this.getTargetClassName().equals(adv.getTargetClassName()))
+				equalsTargetClassName = true;
+			
+			return equalsType&&equalsJoinpointType&&equalsTargetClassName&&equalsTargetMethodName;
+		}
+		return false;
 	}
 
 }

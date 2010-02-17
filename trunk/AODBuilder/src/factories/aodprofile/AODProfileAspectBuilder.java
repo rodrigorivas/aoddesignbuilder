@@ -119,13 +119,12 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 				}
 				
 				for (AODProfileAdvice advice: source.getUnassociatedAdvices()){
-					if (advice.applies(aodAssoc)){
+					if (advice.applies(aodAssoc) && !aodAssoc.getAdvices().contains(advice)){
 						aodAssoc.addAdvice(advice);
 					}
 				}
 			
-				if (!source.getPossibleAssociations().contains(aodAssoc))
-					source.addAssociation(aodAssoc);
+				source.addAssociation(aodAssoc);
 
 				logger.info("Target found: "+targetFromList);
 			}			

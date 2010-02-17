@@ -1,7 +1,5 @@
 package beans.aodprofile;
 
-import java.util.Map;
-
 import util.UniqueID;
 
 public class AODProfileAssociation extends AODProfileBean {

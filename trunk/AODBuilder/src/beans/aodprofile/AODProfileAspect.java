@@ -79,7 +79,7 @@ public class AODProfileAspect extends AODProfileClass {
 	@Override
 	public void addAssociation(AODProfileAssociation assoc) {
 		if (assoc instanceof AODProfilePointcut){
-			if (possibleAssociations!=null)
+			if (possiblePointcuts!=null && !possiblePointcuts.contains(assoc))
 				possiblePointcuts.add((AODProfilePointcut) assoc);
 		}
 		else{

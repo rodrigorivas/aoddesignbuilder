@@ -3,6 +3,7 @@ package beans.aodprofile;
 import java.util.Map;
 
 
+@SuppressWarnings("unchecked")
 public abstract class AODProfileBean implements Comparable{
 	String id;
 	String name;

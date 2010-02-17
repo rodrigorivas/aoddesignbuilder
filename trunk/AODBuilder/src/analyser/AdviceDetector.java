@@ -40,14 +40,14 @@ public class AdviceDetector {
 					AODProfileAdvice newAdvice = (new AODProfileAdviceBuilder()).build(dr.getDepDW().getWord(),dr.getGovDW().getWord());
 					if (newAdvice!=null){
 						if ("before".equalsIgnoreCase(dr.getDepDW().getWord()))
-							newAdvice.setType(AODProfileAdvice.advice_type.BEFORE);
+							newAdvice.setType(AODProfileAdvice.advice_type.before);
 						else if ("after".equalsIgnoreCase(dr.getDepDW().getWord()))
-							newAdvice.setType(AODProfileAdvice.advice_type.AFTER);
+							newAdvice.setType(AODProfileAdvice.advice_type.after);
 						else if ("around".equalsIgnoreCase(dr.getDepDW().getWord()) ||
 								"on".equalsIgnoreCase(dr.getDepDW().getWord()) ||
 								"in".equalsIgnoreCase(dr.getDepDW().getWord()) ||
 								"at".equalsIgnoreCase(dr.getDepDW().getWord()))
-							newAdvice.setType(AODProfileAdvice.advice_type.AROUND);
+							newAdvice.setType(AODProfileAdvice.advice_type.around);
 						else
 							break;
 						if (!advices.contains(newAdvice)){

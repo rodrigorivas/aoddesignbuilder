@@ -1,7 +1,6 @@
 package beans.aodprofile;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class AODProfileAssociationContainer extends AODProfileBean {
 

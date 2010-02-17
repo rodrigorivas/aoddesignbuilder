@@ -1,6 +1,5 @@
 package beans.aodprofile;
 
-import java.util.Map;
 
 
 public abstract class AODProfileJoinPoint extends AODProfileBean{
