@@ -4,11 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import main.AODBuilderRunner;
-
 import org.apache.log4j.Logger;
 
 import util.Log4jConfigurator;
+import util.ProgressHandler;
 import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLAssociation;
 import beans.uml.UMLBean;
@@ -40,7 +39,6 @@ public class UMLBeanAnalyzer {
 
 	
 	public Map<String, AODProfileBean> process(Map<String, UMLBean> map) throws Exception{
-		AODBuilderRunner runner = AODBuilderRunner.getInstance();
 		Logger logger = Log4jConfigurator.getLogger();
 		logger.info("Starting UMLBeanAnalizer processing...");
 
@@ -55,6 +53,8 @@ public class UMLBeanAnalyzer {
 		
 		for (Entry<String, UMLBean> entry: map.entrySet()){
 			
+			actualProgess = setProgress(incProgress, actualProgess);
+
 			UMLBean bean = entry.getValue();			
 			
 			//associations are processed at the end
@@ -80,7 +80,6 @@ public class UMLBeanAnalyzer {
 				}
 			}
 			
-			setProgress(runner, incProgress, actualProgess);
 		}
 		
 		logger.info("Starting Association Processing");
@@ -98,7 +97,7 @@ public class UMLBeanAnalyzer {
 				if (!aodProfileMap.containsKey(aodBean.getId()))
 					aodProfileMap.put(aodBean.getId(), aodBean);
 			}		
-			setProgress(runner, incProgress, actualProgess);
+			actualProgess = setProgress(incProgress, actualProgess);
 		}
 		
 		logger.info("UMLBean Analizer ended.");
@@ -106,16 +105,15 @@ public class UMLBeanAnalyzer {
 		return aodProfileMap;		
 	}
 
-	private void setProgress(AODBuilderRunner runner, double incProgress,
+	private double setProgress(double incProgress,
 			double actualProgess) {
-		if (runner!=null){
-			//every <DEFAULT_PROGRESS>% we inform the progress
-			actualProgess+=incProgress;
-			if (actualProgess>=DEFAULT_PROGRESS){
-				runner.incrementProgress(DEFAULT_PROGRESS);
-				actualProgess -= DEFAULT_PROGRESS;
-			}
+		//every <DEFAULT_PROGRESS>% we inform the progress
+		actualProgess+=incProgress;
+		if (actualProgess>=DEFAULT_PROGRESS){
+			ProgressHandler.getInstance().incrementProgress(DEFAULT_PROGRESS);
+			actualProgess -= DEFAULT_PROGRESS;
 		}
+		return actualProgess;
 	}
 
 }

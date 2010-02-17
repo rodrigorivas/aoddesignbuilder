@@ -3,18 +3,30 @@ package main;
 
 
 import java.awt.Toolkit;
-import java.io.IOException;
 
 import javax.swing.SwingWorker;
+
+import org.apache.log4j.Logger;
+
+import util.ExceptionUtil;
+import util.Log4jConfigurator;
 
 
 public class AODBuilderRunner extends SwingWorker<Void, Void> {
     private int increment=1;
     private String fileName;
-    
+    private Logger logger;
     private static AODBuilderRunner instance;
     
     private AODBuilderRunner(String fileName) {
+		try {
+			Log4jConfigurator.getLog4JProperties();
+		} catch (Exception e) {
+			System.out.println("Error loading log4j file: ");
+			e.printStackTrace();
+		}
+		logger = Log4jConfigurator.getLogger();	
+
     	this.fileName = fileName;
     }
     
@@ -40,14 +52,11 @@ public class AODBuilderRunner extends SwingWorker<Void, Void> {
         setProgress(0);
         try {
 			AODBuilder.getInstance().process(fileName);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(ExceptionUtil.getTrace(e));
 		}
-    	setProgress(100);
+		if (!isCancelled())
+			setProgress(100);
 
     	return null;
     }
@@ -78,7 +87,6 @@ public class AODBuilderRunner extends SwingWorker<Void, Void> {
 	public void setIncrement(int increment) {
 		this.increment = increment;
 	}
-
 	
 }
 
