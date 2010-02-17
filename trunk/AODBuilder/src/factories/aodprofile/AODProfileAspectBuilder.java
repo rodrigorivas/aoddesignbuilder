@@ -110,7 +110,7 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 	
 				aodAssoc.setTarget((AODProfileClass) targetFromList);
 //				aodAssoc.setId(umlAssoc.getId());
-				aodAssoc.setName("->"+DataFormatter.javanize(targetFromList.getName(), true));
+				aodAssoc.setName(source.getName()+"->"+DataFormatter.javanize(targetFromList.getName(), true));
 		
 				aodAssoc.addJoinPoint((new AODProfileJoinPointBuilder()).build("target", targetFromList.getName()));
 				for (AODProfileJoinPoint joinPoint: source.getUnassociatedJoinPoint()){
