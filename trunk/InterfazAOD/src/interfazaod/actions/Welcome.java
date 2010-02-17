@@ -1,22 +1,26 @@
 package interfazaod.actions;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.FlowLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-
 import javax.swing.WindowConstants;
-import javax.swing.SwingUtilities;
+
+import org.apache.log4j.Logger;
+
+import util.ExceptionUtil;
+import util.Log4jConfigurator;
+
+
 
 
 
@@ -56,6 +60,8 @@ public class Welcome extends javax.swing.JFrame {
 	private FileSelector fileSelector;
 	private static Welcome welcome;
 	
+	Logger logger;
+
 	public static Welcome getInstance() {
 		if (welcome==null)
 			welcome = new Welcome();
@@ -64,14 +70,22 @@ public class Welcome extends javax.swing.JFrame {
 	
 	protected Welcome() {
 		super();
+		try {
+			Log4jConfigurator.getLog4JProperties();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		logger = Log4jConfigurator.getLogger();
 		initGUI();
 	}
 	
 	private void initGUI() {
 		try {
+			logger.info("Init Welcome GUI...");
+			
 			this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			this.setTitle("AOD Builder");
-			this.setDefaultLookAndFeelDecorated(true);
+			JFrame.setDefaultLookAndFeelDecorated(true);
 			this.setResizable(false);
 			{
 				jPanelTop = new JPanel();
@@ -139,16 +153,18 @@ public class Welcome extends javax.swing.JFrame {
 			setLocationRelativeTo(null);
 			setVisible(true);
 
+			logger.info("Welcome initGUI ended.");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(ExceptionUtil.getTrace(e));
 		}
 	}
 	
 	private void jButtonExitMouseClicked(MouseEvent evt) {
 		Integer value = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Confirm exit", JOptionPane.YES_NO_OPTION);
 		if (value == JOptionPane.OK_OPTION) {
+			logger.info("Exiting program.");
 			this.dispose();
-			System.exit(NORMAL);
+//			System.exit(NORMAL);
 		}
 	}
 	

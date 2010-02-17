@@ -1,10 +1,14 @@
 package interfazaod.actions;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.Map;
+
 import javax.swing.BorderFactory;
 
 import javax.swing.DefaultComboBoxModel;
@@ -21,6 +25,11 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
+
+import beans.aodprofile.AODProfileBean;
+import beans.aodprofile.AODProfileClass;
+import main.AODBuilder;
+
 
 /**
 * This code was edited or generated using CloudGarden's Jigloo
@@ -60,17 +69,25 @@ public class ProposedSolution extends javax.swing.JFrame {
 	private JScrollPane sClasses, sAttributes, sResponsibilities;
 	private FileSelector fileSelector;
 	private CheckListManager cMClasses, cMAttributes, cMResponsibilities;
+	Object[] aodClasses;
+	
 	private static ProposedSolution proposedSolution;
 
-	public static ProposedSolution getInstance() {
+	public static ProposedSolution getInstance(Object[] values) {
 		if (proposedSolution==null) {
-			proposedSolution = new ProposedSolution();
+			proposedSolution = new ProposedSolution(values);
 		}
 		return proposedSolution;
 	}
 	
-	protected ProposedSolution() {
+	public static ProposedSolution getInstance() {
+		return proposedSolution;
+	}
+
+	
+	protected ProposedSolution(Object[] values) {
 		super();
+		setAodClasses(values);
 		initGUI();
 	}
 	
@@ -90,24 +107,26 @@ public class ProposedSolution extends javax.swing.JFrame {
 					jPanelTop.add(jPanelLeft, BorderLayout.WEST);
 					jPanelLeft.setPreferredSize(new java.awt.Dimension(298, 323));
 					{
-						//En esta parte del modelo habría que cambiar el String que
-						//se presenta acá por el contenido de nuestro listado de clases
-						sClasses = new JScrollPane();
-						sClasses.getViewport().setView(jClasses);
+						jClasses = new JList();
+//						sClasses.setViewportView(jClasses);
+						ListModel jClassesModel = new DefaultComboBoxModel();
+						jClasses.setModel(jClassesModel);
+						jClasses.setCellRenderer(new ClassCellRenderer());
+						jClasses.setBounds(0, 0, 233, 269);
+						jClasses.setPreferredSize(new java.awt.Dimension(233, 237));
+						jClasses.setListData(aodClasses);
+						jClasses.setSelectionBackground(new java.awt.Color(128,255,128));
+						jClasses.setSelectionForeground(new java.awt.Color(0,0,255));
+//						jClasses.setVisibleRowCount(100);
+						jClasses.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jClassesMouseClicked(evt);
+							}
+						});
+						sClasses = new JScrollPane(jClasses);
 						sClasses.setBounds(55, 25, 233, 237);
+						sClasses.setAutoscrolls(true);
 						jPanelLeft.add(sClasses,new GridBagConstraints (3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,GridBagConstraints.NONE ,new Insets(0,0,0,0),0,0));
-						{
-							jClasses = new JList();
-							sClasses.setViewportView(jClasses);
-							ListModel jClassesModel = 
-								new DefaultComboBoxModel(
-										new String[] { "1", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"
-												, "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"});
-							jClasses.setModel(jClassesModel);
-							jClasses.setBounds(0, 0, 233, 269);
-							jClasses.setPreferredSize(new java.awt.Dimension(233, 237));
-						}
-						
 					}
 					{
 						jLabel2 = new JLabel();
@@ -141,8 +160,7 @@ public class ProposedSolution extends javax.swing.JFrame {
 							jAttributes = new JList();
 							jPanelTR.add(jAttributes);
 							ListModel jAttributesModel = 
-								new DefaultComboBoxModel(
-										new String[] { "1", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"});
+								new DefaultComboBoxModel();
 							jAttributes.setModel(jAttributesModel);
 							jAttributes.setBounds(0, 25, 238, 102);
 						}
@@ -166,8 +184,7 @@ public class ProposedSolution extends javax.swing.JFrame {
 							jResponsibilities = new JList();
 							jPanelBR.add(jResponsibilities);
 							ListModel jResponsibilitiesModel = 
-								new DefaultComboBoxModel(
-										new String[] { "1", "2", "2", "2", "2"});
+								new DefaultComboBoxModel();
 							jResponsibilities.setModel(jResponsibilitiesModel);
 							jResponsibilities.setBounds(0, 15, 238, 110);
 						}
@@ -235,7 +252,7 @@ public class ProposedSolution extends javax.swing.JFrame {
 	private void jNextMouseClicked(MouseEvent evt) {
 			Integer value = JOptionPane.showConfirmDialog(null, "Are you sure you want to generate this .uml?", "Confirm UML generation", JOptionPane.YES_NO_OPTION);
 			if (value == JOptionPane.OK_OPTION) {
-				//Acá generar todo el UML
+				//exportar valores
 			}
 		}
 	
@@ -303,6 +320,23 @@ public class ProposedSolution extends javax.swing.JFrame {
 			jLabel5.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/Settings.png")));
 		}
 		return jLabel5;
+	}
+
+	public Object[] getAodClasses() {
+		return aodClasses;
+	}
+
+	public void setAodClasses(Object[] aodClasses) {
+		this.aodClasses = aodClasses;
+	}
+	
+	private void jClassesMouseClicked(MouseEvent evt) {
+		jClasses.repaint();
+		AODProfileClass cl = (AODProfileClass) jClasses.getSelectedValue();
+		jAttributes.setListData(cl.getAttributes().toArray());
+		jResponsibilities.setListData(cl.getResponsabilities().toArray());
+		jAttributes.repaint();
+		jResponsibilities.repaint();
 	}
 
 }

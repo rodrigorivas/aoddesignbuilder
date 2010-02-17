@@ -1,4 +1,5 @@
 package interfazaod.actions;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -13,6 +14,8 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import beans.aodprofile.AODProfileBean;
 
 
 public class CheckListManager extends MouseAdapter implements ListSelectionListener, ActionListener{ 
@@ -36,10 +39,15 @@ public class CheckListManager extends MouseAdapter implements ListSelectionListe
         if(index<0) 
             return; 
  
-        if(selectionModel.isSelectedIndex(index)) 
-            selectionModel.removeSelectionInterval(index, index); 
-        else 
-            selectionModel.addSelectionInterval(index, index); 
+       AODProfileBean bean = (AODProfileBean) list.getSelectedValue();
+       if(selectionModel.isSelectedIndex(index)) {
+            selectionModel.removeSelectionInterval(index, index);
+            bean.setSelected(false);
+        }
+        else{ 
+            selectionModel.addSelectionInterval(index, index);
+            bean.setSelected(true);
+        }
     } 
  
     /*------------------------------[ MouseListener ]-------------------------------------*/ 
@@ -64,4 +72,5 @@ public class CheckListManager extends MouseAdapter implements ListSelectionListe
     public void actionPerformed(ActionEvent e){ 
         toggleSelection(list.getSelectedIndex()); 
     } 
+    
 } 
