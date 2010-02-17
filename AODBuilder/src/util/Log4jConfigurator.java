@@ -6,9 +6,14 @@ import org.apache.log4j.PropertyConfigurator;
 import constants.FileConstants;
 
 public class Log4jConfigurator {
+	
+	private static boolean configured=false;
 
 	public static void getLog4JProperties() throws Exception {
-		PropertyConfigurator.configure(ResourceLoader.loadProperties("AODLog4j"));
+		if (!configured){
+			PropertyConfigurator.configure(ResourceLoader.loadProperties("AODLog4j"));
+			configured = true;
+		}
 	}
 
 	public static Logger getLogger(String loggerName) {

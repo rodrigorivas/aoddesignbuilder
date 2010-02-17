@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import main.AODBuilderRunner;
-
 import org.apache.log4j.Logger;
 
 import util.Log4jConfigurator;
+import util.ProgressHandler;
 import beans.aodprofile.AODProfileBean;
 import beans.uml.UMLBean;
 import beans.uml.UMLGenericBean;
@@ -63,7 +62,6 @@ public class GenericBeanAnalyzer {
 	 */
 	public Map<String, AODProfileBean> process(List<UMLGenericBean> list) throws Exception{
 		Logger logger = Log4jConfigurator.getLogger();
-		AODBuilderRunner runner = AODBuilderRunner.getInstance();
 		logger.info("Starting GenericBeanAnalizer processing...");
 				
 		HashMap<String, UMLBean> umlMapFirstPass = new HashMap<String, UMLBean>();
@@ -76,9 +74,8 @@ public class GenericBeanAnalyzer {
 			}
 		}		
 		
-		//set task progress
-		if (runner!=null)
-			runner.incrementProgress(5);
+		//inform process progress
+		ProgressHandler.getInstance().incrementProgress(5);
 
 		umlBeanMap = new HashMap<String, UMLBean>();
 		//second pass: associate umlBean with each other
