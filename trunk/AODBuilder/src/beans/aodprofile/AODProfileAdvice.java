@@ -13,6 +13,21 @@ public class AODProfileAdvice extends AODProfileResponsability {
 	
 	public AODProfileAdvice() {
 		super();
+		setName("ADV_"+getId());
+	}
+	public AODProfileAdvice(AODProfileAdvice advice) {
+		super();
+		setName("ADV_"+getId());
+		if (advice!=null){
+			this.type = advice.getType();
+			this.joinPointType = advice.getJoinPointType();
+			this.targetClassName = advice.getTargetClassName();
+			this.targetMethodName = advice.getTargetMethodName();
+			this.returningType = advice.getReturningType();
+			for (AODProfileAttribute param: advice.parameters){
+				this.parameters.add(param);
+			}
+		}
 	}
 	public String getJoinPointType() {
 		return joinPointType;
