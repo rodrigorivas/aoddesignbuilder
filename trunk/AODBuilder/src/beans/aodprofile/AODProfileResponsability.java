@@ -9,13 +9,13 @@ import util.UniqueID;
 
 public class AODProfileResponsability extends AODProfileBean{
 
-	String returningType;
-	List<AODProfileAttribute> parameters = new ArrayList<AODProfileAttribute>();
-	boolean selected;
+	protected String returningType;
+	protected List<AODProfileAttribute> parameters = new ArrayList<AODProfileAttribute>();
+	protected boolean selected;
 	
 	public AODProfileResponsability() {
-		setName("");
 		setId(UniqueID.generateUniqueID());
+		setName("RESP_"+getId());
 		setReturningType(ANY_MATCH);
 	}
 	

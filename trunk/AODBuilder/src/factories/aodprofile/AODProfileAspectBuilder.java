@@ -120,7 +120,7 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 				
 				for (AODProfileAdvice advice: source.getUnassociatedAdvices()){
 					if (advice.applies(aodAssoc) && !aodAssoc.getAdvices().contains(advice)){
-						aodAssoc.addAdvice(advice);
+						aodAssoc.addAdvice(new AODProfileAdvice(advice));
 					}
 				}
 			
