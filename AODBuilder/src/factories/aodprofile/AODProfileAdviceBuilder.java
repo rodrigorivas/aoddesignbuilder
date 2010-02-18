@@ -49,6 +49,10 @@ public class AODProfileAdviceBuilder{
 		
 		Log4jConfigurator.getLogger().info("Build complete.");
 		return advice;
+	}
+
+	public AODProfileAdvice build(AODProfileAdvice advice) {
+		return new AODProfileAdvice(advice);
 	}	
 }
 

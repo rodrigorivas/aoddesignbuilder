@@ -115,12 +115,12 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 				aodAssoc.addJoinPoint((new AODProfileJoinPointBuilder()).build("target", targetFromList.getName()));
 				for (AODProfileJoinPoint joinPoint: source.getUnassociatedJoinPoint()){
 					if (joinPoint.applies(source, aodAssoc))
-						aodAssoc.addJoinPoint(joinPoint);
+						aodAssoc.addJoinPoint(new AODProfileJoinPointBuilder().build(joinPoint));
 				}
 				
 				for (AODProfileAdvice advice: source.getUnassociatedAdvices()){
 					if (advice.applies(aodAssoc) && !aodAssoc.getAdvices().contains(advice)){
-						aodAssoc.addAdvice(new AODProfileAdvice(advice));
+						aodAssoc.addAdvice(new AODProfileAdviceBuilder().build(advice));
 					}
 				}
 			

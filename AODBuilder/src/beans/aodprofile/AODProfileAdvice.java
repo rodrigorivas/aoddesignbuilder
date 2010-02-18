@@ -25,7 +25,7 @@ public class AODProfileAdvice extends AODProfileResponsability {
 			this.targetMethodName = advice.getTargetMethodName();
 			this.returningType = advice.getReturningType();
 			for (AODProfileAttribute param: advice.parameters){
-				this.parameters.add(param);
+				this.parameters.add(new AODProfileAttribute(param));
 			}
 		}
 	}

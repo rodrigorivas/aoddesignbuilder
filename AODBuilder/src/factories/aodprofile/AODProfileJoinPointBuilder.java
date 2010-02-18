@@ -33,7 +33,6 @@ public class AODProfileJoinPointBuilder{
 			}
 	
 			jp.setName(word);
-			jp.setId(jp.generateId());
 			jp.setType(word);
 		}		
 		
@@ -70,6 +69,17 @@ public class AODProfileJoinPointBuilder{
 				return true;
 		}
 		return false;
+	}
+
+	public AODProfileJoinPoint build(AODProfileJoinPoint joinPoint) {
+		AODProfileJoinPoint newJP = null;
+		if (joinPoint instanceof AODProfileSimpleJoinPoint){
+			newJP = new AODProfileSimpleJoinPoint((AODProfileSimpleJoinPoint) joinPoint);
+		}
+		else{
+			newJP = new AODProfileComplexJoinPoint((AODProfileComplexJoinPoint) joinPoint);
+		}
+		return newJP;
 	}	
 	
 }
