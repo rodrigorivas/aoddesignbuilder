@@ -10,11 +10,21 @@ public class AODProfileAttribute extends AODProfileBean{
 	boolean selected;
 	
 	public AODProfileAttribute() {
-		setName("");
 		setId(UniqueID.generateUniqueID());
+		setName("ATTR_"+getId());
 		setType(ANY_MATCH);
 	}
 	
+	public AODProfileAttribute(AODProfileAttribute param) {
+		setId(UniqueID.generateUniqueID());
+		setName("ATTR_"+getId());
+		if (param!=null){
+			this.type = param.getType();
+			this.value = param.getValue();
+			this.selected = param.isSelected();
+		}
+	}
+
 	public String getType() {
 		return type;
 	}

@@ -19,6 +19,16 @@ public class AODProfileResponsability extends AODProfileBean{
 		setReturningType(ANY_MATCH);
 	}
 	
+	public AODProfileResponsability(AODProfileResponsability responsability) {
+		setId(UniqueID.generateUniqueID());
+		this.name = responsability.getName();
+		this.returningType = responsability.getReturningType();
+		this.selected = responsability.isSelected();
+		for (AODProfileAttribute param: responsability.getParameters()){
+			this.addParameter(new AODProfileAttribute(param));
+		}
+	}
+
 	public String getReturningType() {
 		return returningType;
 	}

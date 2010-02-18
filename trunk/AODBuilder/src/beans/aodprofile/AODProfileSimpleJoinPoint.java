@@ -14,6 +14,14 @@ public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 		param = ANY_MATCH;
 		setId(UniqueID.generateUniqueID());
 	}
+	public AODProfileSimpleJoinPoint(AODProfileSimpleJoinPoint joinPoint) {
+		setId(UniqueID.generateUniqueID());
+		this.name = joinPoint.getName();
+		this.param = joinPoint.getParam();
+		this.selected = joinPoint.selected;
+		this.type = joinPoint.getType();
+	}
+	
 	public String getParam() {
 		return param;
 	}

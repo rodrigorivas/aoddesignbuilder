@@ -15,6 +15,14 @@ public class AODProfileComplexJoinPoint extends AODProfileJoinPoint {
 		setId(UniqueID.generateUniqueID());
 	}
 
+	public AODProfileComplexJoinPoint(AODProfileComplexJoinPoint joinPoint) {
+		setId(UniqueID.generateUniqueID());
+		this.name = joinPoint.getName();
+		this.selected = joinPoint.isSelected();
+		this.type = joinPoint.getType();
+		this.responsability = new AODProfileResponsability(joinPoint.getResponsability());
+	}
+
 	public AODProfileResponsability getResponsability() {
 		return responsability;
 	}
