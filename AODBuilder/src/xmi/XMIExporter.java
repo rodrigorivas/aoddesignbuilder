@@ -74,7 +74,7 @@ public class XMIExporter {
 		     
 		    java.io.File file = new java.io.File("aodDesign.uml");
 		    java.io.BufferedWriter writer = new java.io.BufferedWriter(new
-		    		java.io.FileWriter(file, true));
+		    		java.io.FileWriter(file));
 		    writer.write(sw.toString());
 		    writer.flush();
 		    writer.close();
@@ -205,9 +205,18 @@ public class XMIExporter {
 	     estereotipo.setAttribute("xmi:id", getId().toString()); 
 	     estereotipo.setAttribute("base_Association", aodProfileAssociation.getId()); 
 	     Iterator <AODProfileJoinPoint> joinPointIterator = ((AODProfilePointcut)aodProfileAssociation).getJoinPoints().iterator();
-	     while (joinPointIterator.hasNext()) {
-	    	 // Ver cómo se guardaría esto!
-	    	 joinPointIterator.next();
+	     if (joinPointIterator.hasNext()) {
+	    	 String joinPoint = "";
+	    	 int first = 0;
+		     while (joinPointIterator.hasNext()) {
+		    	 if (first == 0) {
+		    		 joinPoint = joinPoint + ((AODProfileJoinPoint)joinPointIterator.next()).toString();
+		    		 first = 1;
+		    	 }
+		    	 else
+		    		 joinPoint = joinPoint + "&&" + ((AODProfileJoinPoint)joinPointIterator.next()).toString();
+		     }
+		     estereotipo.setAttribute("joinPoint", joinPoint);
 	     }
 	     Iterator <AODProfileAdvice> adviceIterator = ((AODProfilePointcut)aodProfileAssociation).getAdvices().iterator();
 	     while (adviceIterator.hasNext()) {
@@ -249,7 +258,7 @@ public class XMIExporter {
 	      String targetId = memberEndKeys.get(aodProfileAssociation.getId());
 	      associationNode.setAttribute("memberEnd", targetId + " " + sourceId.toString()); //Acá va el source y el target
 	      associationNode.setAttribute("name", aodProfileAssociation.getName());
-	      associationNode.setAttribute("xmi:id", aodProfileAssociation.generateId());
+	      associationNode.setAttribute("xmi:id", aodProfileAssociation.getId());
 	      associationNode.setAttribute("xmi:type", "uml:Association");
 	      Element ownedEnd = doc.createElement("ownedEnd");
 	      ownedEnd.setAttribute("xmi:id", sourceId.toString()); //Este ID lo tengo que generar de 0. Resulta ser el source del elemento associationNode
@@ -305,7 +314,7 @@ public class XMIExporter {
 	      innerAssocNode.setAttribute("name", next.getTarget().getName()); //nombre del target 
 	      innerAssocNode.setAttribute("type", next.getTarget().getId()); //id del target
 	      innerAssocNode.setAttribute("isUnique", "false");
-	      innerAssocNode.setAttribute("association", next.generateId());
+	      innerAssocNode.setAttribute("association", next.getId());
 	      memberEndKeys.put(next.getId(), ownedAttributeId.toString());
 	      return innerAssocNode;
 	      //Ver de poner o no los upper y lower values
@@ -315,6 +324,11 @@ public class XMIExporter {
 		Iterator <AODProfileResponsability> iterator = aodProfileClass.getResponsabilities().iterator();
 		while (iterator.hasNext()) {
 			classNode.appendChild(createResponsibility(doc,iterator.next()));
+		}
+		if (aodProfileClass instanceof AODProfileAspect) {
+			Iterator <AODProfileAdvice> advices = ((AODProfileAspect)aodProfileClass).getUnassociatedAdvices().iterator();
+			while (advices.hasNext())
+				classNode.appendChild(createResponsibility(doc,advices.next()));
 		}
 	}
 
@@ -327,7 +341,7 @@ public class XMIExporter {
 
 	private Element createAttribute (Document doc, AODProfileAttribute aodProfileAttribute) {
 	      Element attribNode = doc.createElement("ownedAttribute");
-	      attribNode.setAttribute("xmi:id", aodProfileAttribute.generateId());
+	      attribNode.setAttribute("xmi:id", aodProfileAttribute.getId());
 	      attribNode.setAttribute("name", aodProfileAttribute.getName());
 	      attribNode.setAttribute("isUnique", "false");
 	      if (aodProfileAttribute.getType().compareTo("*")!=0) {
