@@ -168,4 +168,45 @@ public class AODProfileClass extends AODProfileBean {
 		return AODProfileClass.class.getSimpleName()+"."+AODProfileClass.convertClassName(name);
 	}
 
+	@Override
+	public int compareTo(Object o) {
+		if (this instanceof AODProfileAspect) {
+			if (o instanceof AODProfileClass) {
+				Integer responsabilities = new Integer(((AODProfileClass)o).getPossibleAssociations().size());
+				if (((AODProfileAspect)this).getPossiblePointcuts().size() > responsabilities)
+					return -1;
+				else
+					if (((AODProfileAspect)this).getPossiblePointcuts().size() == responsabilities)
+						return 0;
+			}
+			else
+				if (o instanceof AODProfileAspect) {
+					Integer responsabilities = new Integer(((AODProfileAspect)o).getPossiblePointcuts().size());
+					if (((AODProfileAspect)this).getPossiblePointcuts().size() > responsabilities)
+						return -1;
+					else
+						if (((AODProfileAspect)this).getPossiblePointcuts().size() == responsabilities)
+							return 0;
+				}
+		}
+		else {
+			if (o instanceof AODProfileAspect) {
+				Integer responsabilities = new Integer(((AODProfileAspect)o).getPossiblePointcuts().size());
+				if (this.getPossibleAssociations().size() > responsabilities)
+					return -1;
+				else
+					if (this.getPossibleAssociations().size() == responsabilities)
+						return 0;
+			}
+			else {
+				Integer responsabilities = new Integer(((AODProfileClass)o).getPossibleAssociations().size());
+				if (this.getPossibleAssociations().size() > responsabilities)
+					return -1;
+				else
+					if (this.getPossibleAssociations().size() == responsabilities)
+						return 0;
+				}
+		}
+		return 1;
+	}
 }
