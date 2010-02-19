@@ -3,7 +3,9 @@ package xmi;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,7 +17,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
+import beans.aodprofile.AODProfileAdvice;
 import beans.aodprofile.AODProfileAspect;
 import beans.aodprofile.AODProfileAssociation;
 import beans.aodprofile.AODProfileAttribute;
@@ -32,10 +36,16 @@ public class Di2Generator {
 	private Document doc;
 	private Collection <AODProfileBean> aodProfileBeans;
 	private ArrayList <LocationBean> locationElements;
+	private Map <String,String> classAnchorages;
+	private Map <String,String> associationAnchorages ;
+	private Integer associationNumber;
 	
 	public Di2Generator(Collection <AODProfileBean> aodProfileBeans) {
 		super();
 		locationElements = new ArrayList <LocationBean>();
+		classAnchorages = new HashMap <String,String> ();
+		associationAnchorages = new HashMap <String,String> ();
+		setAssociationNumber(new Integer(0));
 		this.aodProfileBeans = aodProfileBeans;
 		doc = makeDoc();
 		generateUMLFile();
@@ -94,14 +104,12 @@ public class Di2Generator {
 
 		      createAssociations (doc,di2Root,locationElements);
 
-		      //Agregar el createEdge por cada asociación
-
 		      Element owner = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance", "owner");
 		      owner.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", "di2:Uml1SemanticModelBridge");
 		      di2Root.appendChild(owner);
 		      Element element = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","element");
 		      element.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", "uml:Model");
-		      element.setAttribute("href","aodDesign.uml#_"+XMIExporter.getUmlRootId());
+		      element.setAttribute("href","aodDesign.uml#"+XMIExporter.getUmlRootId());
 		      owner.appendChild(element);
 		      
 		      return doc;
@@ -148,14 +156,14 @@ public class Di2Generator {
 				Integer associationPosition = new Integer(0);
 				while (associationIterator.hasNext()) {
 					AODProfileAssociation association = associationIterator.next();
-					di2Root.appendChild(createAssociation(doc,association,contained,associationPosition));
+					di2Root.appendChild(createAssociation(doc,locationBean,association,contained,associationPosition));
 					associationPosition++;
 				}
 				if (locationBean.getAODProfileBean() instanceof AODProfileAspect) {
 					Iterator <AODProfilePointcut> pointcutIterator = ((AODProfileAspect)locationBean.getAODProfileBean()).getPossiblePointcuts().iterator();
 					while (pointcutIterator.hasNext()) {
 						AODProfilePointcut pointcut = pointcutIterator.next();
-						di2Root.appendChild(createAssociation(doc,pointcut,contained,associationPosition));
+						di2Root.appendChild(createAssociation(doc,locationBean,pointcut,contained,associationPosition));
 						associationPosition++;
 					}
 				}
@@ -163,7 +171,7 @@ public class Di2Generator {
 			}
 	}
 
-		private Element createAssociation(Document doc, AODProfileAssociation association, Integer containedClass, Integer associationPosition) {
+		private Element createAssociation(Document doc, LocationBean locationBean, AODProfileAssociation association, Integer containedClass, Integer associationPosition) {
 		      Element contained = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance", "contained");
 			  contained.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", "di2:GraphEdge");
 		      contained.setAttribute("isVisible","true");
@@ -174,17 +182,22 @@ public class Di2Generator {
 		      contained.setAttribute("foregroundColor", "0:0:0");
 		      contained.setAttribute("backgroundColor", "0:0:0");
 		      contained.setAttribute("borderColor", "0:0:0");
-		      contained.setAttribute("anchor", "//@contained."+containedClass.toString()+"/@anchorage."+associationPosition.toString()+" //@contained.1/@anchorage.0");
+		      String targetLocation = searchClass(association.getTarget());
+		      String targetAnchorage = searchAnchorage(locationBean,association);
+		      contained.setAttribute("anchor", "//@contained."+containedClass.toString()+"/@anchorage."+associationPosition.toString()+" //@contained." + targetLocation +"/@anchorage."+targetAnchorage);
 
 		      //Properties obligatorias
 		      Element propStereotype = createStereotypeProp(doc);
 		      contained.appendChild(propStereotype);
 		      Element propQualifiedName = createQualifiedNameProp(doc);
 		      contained.appendChild(propQualifiedName);
+		      if (association instanceof AODProfilePointcut) {
+		    	  contained.appendChild(createAodStereotype(doc,"profileAod::Pointcut"));
+		      }
 		      
 		      //Genera los seis contained para el elemento
-		      Element contained1 = doc.createElement("contained");
-		      	setAttributes(contained1,"0:-20","100:100","157:124:47");
+		      Element contained1 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
+		      	setAttributes(contained1,"0:-20","100:100","157:124:47","false");
 		      	contained1.setAttribute("fontSize", "9");
 		      	Element propStereotype1 = createStereotypeProp(doc);
 			    contained1.appendChild(propStereotype1);
@@ -192,8 +205,8 @@ public class Di2Generator {
 			    contained1.appendChild(propQualifiedName1);
 			  contained.appendChild(contained1);
 		      
-			  Element contained2 = doc.createElement("contained");
-		      	setAttributes(contained2,"-60:20","100:100","157:124:47");
+			  Element contained2 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
+		      	setAttributes(contained2,"-60:20","100:100","157:124:47","false");
 		      	contained2.setAttribute("fontSize", "9");
 		      	Element propStereotype2 = createStereotypeProp(doc);
 			    contained2.appendChild(propStereotype2);
@@ -203,8 +216,8 @@ public class Di2Generator {
 			    contained2.appendChild(display);
 			  contained.appendChild(contained2);
 			  
-			  Element contained3 = doc.createElement("contained");
-		      	setAttributes(contained3,"20:-20","100:100","157:124:47");
+			  Element contained3 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
+		      	setAttributes(contained3,"20:-20","100:100","157:124:47","false");
 		      	contained3.setAttribute("fontSize", "9");
 		      	Element propStereotype3 = createStereotypeProp(doc);
 			    contained3.appendChild(propStereotype3);
@@ -214,8 +227,8 @@ public class Di2Generator {
 			    contained3.appendChild(display3);
 			  contained.appendChild(contained3);
 			  
-		      Element contained4 = doc.createElement("contained");
-		      	setAttributes(contained4,"-60:-20","100:100","157:124:47");
+		      Element contained4 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
+		      	setAttributes(contained4,"-60:-20","100:100","157:124:47","false");
 		      	contained4.setAttribute("fontSize", "9");
 		      	Element propStereotype4 = createStereotypeProp(doc);
 			    contained4.appendChild(propStereotype4);
@@ -223,8 +236,8 @@ public class Di2Generator {
 			    contained4.appendChild(propQualifiedName4);
 			  contained.appendChild(contained4);
 
-			  Element contained5 = doc.createElement("contained");
-		      	setAttributes(contained5,"20:20","100:100","157:124:47");
+			  Element contained5 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
+		      	setAttributes(contained5,"20:20","100:100","157:124:47","false");
 		      	contained5.setAttribute("fontSize", "9");
 		      	Element propStereotype5 = createStereotypeProp(doc);
 			    contained5.appendChild(propStereotype5);
@@ -232,8 +245,8 @@ public class Di2Generator {
 			    contained5.appendChild(propQualifiedName5);
 			  contained.appendChild(contained5);
 		      
-			  Element contained6 = doc.createElement("contained");
-		      	setAttributes(contained6,"0:-20","100:100","157:124:47");
+			  Element contained6 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
+		      	setAttributes(contained6,"0:-20","100:100","157:124:47","false");
 		      	contained6.setAttribute("fontSize", "9");
 		      	Element propStereotype6 = createStereotypeProp(doc);
 			    contained6.appendChild(propStereotype6);
@@ -243,10 +256,46 @@ public class Di2Generator {
 
 	      	  //Crea elemento semanticModel
 	      	  contained.appendChild(createSemanticModel(doc,"uml:Association",association.getId()));
+	      	  
+	      	  if (locationBean.getAODProfileBean().getId().equals(association.getTarget().getId())) 
+	      		  createWaypoints(doc,contained,locationBean);
 	      	  return contained;
 		}
 		
 		
+		private void createWaypoints(Document doc, Element contained, LocationBean locationBean) {
+			  String initialPosition = calculateSourcePosition(locationBean);
+      		  String [] splitInitial = initialPosition.split(":");
+      		  String w1h = splitInitial[1];
+      		  String w1w = splitInitial[0];
+      		  Integer w1 = new Integer (w1w) + 20;
+      		  Element waypoint1 = doc.createElement("waypoints");
+      		  waypoint1.setTextContent(w1.toString() + ":" + w1h);
+      		  
+      		  String [] position = locationBean.getPosition().split(":");
+      		  String [] size = locationBean.getSize().split(":");
+      		  Integer w2 = 20 + new Integer(position[1]) + new Integer (size[1]);
+      		  Element waypoint2 = doc.createElement("waypoints");
+      		  waypoint2.setTextContent(w1.toString() + ":" + w2.toString());
+      		  
+      		  Integer w3 = new Integer(position[0]) - 20;
+      		  Element waypoint3 = doc.createElement("waypoints");
+      		  waypoint3.setTextContent(w3.toString() + ":" + w2.toString());
+      		  
+      		  Element waypoint4 = doc.createElement("waypoints");
+      		  waypoint4.setTextContent(w3.toString() +":"+ w1h);
+      		  contained.appendChild(waypoint1);
+      		  contained.appendChild(waypoint2);
+      		  contained.appendChild(waypoint3);
+      		  contained.appendChild(waypoint4);
+		}
+
+		private String searchAnchorage(LocationBean locationBean, AODProfileAssociation association) {
+			String toSearch = locationBean.getAODProfileBean().getId() + "-" + association.getTarget().getId();
+			String anchorage = associationAnchorages.get(toSearch);
+			return anchorage;
+		}
+
 //Classes
 		private void createClasses(Document doc, Element di2Root, ArrayList<LocationBean> locationElements) {
 			Iterator <LocationBean> iterator = locationElements.iterator();
@@ -254,17 +303,20 @@ public class Di2Generator {
 				LocationBean locationBean = iterator.next();
 				di2Root.appendChild(createClass(doc,locationBean));
 			}
+			createTargetAnchorages(doc,di2Root);
 		}
 		
 		private Element createClass (Document doc, LocationBean locationBean) {
 		      Element contained = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance", "contained");
-		      setAttributes(contained,locationBean.getPosition(),locationBean.getSize(),"157:124:47");//position, size
+		      setAttributes(contained,locationBean.getPosition(),locationBean.getSize(),"157:124:47","true");//position, size
 
 		      //Properties obligatorias
 		      Element propStereotype = createStereotypeProp(doc);
 		      contained.appendChild(propStereotype);
 		      Element propQualifiedName = createQualifiedNameProp(doc);
 		      contained.appendChild(propQualifiedName);
+		      if (locationBean.getAODProfileBean() instanceof AODProfileAspect) 
+		    	  contained.appendChild(createAodStereotype(doc,"profileAod::Aspect"));
 		      
 		      //Genera el espacio para los atributos
 		      Element cAttrib = createAttribSpace(doc);
@@ -288,15 +340,27 @@ public class Di2Generator {
 	      	  
 	      	  //Crea elemento semanticModel
 	      	  contained.appendChild(createSemanticModel(doc,"uml:Class",locationBean.getAODProfileBean().getId()));
-	      	  createAnchorages (doc,contained,locationBean);
+	      	  createSourceAnchorages (doc,contained,locationBean);
 	      	  
 	      	  return contained;
+		}
+
+		private Node createAodStereotype(Document doc, String type) {
+			  Element stereotype = doc.createElement("property");
+		      stereotype.setAttribute("key", "PropStereoDisplay");
+		      stereotype.setAttribute("value", type);
+		      return stereotype;
 		}
 
 		private void createOperations(Document doc, Element cMethod, LocationBean locationBean) {
   	  		Iterator <AODProfileResponsability> iterator = ((AODProfileClass)locationBean.getAODProfileBean()).getResponsabilities().iterator();
   	  		while (iterator.hasNext()) {
   	  			cMethod.appendChild(createOperation(doc,iterator.next()));
+  	  		}
+  	  		if (locationBean.getAODProfileBean() instanceof AODProfileAspect) {
+  	  			Iterator <AODProfileAdvice> advices = ((AODProfileAspect)locationBean.getAODProfileBean()).getUnassociatedAdvices().iterator();
+  	  			while (advices.hasNext())
+  	  				cMethod.appendChild(createOperation(doc,advices.next()));
   	  		}
 		}
 
@@ -309,7 +373,7 @@ public class Di2Generator {
 
 		private Element createAttribute (Document doc, AODProfileAttribute aodProfileAttribute) {
 			  Element attribContained = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
-			  setAttributes(attribContained,"20:20","100:100","166:157:183");
+			  setAttributes(attribContained,"20:20","100:100","166:157:183","true");
 			  Element propStereotype = createStereotypeProp(doc);
 			  attribContained.appendChild(propStereotype);
 			  Element propQualifiedName = createQualifiedNameProp(doc);
@@ -321,11 +385,13 @@ public class Di2Generator {
 
 		private Element createOperation (Document doc, AODProfileResponsability aodProfileResponsability) {
 		      Element methodContained = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
-		      setAttributes(methodContained,"20:20","100:100","157:124:47");
+		      setAttributes(methodContained,"20:20","100:100","157:124:47","true");
 			  Element propStereotype = createStereotypeProp(doc);
 			  methodContained.appendChild(propStereotype);
 			  Element propQualifiedName = createQualifiedNameProp(doc);
 			  methodContained.appendChild(propQualifiedName);
+			  if (aodProfileResponsability instanceof AODProfileAdvice) 
+				  methodContained.appendChild(createAodStereotype(doc,"profileAod::Advice"));
 			  methodContained.appendChild(createSemanticModel(doc,"uml:Operation",aodProfileResponsability.getId()));
 		      return methodContained;
 		}
@@ -346,9 +412,9 @@ public class Di2Generator {
 		      return propQName;
 		}
 		
-		private void setAttributes (Element contained,String position, String size, String borderColor) {
+		private void setAttributes (Element contained,String position, String size, String borderColor, String visible) {
 			  contained.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", "di2:GraphNode");
-		      contained.setAttribute("isVisible","true");
+		      contained.setAttribute("isVisible",visible);
 		      contained.setAttribute("fontFamily", "Arial");
 		      contained.setAttribute("lineStyle", "solid");
 		      contained.setAttribute("fontColor", "0:0:0");
@@ -361,7 +427,7 @@ public class Di2Generator {
 
 		private Element createAttribSpace (Document doc) {
 		      Element cAttrib = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance", "contained");
-		      setAttributes(cAttrib,"20:20","100:100","157:124:47");
+		      setAttributes(cAttrib,"20:20","100:100","157:124:47","true");
 		      return cAttrib;
 		}
 		
@@ -378,55 +444,127 @@ public class Di2Generator {
 		      aSemanticModel.setAttribute("presentation", "TextStereotype");
 		      Element aSemanticElement = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","element");
 		      aSemanticElement.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", semanticElement);
-		      aSemanticElement.setAttribute("href","aodDesign.uml#_"+ id);//Referencia al elemento del .uml. Una vez que sepamos cómo definirlo habría que pasarlo como parámetro :)
+		      aSemanticElement.setAttribute("href","aodDesign.uml#"+ id);//Referencia al elemento del .uml. Una vez que sepamos cómo definirlo habría que pasarlo como parámetro :)
 		      aSemanticModel.appendChild(aSemanticElement);
 		      return aSemanticModel;
 		}
 
 		private Element createMethodSpace (Document doc) {
 		      Element cMethod = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance", "contained");
-		      setAttributes(cMethod,"20:20","100,100","157:124:47");
+		      setAttributes(cMethod,"20:20","100:100","157:124:47","true");
 		      return cMethod;
 		}
 
-		private void createAnchorages(Document doc, Element contained,	LocationBean locationBean) {
+		private void createSourceAnchorages(Document doc, Element contained,	LocationBean locationBean) {
 	      	  Iterator <AODProfileAssociation> associationIterator = ((AODProfileClass)locationBean.getAODProfileBean()).getPossibleAssociations().iterator();
+		 	  String anchoragePosition = calculateSourcePosition (locationBean);
 	      	  while (associationIterator.hasNext()) {
-	      		  contained.appendChild(createAnchorage(doc,locationBean));
-	      		  associationIterator.next();
+	      		  contained.appendChild(createSourceAnchorage(doc,locationBean,associationIterator.next(),anchoragePosition));
 	      	  }
 	      	  if (locationBean.getAODProfileBean() instanceof AODProfileAspect) {
 		      	  Iterator <AODProfilePointcut> pointcutIterator = ((AODProfileAspect)locationBean.getAODProfileBean()).getPossiblePointcuts().iterator();
-		      	  while (pointcutIterator.hasNext())
-		      		  contained.appendChild(createAnchorage(doc,locationBean));
-		      	  	  pointcutIterator.next();
+		      	  while (pointcutIterator.hasNext()) {
+		      		  contained.appendChild(createSourceAnchorage(doc,locationBean,pointcutIterator.next(),anchoragePosition));
+		      	  }
 	      	  }
 			
 		}
 		
-		private Element createAnchorage (Document doc, LocationBean locationBean) {
+		private Element createSourceAnchorage (Document doc, LocationBean locationBean, AODProfileAssociation association, String anchoragePosition) {
 		 	  Element anchorage = doc.createElement("anchorage");
-		 	  String anchoragePosition = calculatePosition (locationBean);
 	      	  anchorage.setAttribute("position", anchoragePosition); 
-	      	  anchorage.setAttribute("graphEdge", "//@contained.2");
+	      	  Integer containedNumber = getAssociationNumber() + locationElements.size();
+	      	  setAssociationNumber (getAssociationNumber() + 1);
+	      	  anchorage.setAttribute("graphEdge", "//@contained."+ containedNumber.toString());
+	      	  classAnchorages.put(association.getTarget().getId() + "-" + locationBean.getAODProfileBean().getId(), containedNumber.toString());
 	      	  return anchorage;
 	     }
-		
 
-		private String calculatePosition(LocationBean locationBean) {
+		private void createTargetAnchorages(Document doc, Element di2Root) {
+			Iterator <String> iterator = classAnchorages.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String [] splitKey = key.split("-");
+				String target = splitKey[0];
+				
+				for (int i=0; i<di2Root.getChildNodes().getLength(); i++) {
+					Node node = di2Root.getChildNodes().item(i);
+					for (int j=0; j< node.getChildNodes().getLength(); j++) {
+						if (node.getChildNodes().item(j).getNodeName().equals("semanticModel")) {
+							Node element = node.getChildNodes().item(j).getFirstChild();
+							String name = "aodDesign.uml#" + target;
+							if(element.getAttributes().item(0).getNodeValue().equals(name)) {
+								String value = classAnchorages.get(key);
+								String anchoragePosition = calculateTargetPosition(locationElements.get(i),element);
+								String nroAnchorage = searchAnchorageNumber(node);
+								node.appendChild(createTargetAnchorage(doc,anchoragePosition,value));
+								String associationKey = splitKey[1] + "-" + splitKey[0];
+								associationAnchorages.put(associationKey, nroAnchorage);
+							}
+						}
+							
+					}
+				}
+			}
+		}
+		
+		private String searchAnchorageNumber(Node node) {
+			Integer number = new Integer (0);
+			for (int j=0; j< node.getChildNodes().getLength(); j++) {
+				if (node.getChildNodes().item(j).getNodeName().equals("anchorage"))
+					number++;
+			}
+			return number.toString();
+		}
+
+		private String searchClass(AODProfileClass target) {
+			Iterator <LocationBean> i = locationElements.iterator();
+			Integer position = new Integer(0);
+			while (i.hasNext()) {
+				if (i.next().getAODProfileBean().getId().equals(target.getId())) 
+					return position.toString();
+				position++;
+			}
+			return position.toString();
+		}
+		
+		private Element createTargetAnchorage (Document doc, String anchoragePosition, String contained) {
+		 	  Element anchorage = doc.createElement("anchorage");
+	      	  anchorage.setAttribute("position", anchoragePosition); 
+	      	  anchorage.setAttribute("graphEdge", "//@contained."+ contained);
+	      	  return anchorage;
+	     }
+
+		private String calculateSourcePosition(LocationBean locationBean) {
 		 	  String size = locationBean.getSize();
 		 	  String position = locationBean.getPosition();
 		 	  String [] splitSize = size.split(":");
 		 	  String [] splitPosition = position.split(":");
-		 	  Integer vertical = new Integer(splitPosition[1]) + new Integer(splitSize[1]);
-		 	  Integer horizontal = (new Integer (splitSize[2])/2) + new Integer (splitPosition[2]);
+		 	  Integer initHorPosition = new Integer(splitPosition[0]);
+		 	  Integer horizontal, vertical;
+		 	  LocationCalculator.getInstance();
+		 	  if (initHorPosition < LocationCalculator.getScreenwidth()/2) {
+			 	   horizontal = new Integer(splitPosition[0]) + new Integer(splitSize[0]);
+			 	   vertical = (new Integer (splitSize[1])/2) + new Integer (splitPosition[1]);
+		 	  }
+		 	  else {
+			 	   horizontal = new Integer(splitPosition[0]);
+			 	   vertical = (new Integer (splitSize[1])/2) + new Integer (splitPosition[1]);
+		 	  }
 		 	  return (horizontal.toString() + ":" + vertical.toString());
 		}
 
-		public Collection <AODProfileBean> getAodProfileBeans() {
-			return aodProfileBeans;
+		private String calculateTargetPosition(LocationBean locationBean, Node element) {
+		 	  String size = locationBean.getSize();
+		 	  String position = locationBean.getPosition();
+		 	  String [] splitSize = size.split(":");
+		 	  String [] splitPosition = position.split(":");
+		 	  Integer horizontal = null, vertical;
+		 	  horizontal = new Integer(splitPosition[0]);
+		 	  vertical = (new Integer (splitSize[1])/2) + new Integer (splitPosition[1]);
+		 	  return (horizontal.toString() + ":" + vertical.toString());
 		}
-
+		
 		public void setAodProfileBeans(Collection <AODProfileBean> aodProfileBeans) {
 			this.aodProfileBeans = aodProfileBeans;
 		}
@@ -435,8 +573,12 @@ public class Di2Generator {
 			this.locationElements = locationElements;
 		}
 
-		public ArrayList <LocationBean> getLocationElements() {
-			return locationElements;
+		public void setAssociationNumber(Integer associationNumber) {
+			this.associationNumber = associationNumber;
+		}
+
+		public Integer getAssociationNumber() {
+			return associationNumber;
 		}
 
 		
