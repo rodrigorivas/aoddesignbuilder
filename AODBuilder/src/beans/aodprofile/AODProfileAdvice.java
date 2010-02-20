@@ -13,11 +13,10 @@ public class AODProfileAdvice extends AODProfileResponsability {
 	
 	public AODProfileAdvice() {
 		super();
-		setName("ADV_"+getId());
 	}
+
 	public AODProfileAdvice(AODProfileAdvice advice) {
 		super();
-		setName("ADV_"+getId());
 		if (advice!=null){
 			this.type = advice.getType();
 			this.joinPointType = advice.getJoinPointType();

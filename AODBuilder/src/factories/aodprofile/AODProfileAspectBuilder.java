@@ -72,12 +72,12 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 			aodClass.addResponsabilities(responsabilities);
 			/* Detect JoinPoints */
 			Collection<AODProfileJoinPoint> joinPoints = JoinPointDetector.getInstance().detectJoinPoints(relations, cl);
-			JoinPointDetector.getInstance().completeJoinPoints(joinPoints, wordsHM.values(), relations);
+			JoinPointDetector.getInstance().completeJoinPoints(joinPoints, wordsHM.values(), relations, cl);
 			JoinPointDetector.getInstance().completeJoinPoints(joinPoints, responsabilities);
 			aodClass.setUnassociatedJoinPoint((List<AODProfileJoinPoint>) joinPoints);
 			/* Detect Advices */
 			Collection<AODProfileAdvice> advices = AdviceDetector.getInstance().detectAdvices(relations, cl);		
-			AdviceDetector.getInstance().completeAdvices(advices, wordsHM.values(), relations);
+			AdviceDetector.getInstance().completeAdvices(advices, wordsHM.values(), relations, cl);
 			aodClass.setUnassociatedAdvices((List<AODProfileAdvice>) advices);			
 		}
 	}
@@ -112,10 +112,11 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 //				aodAssoc.setId(umlAssoc.getId());
 				aodAssoc.setName(source.getName()+"."+DataFormatter.javanize(targetFromList.getName(), true));
 		
-				aodAssoc.addJoinPoint((new AODProfileJoinPointBuilder()).build("target", targetFromList.getName()));
 				for (AODProfileJoinPoint joinPoint: source.getUnassociatedJoinPoint()){
-					if (joinPoint.applies(source, aodAssoc))
+					if (joinPoint.applies(source, aodAssoc)){
+						aodAssoc.addJoinPoint((new AODProfileJoinPointBuilder()).build("target", targetFromList.getName()));
 						aodAssoc.addJoinPoint(new AODProfileJoinPointBuilder().build(joinPoint));
+					}
 				}
 				
 				for (AODProfileAdvice advice: source.getUnassociatedAdvices()){

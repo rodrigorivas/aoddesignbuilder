@@ -13,6 +13,7 @@ public class AODProfileComplexJoinPoint extends AODProfileJoinPoint {
 	
 	public AODProfileComplexJoinPoint() {
 		setId(UniqueID.generateUniqueID());
+		targetClass = ANY_MATCH;
 	}
 
 	public AODProfileComplexJoinPoint(AODProfileComplexJoinPoint joinPoint) {
@@ -20,6 +21,7 @@ public class AODProfileComplexJoinPoint extends AODProfileJoinPoint {
 		this.name = joinPoint.getName();
 		this.selected = joinPoint.isSelected();
 		this.type = joinPoint.getType();
+		this.targetClass = joinPoint.getTargetClass(); 
 		this.responsability = new AODProfileResponsability(joinPoint.getResponsability());
 	}
 
@@ -76,11 +78,6 @@ public class AODProfileComplexJoinPoint extends AODProfileJoinPoint {
 	}
 
 	@Override
-	public void setClassName(String name) {
-		setResponsabilityReturn(name);
-	}
-
-	@Override
 	public void setMethodName(String name) {
 		setResponsabilityName(name);
 	}
@@ -97,7 +94,9 @@ public class AODProfileComplexJoinPoint extends AODProfileJoinPoint {
 			return responsability.equals(source);
 		}
 		else if (source instanceof AODProfileAspect){
-			return true;
+			if (aodAssoc.getTarget()!=null && DataFormatter.equalsRegExp(targetClass, aodAssoc.getTarget().getName())){
+				return true;
+			}
 		}
 		return false;
 	}
@@ -112,5 +111,14 @@ public class AODProfileComplexJoinPoint extends AODProfileJoinPoint {
 		return false;
 	}
 
+	@Override
+	public boolean match(AODProfileBean bean) {
+		if (bean instanceof AODProfileAdvice){
+			AODProfileAdvice adv = (AODProfileAdvice) bean;
+			return (this.getType().equals(adv.getType()) && 
+				(this.getResponsability().getName().equalsIgnoreCase(adv.getTargetClassName()) || this.getResponsability().getName().equalsIgnoreCase(adv.getTargetMethodName())));
+		}
+		return false;
+	}
 
 }
