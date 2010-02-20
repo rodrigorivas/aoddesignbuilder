@@ -54,6 +54,7 @@ public class AODBuilderRunner extends SwingWorker<Void, Void> {
 			AODBuilder.getInstance().process(fileName);
 		} catch (Exception e) {
 			logger.error(ExceptionUtil.getTrace(e));
+			cancel(true);
 		}
 		if (!isCancelled())
 			setProgress(100);
