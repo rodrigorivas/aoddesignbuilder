@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 
 import util.DataFormatter;
 import util.Log4jConfigurator;
-
 import beans.aodprofile.AODProfileAdvice;
 import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
@@ -70,36 +69,92 @@ public class AdviceDetector {
 		logger.info("Advices detection completed.");
 		return advices;
 	}
-
-	public void completeAdvices(Collection<AODProfileAdvice> advices, Collection<NLPDependencyWord> words, Collection<NLPDependencyRelation> relations){
-		ArrayList<NLPDependencyRelation> dobjList = new ArrayList<NLPDependencyRelation>();
+	
+	public void completeAdvices(Collection<AODProfileAdvice> advices, Collection<NLPDependencyWord> words, Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){
 		
-		/* From dobj relation we can figure if the joinPoint refers to a class or a method */
-		for (NLPDependencyRelation dr: relations){
-			if (dr.getRelationType().equalsIgnoreCase("dobj")){
-				dobjList.add(dr);
-			}
-		}
+		ArrayList<NLPDependencyWord> verbsRelatedToJoinPoint = getRelatedVerbs(words, advices);
 
 		for (NLPDependencyWord word: words){
-			for (AODProfileAdvice advice: advices){
-				if (word.isParent(advice.getJoinPointType()) && word.isVerb()){
-					for (NLPDependencyRelation dr: dobjList){
-						if (dr.getGovDW().equals(word)){
-							if ("class".equalsIgnoreCase(dr.getDepDW().getWord()) || 
-									"object".equalsIgnoreCase(dr.getDepDW().getWord()) || 
-									"instance".equalsIgnoreCase(dr.getDepDW().getWord())){
-								advice.setTargetClassName(DataFormatter.javanize(word.getWord(),true));
-								logger.info("Refining advice: "+advice);
-							}
-						}
-					}	
-					advice.setTargetMethodName(DataFormatter.javanize(word.getWord(),false));
-					advice.setName(advice.getTargetMethodName());
-					logger.info("Refining advice: "+advice);
-				}	
+			//detect posible class target
+			if (("class".equalsIgnoreCase(word.getWord()) || 
+					"object".equalsIgnoreCase(word.getWord()) || 
+					"instance".equalsIgnoreCase(word.getWord())) && 
+					word.isRelated(classContainer, true)){
+					AODProfileAdvice advice = getRelatedAdvice(advices, word, verbsRelatedToJoinPoint);
+					if (advice!=null){
+						String className = findClassName(words, word.getWord());
+						advice.setTargetClassName(className);
+						logger.info("Refining Advice. Set target class name to: "+className);	
+					}											
+//				}				
+			//detect posible method target				
+			}else if (("method".equalsIgnoreCase(word.getWord()) || 
+					"responsability".equalsIgnoreCase(word.getWord()) || 
+					"procedure".equalsIgnoreCase(word.getWord()) || 
+					"function".equalsIgnoreCase(word.getWord())) && 
+					word.isRelated(classContainer, true)){
+					AODProfileAdvice advice = getRelatedAdvice(advices, word, verbsRelatedToJoinPoint);
+					if (advice!=null){
+						String methodName = findMethodName(word, advices);
+						advice.setTargetMethodName(methodName);
+						logger.info("Refining Advice. Set target method name to: "+methodName);	
+					}						
 			}
 		}
+		
 	}
+
+	private ArrayList<NLPDependencyWord> getRelatedVerbs(Collection<NLPDependencyWord> words, Collection<AODProfileAdvice> advices) {
+		ArrayList<NLPDependencyWord> verbsRelatedToJoinPoint = new ArrayList<NLPDependencyWord>();
+		for (NLPDependencyWord word: words){
+			for (AODProfileAdvice advice: advices){
+				if (word.getWord().equalsIgnoreCase(advice.getJoinPointType())){
+					Collection<NLPDependencyWord> verbs = word.getRelatedVerbs();
+					for (NLPDependencyWord verb: verbs){
+						verbsRelatedToJoinPoint.add(verb);
+					}
+				}
+			}
+		}
+		return verbsRelatedToJoinPoint;
+	}
+
+	private String findMethodName(NLPDependencyWord word, Collection<AODProfileAdvice> advices) {
+		Collection<NLPDependencyWord> verbs = word.getRelatedVerbs();
+		for (NLPDependencyWord verb: verbs){
+			for (AODProfileAdvice advice: advices){
+				if (verb.isParent(advice.getJoinPointType())){
+					return DataFormatter.javanize(verb.getWord(),false);
+				}
+			}
+		}
+		return "*";
+		
+	}
+
+	private String findClassName(Collection<NLPDependencyWord> words, String string) {
+		for (NLPDependencyWord word: words){
+			if (word.getWord().contains(string)){
+				String className = word.getWord().replace(string, "").trim();
+				if (className.length()>0)
+					return DataFormatter.javanize(className,true);
+			}
+		}
+		return "*";
+	}
+
+	private AODProfileAdvice getRelatedAdvice(Collection<AODProfileAdvice> advices, NLPDependencyWord word, ArrayList<NLPDependencyWord> verbsRelatedToJoinPoint) {
+		Collection<NLPDependencyWord> verbs = word.getRelatedVerbs();
+		for (NLPDependencyWord verb: verbs){
+			for (AODProfileAdvice advice: advices){
+				if (verb.isParent(advice.getJoinPointType())|| 
+						verbsRelatedToJoinPoint.contains(verb)){
+					return advice;
+				}
+			}
+		}
+		return null;
+	}
+
 
 }

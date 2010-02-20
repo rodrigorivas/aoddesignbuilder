@@ -4,8 +4,8 @@ package beans.aodprofile;
 
 public abstract class AODProfileJoinPoint extends AODProfileBean{
 	
-//	public enum joinPointType {Call, Execution, Within, Handler, New, Target, This};
 	protected String type;
+	protected String targetClass;
 
 	public String getType() {
 		return type;
@@ -32,8 +32,15 @@ public abstract class AODProfileJoinPoint extends AODProfileBean{
 		return false;
 	}
 
+	public String getTargetClass() {
+		return targetClass;
+	}
+
+	public void setTargetClass(String targetClass) {
+		this.targetClass = targetClass;
+	}
+
 	public abstract void setMethodName(String name);
-	public abstract void setClassName(String name);
 	public abstract AODProfileResponsability getResponsability();
-	
+	public abstract boolean match (AODProfileBean bean);
 }
