@@ -42,5 +42,11 @@ public abstract class AODProfileJoinPoint extends AODProfileBean{
 
 	public abstract void setMethodName(String name);
 	public abstract AODProfileResponsability getResponsability();
-	public abstract boolean match (AODProfileBean bean);
+	public boolean match (AODProfileBean bean){
+		if (bean instanceof AODProfileAdvice){
+			AODProfileAdvice adv = (AODProfileAdvice) bean;
+			return (this.getType().equals(adv.getJoinPointType()));
+		}
+		return false;		
+	}
 }
