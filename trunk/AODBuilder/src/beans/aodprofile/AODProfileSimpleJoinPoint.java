@@ -82,14 +82,5 @@ public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 		}
 		return false;
 	}
-	@Override
-	public boolean match(AODProfileBean bean) {
-		if (bean instanceof AODProfileAdvice){
-			AODProfileAdvice adv = (AODProfileAdvice) bean;
-			return (this.getType().equals(adv.getType()) && 
-				(this.getParam().equalsIgnoreCase(adv.getTargetClassName()) || this.getParam().equalsIgnoreCase(adv.getTargetMethodName())));
-		}
-		return false;
-	}
 
 }
