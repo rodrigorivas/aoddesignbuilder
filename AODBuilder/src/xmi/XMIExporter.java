@@ -30,6 +30,7 @@ import beans.aodprofile.AODProfileClass;
 import beans.aodprofile.AODProfileJoinPoint;
 import beans.aodprofile.AODProfilePointcut;
 import beans.aodprofile.AODProfileResponsability;
+import beans.aodprofile.AODProfileAdvice.advice_type;
 
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
@@ -183,13 +184,13 @@ public class XMIExporter {
 
 	private Node createAdviceStereotype(Document doc,AODProfileResponsability responsability) {
 		Element stereotype;
-		if (((AODProfileAdvice)responsability).getType().equals("after"))
+		if (((AODProfileAdvice)responsability).getType().equals(advice_type.after))
 			stereotype = doc.createElement("profileAod:After");
 		else
-			if (((AODProfileAdvice)responsability).getType().equals("around"))
+			if (((AODProfileAdvice)responsability).getType().equals(advice_type.around))
 					stereotype = doc.createElement("profileAod:Around");
 			else
-				if (((AODProfileAdvice)responsability).getType().equals("before"))
+				if (((AODProfileAdvice)responsability).getType().equals(advice_type.before))
 					stereotype = doc.createElement("profileAod:Before");
 				else
 					stereotype = doc.createElement("profileAod:Advice");
