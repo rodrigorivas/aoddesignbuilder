@@ -80,6 +80,7 @@ public class FileSelector extends javax.swing.JFrame {
 	private String fileName;
 	private static FileSelector fileSelector;
 	Object[] aodClasses;
+	Object[] aodAspects;
 	Logger logger = Log4jConfigurator.getLogger();
 
 	public static FileSelector getInstance() {
@@ -277,7 +278,6 @@ public class FileSelector extends javax.swing.JFrame {
 		proposedSolution.setFileSelector(this);
 		proposedSolution.setVisible(true);
 		this.setVisible(false);
-		this.dispose();
 	}
 
 	private void jCancelMouseClicked(MouseEvent evt) {
@@ -357,9 +357,8 @@ public class FileSelector extends javax.swing.JFrame {
 					}
 					else{
 						Map<String, AODProfileBean> map = AODBuilder.getInstance().getMap();
-						if (map != null && map.values() != null) {
+						if (map!=null && map.values().size()>0)
 							aodClasses = map.values().toArray();
-						}
 						AODBuilderRunner.destroy();
 						enableButtons();
 						endLoading();
