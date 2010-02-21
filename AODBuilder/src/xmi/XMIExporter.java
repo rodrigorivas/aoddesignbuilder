@@ -39,11 +39,13 @@ public class XMIExporter {
 	private Integer id;
 	private static Integer umlRootId;
 	private Map <String,String> memberEndKeys;
+	private Map <String,String> advicesKeys;
 	
 	public XMIExporter(Collection <AODProfileBean> aodProfileBeans) {
 		super();
 		setId(0);
 		memberEndKeys = new HashMap <String,String>();
+		advicesKeys = new HashMap <String,String>();
 		this.aodProfileBeans = aodProfileBeans;
 		doc = makeDoc();
 		generateUMLFile();
@@ -178,26 +180,35 @@ public class XMIExporter {
 				Iterator <AODProfilePointcut> pointcutIterator = ((AODProfileAspect)aodProfileBean).getPossiblePointcuts().iterator();
 				while (pointcutIterator.hasNext()){
 					AODProfilePointcut aodProfilePointcut = pointcutIterator.next();
-					if (aodProfilePointcut instanceof AODProfilePointcut) {
-						xmiRoot.appendChild(createPointcutStereotype(doc,aodProfilePointcut));
-					}
+					Iterator <AODProfileAdvice> advices = aodProfilePointcut.getAdvices().iterator();
+					while (advices.hasNext())
+						xmiRoot.appendChild(createAdviceStereotype(doc,advices.next()));
 				}
-				Iterator <AODProfileResponsability> responsabilities = ((AODProfileAspect)aodProfileBean).getResponsabilities().iterator();
-				while (responsabilities.hasNext()) {
-					AODProfileResponsability responsability = responsabilities.next();
-					if (responsability instanceof AODProfileAdvice) {
-						xmiRoot.appendChild(createAdviceStereotype(doc,responsability));
-					}
-				}
+				pointcutIterator = ((AODProfileAspect)aodProfileBean).getPossiblePointcuts().iterator();
+				while (pointcutIterator.hasNext())
+					xmiRoot.appendChild(createPointcutStereotype(doc,pointcutIterator.next()));
+				
 			}
 		}
 	}
 
 	private Node createAdviceStereotype(Document doc,AODProfileResponsability responsability) {
-	     Element estereotipo = doc.createElement("profileAod:Advice"); 
-	     estereotipo.setAttribute("xmi:id", getId().toString()); 
-	     estereotipo.setAttribute("base_Operation", responsability.getId()); 
-	     return estereotipo;
+		Element stereotype;
+		if (((AODProfileAdvice)responsability).getType().equals("after"))
+			stereotype = doc.createElement("profileAod:After");
+		else
+			if (((AODProfileAdvice)responsability).getType().equals("around"))
+					stereotype = doc.createElement("profileAod:Around");
+			else
+				if (((AODProfileAdvice)responsability).getType().equals("before"))
+					stereotype = doc.createElement("profileAod:Before");
+				else
+					stereotype = doc.createElement("profileAod:Advice");
+		 Integer stereotypeId = new Integer(getId());
+	     stereotype.setAttribute("xmi:id", stereotypeId.toString()); 
+	     stereotype.setAttribute("base_Operation", responsability.getId());
+	     advicesKeys.put(responsability.getId(), stereotypeId.toString());
+	     return stereotype;
 	}
 
 	private Node createPointcutStereotype(Document doc,AODProfileAssociation aodProfileAssociation) {
@@ -217,10 +228,12 @@ public class XMIExporter {
 		    		 joinPoint = joinPoint + "&&" + ((AODProfileJoinPoint)joinPointIterator.next()).toString();
 		     }
 		     estereotipo.setAttribute("joinPoint", joinPoint);
-	     }
-	     Iterator <AODProfileAdvice> adviceIterator = ((AODProfilePointcut)aodProfileAssociation).getAdvices().iterator();
-	     while (adviceIterator.hasNext()) {
-	    	 estereotipo.setAttribute("advice", adviceIterator.next().getId());
+		     Iterator <AODProfileAdvice> advices = ((AODProfilePointcut)aodProfileAssociation).getAdvices().iterator();
+		     while (advices.hasNext()) {
+		    	 AODProfileAdvice advice = advices.next();
+		    	 String stereotypeId = advicesKeys.get(advice.getId());
+		    	 estereotipo.setAttribute("advice", stereotypeId);
+		     }
 	     }
 	     return estereotipo; 
 	}
@@ -326,9 +339,12 @@ public class XMIExporter {
 			classNode.appendChild(createResponsibility(doc,iterator.next()));
 		}
 		if (aodProfileClass instanceof AODProfileAspect) {
-			Iterator <AODProfileAdvice> advices = ((AODProfileAspect)aodProfileClass).getUnassociatedAdvices().iterator();
-			while (advices.hasNext())
-				classNode.appendChild(createResponsibility(doc,advices.next()));
+			Iterator <AODProfilePointcut> pointcuts = ((AODProfileAspect)aodProfileClass).getPossiblePointcuts().iterator();
+			while (pointcuts.hasNext()) {
+				Iterator <AODProfileAdvice> advices = pointcuts.next().getAdvices().iterator();
+				while (advices.hasNext()) 
+					classNode.appendChild(createResponsibility(doc,advices.next()));
+			}
 		}
 	}
 
