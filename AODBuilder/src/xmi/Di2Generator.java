@@ -27,6 +27,7 @@ import beans.aodprofile.AODProfileBean;
 import beans.aodprofile.AODProfileClass;
 import beans.aodprofile.AODProfilePointcut;
 import beans.aodprofile.AODProfileResponsability;
+import beans.aodprofile.AODProfileAdvice.advice_type;
 
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
@@ -376,13 +377,13 @@ public class Di2Generator {
 			  Element propQualifiedName = createQualifiedNameProp(doc);
 			  methodContained.appendChild(propQualifiedName);
 			  if (aodProfileResponsability instanceof AODProfileAdvice) {
-				  if (((AODProfileAdvice)aodProfileResponsability).getType().equals("after"))
+				  if (((AODProfileAdvice)aodProfileResponsability).getType().equals(advice_type.after))
 					  methodContained.appendChild(createAodStereotype(doc,"profileAod::After"));
 				  else
-					  if (((AODProfileAdvice)aodProfileResponsability).getType().equals("around"))
+					  if (((AODProfileAdvice)aodProfileResponsability).getType().equals(advice_type.around))
 						  methodContained.appendChild(createAodStereotype(doc,"profileAod::Around"));
 					  else
-						  if (((AODProfileAdvice)aodProfileResponsability).getType().equals("before"))
+						  if (((AODProfileAdvice)aodProfileResponsability).getType().equals(advice_type.before))
 							  methodContained.appendChild(createAodStereotype(doc,"profileAod::Before"));
 						  else
 							  methodContained.appendChild(createAodStereotype(doc,"profileAod::Advice"));
