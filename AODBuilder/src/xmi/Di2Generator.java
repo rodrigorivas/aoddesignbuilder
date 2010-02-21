@@ -40,7 +40,7 @@ public class Di2Generator {
 	private Map <String,String> associationAnchorages ;
 	private Integer associationNumber;
 	
-	public Di2Generator(Collection <AODProfileBean> aodProfileBeans) {
+	public Di2Generator(Collection <AODProfileBean> aodProfileBeans) throws Exception {
 		super();
 		locationElements = new ArrayList <LocationBean>();
 		classAnchorages = new HashMap <String,String> ();
@@ -51,8 +51,7 @@ public class Di2Generator {
 		generateUMLFile();
 	}
 	
-	public void generateUMLFile() {
-		try {
+	public void generateUMLFile() throws Exception {
 		    Transformer transformer = TransformerFactory.newInstance().newTransformer();
 		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		    
@@ -74,16 +73,9 @@ public class Di2Generator {
 		    writer.write(sw.toString());
 		    writer.flush();
 		    writer.close();
-		}
-		catch(Exception ex) {
-		      ex.printStackTrace();
-	    }
-
 	}
 	
-	public Document makeDoc() {
-		try {
-			
+	public Document makeDoc() throws Exception{
 			  LocationCalculator locationCalculator = LocationCalculator.getInstance();
 			  ArrayList <AODProfileBean> beans = new ArrayList <AODProfileBean> (aodProfileBeans);
 			  locationElements = locationCalculator.processClasses(beans);
@@ -113,16 +105,6 @@ public class Di2Generator {
 		      owner.appendChild(element);
 		      
 		      return doc;
-	
-		    } catch (Exception ex) {
-		      System.err.println("+============================+");
-		      System.err.println("|        XML Error           |");
-		      System.err.println("+============================+");
-		      System.err.println(ex.getClass());
-		      System.err.println(ex.getMessage());
-		      System.err.println("+============================+");
-		      return null;
-		    }
 		  }
 	
 //Logic Methods
