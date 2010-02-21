@@ -21,10 +21,12 @@ import beans.aodprofile.AODProfileBean;
 public class CheckListManager extends MouseAdapter implements ListSelectionListener, ActionListener{ 
     private ListSelectionModel selectionModel = new DefaultListSelectionModel(); 
     private JList list = new JList(); 
+    private JList parentList = new JList();
     int hotspot = new JCheckBox().getPreferredSize().width; 
  
-    public CheckListManager(JList list){ 
+    public CheckListManager(JList list, JList parent){ 
         this.list = list; 
+        this.parentList = parent;
         list.setCellRenderer(new CheckListCellRenderer(list.getCellRenderer(), selectionModel)); 
         list.registerKeyboardAction(this, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), JComponent.WHEN_FOCUSED); 
         list.addMouseListener(this); 
@@ -47,6 +49,13 @@ public class CheckListManager extends MouseAdapter implements ListSelectionListe
         else{ 
             selectionModel.addSelectionInterval(index, index);
             bean.setSelected(true);
+            if (parentList!=null){
+	            AODProfileBean parent = (AODProfileBean)parentList.getSelectedValue();
+	            if (!parent.isSelected()){
+	            	parent.setSelected(true);
+		            parentList.repaint();
+	            }
+            }
         }
     } 
  

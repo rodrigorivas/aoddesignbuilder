@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 
+import beans.aodprofile.AODProfileBean;
+
 public class CheckListCellRenderer extends JPanel implements ListCellRenderer{ 
     private ListCellRenderer delegate; 
     private ListSelectionModel selectionModel; 
@@ -23,7 +25,9 @@ public class CheckListCellRenderer extends JPanel implements ListCellRenderer{
  
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus){ 
         Component renderer = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); 
-        checkBox.setSelected(selectionModel.isSelectedIndex(index)); 
+        if (value instanceof AODProfileBean){
+            checkBox.setSelected(((AODProfileBean) value).isSelected());         	
+        }
         removeAll(); 
         add(checkBox, BorderLayout.WEST); 
         add(renderer, BorderLayout.CENTER); 
