@@ -11,7 +11,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -41,7 +43,7 @@ public class XMIExporter {
 	private Map <String,String> memberEndKeys;
 	private Map <String,String> advicesKeys;
 	
-	public XMIExporter(Collection <AODProfileBean> aodProfileBeans) {
+	public XMIExporter(Collection <AODProfileBean> aodProfileBeans) throws Exception {
 		super();
 		setId(0);
 		memberEndKeys = new HashMap <String,String>();
@@ -57,8 +59,7 @@ public class XMIExporter {
 		return instance;
 	}
 */
-	public void generateUMLFile() {
-		try {
+	public void generateUMLFile() throws Exception {
 		    Transformer transformer = TransformerFactory.newInstance().newTransformer();
 		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		    
@@ -80,17 +81,10 @@ public class XMIExporter {
 		    writer.write(sw.toString());
 		    writer.flush();
 		    writer.close();
-		}
-		catch(Exception ex) {
-		      ex.printStackTrace();
-	    }
-
 	}
 	
 	//Falta ver esta parte, ver cómo completarlo con las cosas que necesitamos :D
-	public Document makeDoc() {
-
-		try {
+	public Document makeDoc() throws Exception {
 			  DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
 		      DocumentBuilder parser = fact.newDocumentBuilder();
 		      Document doc = parser.newDocument();
@@ -119,11 +113,6 @@ public class XMIExporter {
 		      createStereotypes(doc,xmiRoot,aodProfileBeans);
 		      return doc;
 	
-		    } catch (Exception ex) {
-		      System.err.println(ex.getClass());
-		      System.err.println(ex.getMessage());
-		      return null;
-		    }
 		  }
 
 //General uml methods
