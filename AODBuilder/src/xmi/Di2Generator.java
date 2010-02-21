@@ -70,7 +70,7 @@ public class Di2Generator {
 		     
 		    java.io.File file = new java.io.File("aodDesign.di2");
 		    java.io.BufferedWriter writer = new java.io.BufferedWriter(new
-		    		java.io.FileWriter(file, true));
+		    		java.io.FileWriter(file));
 		    writer.write(sw.toString());
 		    writer.flush();
 		    writer.close();
@@ -246,7 +246,7 @@ public class Di2Generator {
 			  contained.appendChild(contained5);
 		      
 			  Element contained6 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
-		      	setAttributes(contained6,"0:-20","100:100","157:124:47","false");
+		      	setAttributes(contained6,"0:-20","100:100","157:124:47","true");
 		      	contained6.setAttribute("fontSize", "9");
 		      	Element propStereotype6 = createStereotypeProp(doc);
 			    contained6.appendChild(propStereotype6);
@@ -358,9 +358,12 @@ public class Di2Generator {
   	  			cMethod.appendChild(createOperation(doc,iterator.next()));
   	  		}
   	  		if (locationBean.getAODProfileBean() instanceof AODProfileAspect) {
-  	  			Iterator <AODProfileAdvice> advices = ((AODProfileAspect)locationBean.getAODProfileBean()).getUnassociatedAdvices().iterator();
-  	  			while (advices.hasNext())
-  	  				cMethod.appendChild(createOperation(doc,advices.next()));
+  	  			Iterator <AODProfilePointcut> pointcuts = ((AODProfileAspect)locationBean.getAODProfileBean()).getPossiblePointcuts().iterator();
+  	  			while (pointcuts.hasNext()) {
+	  	  			Iterator <AODProfileAdvice> advices = pointcuts.next().getAdvices().iterator();
+	  	  			while (advices.hasNext())
+	  	  				cMethod.appendChild(createOperation(doc,advices.next()));
+  	  			}
   	  		}
 		}
 
@@ -390,8 +393,18 @@ public class Di2Generator {
 			  methodContained.appendChild(propStereotype);
 			  Element propQualifiedName = createQualifiedNameProp(doc);
 			  methodContained.appendChild(propQualifiedName);
-			  if (aodProfileResponsability instanceof AODProfileAdvice) 
-				  methodContained.appendChild(createAodStereotype(doc,"profileAod::Advice"));
+			  if (aodProfileResponsability instanceof AODProfileAdvice) {
+				  if (((AODProfileAdvice)aodProfileResponsability).getType().equals("after"))
+					  methodContained.appendChild(createAodStereotype(doc,"profileAod::After"));
+				  else
+					  if (((AODProfileAdvice)aodProfileResponsability).getType().equals("around"))
+						  methodContained.appendChild(createAodStereotype(doc,"profileAod::Around"));
+					  else
+						  if (((AODProfileAdvice)aodProfileResponsability).getType().equals("before"))
+							  methodContained.appendChild(createAodStereotype(doc,"profileAod::Before"));
+						  else
+							  methodContained.appendChild(createAodStereotype(doc,"profileAod::Advice"));
+			  }
 			  methodContained.appendChild(createSemanticModel(doc,"uml:Operation",aodProfileResponsability.getId()));
 		      return methodContained;
 		}
