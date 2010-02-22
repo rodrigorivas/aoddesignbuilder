@@ -39,8 +39,6 @@ public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 		if (type.equalsIgnoreCase("target") || type.equalsIgnoreCase("this") || type.equalsIgnoreCase("within")){
 			if (aodAssoc!=null && aodAssoc.getTarget()!=null && 
 					targetClass!=null && DataFormatter.equalsRegExp(targetClass, aodAssoc.getTarget().getName())){
-				if (targetClass.equals(AODProfileBean.ANY_MATCH) && aodAssoc.getTarget().getName()!=null && aodAssoc.getTarget().getName().length()>0)
-					setParam(aodAssoc.getTarget().getName());
 				return true;
 			}			
 		}
@@ -65,7 +63,7 @@ public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 
 	@Override
 	public String toString() {
-		String ret = type +"("+ param.replaceAll("[.]", "") +")";
+		String ret = type +"("+ targetClass.replaceAll("[.]", "") +")";
 		
 		return ret;
 	}
@@ -78,7 +76,7 @@ public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 	public boolean equals(Object obj) {
 		if (obj instanceof AODProfileSimpleJoinPoint){
 			AODProfileSimpleJoinPoint sjp = (AODProfileSimpleJoinPoint) obj;
-			if (this.getType().equals(sjp.getType()) && this.getParam().equals(sjp.getParam()))
+			if (this.getType().equals(sjp.getType()) && this.getTargetClass().equals(sjp.getTargetClass()))
 				return true;
 		}
 		return false;
