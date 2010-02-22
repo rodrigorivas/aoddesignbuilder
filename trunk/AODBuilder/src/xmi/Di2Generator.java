@@ -164,7 +164,7 @@ public class Di2Generator {
 		      contained.setAttribute("fontSize", "9");
 		      contained.setAttribute("lineStyle", "solid");
 		      if (association instanceof AODProfilePointcut)
-		    	  contained.setAttribute("fontColor", "0:204:0");
+		    	  contained.setAttribute("fontColor", "0:179:179");
 		      else
 		    	  contained.setAttribute("fontColor", "0:0:0");
 		      contained.setAttribute("foregroundColor", "0:0:0");
@@ -297,7 +297,7 @@ public class Di2Generator {
 		private Element createClass (Document doc, LocationBean locationBean) {
 		      Element contained = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance", "contained");
 		      if (locationBean.getAODProfileBean() instanceof AODProfileAspect)
-		    	  setAttributes(contained,locationBean.getPosition(),locationBean.getSize(),"157:124:47","true","202:252:197","0:0:0");//position, size
+		    	  setAttributes(contained,locationBean.getPosition(),locationBean.getSize(),"157:124:47","true","217:255:255","0:0:0");//position, size
 		      else
 		    	  setAttributes(contained,locationBean.getPosition(),locationBean.getSize(),"157:124:47","true","248:249:214","0:0:0");//position, size
 
@@ -380,7 +380,7 @@ public class Di2Generator {
 		private Element createOperation (Document doc, AODProfileResponsability aodProfileResponsability) {
 		      Element methodContained = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
 		      if (aodProfileResponsability instanceof AODProfileAdvice)
-		    	  setAttributes(methodContained,"20:20","100:100","157:124:47","true","248:249:214","0:204:0");
+		    	  setAttributes(methodContained,"20:20","100:100","157:124:47","true","248:249:214","0:164:164");
 		      else
 		    	  setAttributes(methodContained,"20:20","100:100","157:124:47","true","248:249:214","0:0:0");
 			  Element propStereotype = createStereotypeProp(doc);
