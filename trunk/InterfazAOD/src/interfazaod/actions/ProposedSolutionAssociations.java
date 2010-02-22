@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -28,7 +31,11 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.apache.log4j.Logger;
+
+import util.Log4jConfigurator;
 import xmi.Di2Generator;
 import xmi.XMIExporter;
 
@@ -80,10 +87,11 @@ public class ProposedSolutionAssociations extends javax.swing.JFrame {
 	private JPanel jPanelBR;
 	private JPanel jPanelTR;
 	private JScrollPane sClasses, sJointpoints, sAdvices;
-	private FileSelector fileSelector;
 	private CheckListManager cMAssoc, cMJoinPoint, cMAdvices;
 	Object[] aodClasses;
 	Object[] objects;
+	JFrame previousFrame;
+	Logger logger = Log4jConfigurator.getLogger();
 	
 	private static ProposedSolutionAssociations proposedSolution;
 
@@ -269,32 +277,46 @@ public class ProposedSolutionAssociations extends javax.swing.JFrame {
 		list.setModel(jModel);
 	}
 
-	public void setFileSelector(FileSelector fileSelector) {
-		this.fileSelector = fileSelector;
-	}
 	
 	private void jPreviousMouseClicked(MouseEvent evt) {
-		fileSelector.setVisible(true);
+		previousFrame.setVisible(true);
 		this.setVisible(false);
 	}
 
 	private void jNextMouseClicked(MouseEvent evt) {
 			Integer value = JOptionPane.showConfirmDialog(null, "Are you sure you want to generate this .uml?", "Confirm UML generation", JOptionPane.YES_NO_OPTION);
 			if (value == JOptionPane.OK_OPTION) {
-				try{
-					ArrayList<AODProfileBean> selectedBeans = updateSelection();
-					XMIExporter xmiExporter = new XMIExporter(selectedBeans);
-					xmiExporter.generateUMLFile();
-					Di2Generator di2 = new Di2Generator(selectedBeans);
-					di2.generateUMLFile();
-					JOptionPane.showMessageDialog(this, "Generation completed succesfully!");
-					System.exit(NORMAL);
-				}catch (Exception e) {
-					JOptionPane.showMessageDialog(this, "Generation failed!");
+				String fileName = openSaveDialog();
+				if (fileName!=null){
+					try{
+						ArrayList<AODProfileBean> selectedBeans = updateSelection();
+						XMIExporter xmiExporter = new XMIExporter(selectedBeans);
+						xmiExporter.generateUMLFile(fileName);
+						Di2Generator di2 = new Di2Generator(selectedBeans);
+						di2.generateUMLFile(fileName);
+						JOptionPane.showMessageDialog(this, "Generation completed succesfully!");
+						System.exit(NORMAL);
+					}catch (Exception e) {
+						JOptionPane.showMessageDialog(this, "Generation failed!");
+					}
 				}
 			}
 		}
 	
+	private String openSaveDialog() {
+		String fileName = null;
+		JFileChooser fileChooser = new JFileChooser();
+		int seleccion = fileChooser.showOpenDialog(this);
+
+		if (seleccion == JFileChooser.APPROVE_OPTION) {
+			File useCaseFile = fileChooser.getSelectedFile();
+			fileName = useCaseFile.getAbsolutePath();
+			logger.info("File to save: " + fileName);
+		}
+		
+		return fileName;
+	}
+
 	private ArrayList<AODProfileBean> updateSelection() {
 		ArrayList<AODProfileBean> list = new ArrayList<AODProfileBean>();
 		for (Object obj: aodClasses){
@@ -473,5 +495,10 @@ public class ProposedSolutionAssociations extends javax.swing.JFrame {
 		this.aodClasses = aodClasses;
 	}
 
+	public void setPreviousFrame(JFrame previousFrame) {
+		this.previousFrame = previousFrame;
+	}
+
+	
 	
 }
