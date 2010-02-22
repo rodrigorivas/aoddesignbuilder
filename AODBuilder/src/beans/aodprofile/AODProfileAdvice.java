@@ -73,10 +73,13 @@ public class AODProfileAdvice extends AODProfileResponsability {
 			target = targetClassName+" ";
 		if (targetMethodName!=null)
 			target += targetMethodName;
-		
-		String ret = "advice " + type + " "+joinPointType + " "+ target.replaceAll("[.]", "");
-		
-		return ret;
+		if (joinPointType.equals(ANY_MATCH) && target.equals(ANY_MATCH))
+			return "advice " + type;
+		else{
+			String ret = "advice " + type + " "+joinPointType + " "+ target.replaceAll("[.]", "");
+			
+			return ret;			
+		}
 	}
 	
 	@Override

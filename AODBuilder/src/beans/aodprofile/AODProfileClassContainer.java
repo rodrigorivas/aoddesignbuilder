@@ -6,7 +6,7 @@ import java.util.Map;
 public class AODProfileClassContainer extends AODProfileBean{
 
 	ArrayList<AODProfileClass> possibleClasses = new ArrayList<AODProfileClass>();	
-//	String description;
+	String description;
 
 	public ArrayList<AODProfileClass> getPossibleClasses() {
 		return possibleClasses;
@@ -14,12 +14,12 @@ public class AODProfileClassContainer extends AODProfileBean{
 	public void setPossibleClasses(ArrayList<AODProfileClass> possibleClasses) {
 		this.possibleClasses = possibleClasses;
 	}
-//	public String getDescription() {
-//		return description;
-//	}
-//	public void setDescription(String description) {
-//		this.description = description;
-//	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	public void addClass(AODProfileClass aodProfileClass){
 		if (possibleClasses!=null)
 			possibleClasses.add(aodProfileClass);
@@ -28,16 +28,21 @@ public class AODProfileClassContainer extends AODProfileBean{
 	public boolean processInnerBeans(Map<String, AODProfileBean> map) {
 		if (possibleClasses!=null){
 			for (AODProfileClass aodclass: possibleClasses){
-				if (!map.containsKey(aodclass.getId())){
-					map.put(aodclass.getId(), aodclass);
-				}
-				else{
-					aodclass.merge((AODProfileClass) map.get(aodclass.getId()));
-				}
+				processInnerClass(map, aodclass);
 			}
 			return true;
 		}
 		return false;
+	}
+	
+	public void processInnerClass(Map<String, AODProfileBean> map,
+			AODProfileClass aodclass) {
+		if (!map.containsKey(aodclass.getId())){
+			map.put(aodclass.getId(), aodclass);
+		}
+		else{
+			aodclass.merge((AODProfileClass) map.get(aodclass.getId()));
+		}
 	}
 	
 	@Override

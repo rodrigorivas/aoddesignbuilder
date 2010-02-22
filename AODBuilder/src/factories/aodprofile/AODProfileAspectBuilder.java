@@ -9,8 +9,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import util.DataFormatter;
+import util.ListUtils;
 import util.Log4jConfigurator;
-
 import analyser.AdviceDetector;
 import analyser.AttributeDetector;
 import analyser.JoinPointDetector;
@@ -22,6 +22,7 @@ import beans.aodprofile.AODProfileAspect;
 import beans.aodprofile.AODProfileAttribute;
 import beans.aodprofile.AODProfileBean;
 import beans.aodprofile.AODProfileClass;
+import beans.aodprofile.AODProfileClassContainer;
 import beans.aodprofile.AODProfileJoinPoint;
 import beans.aodprofile.AODProfilePointcut;
 import beans.aodprofile.AODProfileResponsability;
@@ -43,7 +44,17 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 		}
 		return null;
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public AODProfileBean build(AODProfileClass cl) throws Exception {
+		AODProfileAspect aspect = new AODProfileAspect();
+		aspect.setName(cl.getName());
+		aspect.setId(aspect.generateId());
+		aspect.setAttributes(ListUtils.clone(cl.getAttributes()));
+		aspect.setResponsabilities(ListUtils.clone(cl.getResponsabilities()));
+		
+		return aspect;
+	}
 
 	public AODProfileBean build(UMLAspect bean) throws Exception {
 		Log4jConfigurator.getLogger().info("Building new Aspect...");
@@ -97,9 +108,37 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 			source = (AODProfileAspect) map.get(sourceKey);
 		}
 		else{
-			source = (AODProfileAspect) AODProfileFactory.getInstance().factoryMethod(umlAssoc.getSource());
+			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(umlAssoc.getSource());
+			if (aodBean instanceof AODProfileAspect){
+				source = (AODProfileAspect) aodBean;
+			} else if (aodBean instanceof AODProfileClass){
+				source = (AODProfileAspect) new AODProfileAspectBuilder().build((AODProfileClass)aodBean);
+			} else if (aodBean instanceof AODProfileClassContainer){
+				aodBean.processInnerBeans(map);
+				//delete existing class because is going to be added as Aspect
+				deleteExistingClass(map, aodBean.getName());
+				UMLAspect asp = new UMLAspect(bean.getId(), aodBean.getName());
+				asp.setDescription(((AODProfileClassContainer)aodBean).getDescription());
+				source = (AODProfileAspect)new AODProfileAspectBuilder().build(asp);
+			}
 		}
+				
+		doAssociation(logger, umlAssoc, map, source, targetKey);
 		
+		logger.info("Build complete.\n"+source);
+		return source;
+	}
+
+	private void deleteExistingClass(Map<String, AODProfileBean> map, String name) {
+		String key = AODProfileClass.generateId(DataFormatter.javanize(name, true));
+		if (map.containsKey(key)){
+			map.remove(key);
+		}
+	}
+
+	private void doAssociation(Logger logger, UMLAssociation umlAssoc,
+			Map<String, AODProfileBean> map, AODProfileAspect source,
+			String targetKey) throws Exception {
 		if (source!=null){
 			logger.info("Found source: "+source);
 			/* Get targets */
@@ -109,13 +148,15 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 				AODProfilePointcut aodAssoc = new AODProfilePointcut();
 	
 				aodAssoc.setTarget((AODProfileClass) targetFromList);
-//				aodAssoc.setId(umlAssoc.getId());
 				aodAssoc.setName(source.getName()+"."+DataFormatter.javanize(targetFromList.getName(), true));
 		
 				for (AODProfileJoinPoint joinPoint: source.getUnassociatedJoinPoint()){
 					if (joinPoint.applies(source, aodAssoc)){
-						aodAssoc.addJoinPoint((new AODProfileJoinPointBuilder()).build("target", targetFromList.getName()));
-						aodAssoc.addJoinPoint(new AODProfileJoinPointBuilder().build(joinPoint));
+						AODProfileJoinPoint newDefaultJp = new AODProfileJoinPointBuilder().buildSimpleDefault(targetFromList.getName());
+						AODProfileJoinPoint newJp = new AODProfileJoinPointBuilder().build(joinPoint);
+						if (!newDefaultJp.equals(newJp))
+							aodAssoc.addJoinPoint(newDefaultJp);
+						aodAssoc.addJoinPoint(newJp);
 					}
 				}
 				
@@ -130,9 +171,6 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 				logger.info("Target found: "+targetFromList);
 			}			
 		}
-		
-		logger.info("Build complete.\n"+source);
-		return source;
 	}
 
 

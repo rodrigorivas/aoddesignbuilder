@@ -1,5 +1,6 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListUtils {
@@ -22,5 +23,15 @@ public class ListUtils {
 			}
 		}
 		return null;
+	}
+	
+	public static List clone (List list){
+		List newList = new ArrayList();
+		if (list!=null){
+			for (Object obj: list){
+				newList.add(obj);
+			}
+		}
+		return newList;
 	}
 }

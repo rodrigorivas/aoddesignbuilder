@@ -10,7 +10,7 @@ public class TestAODBuilder{
 
 	public static void main(String[] args) {
 		try {
-			Map<String, AODProfileBean> mapAOD = AODBuilder.getInstance().process("c:/temp/CSPS.xmi");
+			Map<String, AODProfileBean> mapAOD = AODBuilder.getInstance().process(args[0]);
 
 			int i=1;
 			for (AODProfileBean bean: mapAOD.values()){

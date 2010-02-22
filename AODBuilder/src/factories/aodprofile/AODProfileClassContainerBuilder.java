@@ -29,7 +29,9 @@ public class AODProfileClassContainerBuilder implements AODProfileBuilder{
 		
 		ArrayList<NLPDependencyWord> classes = ClassDetector.getInstance().detectClasses(words);
 		AODProfileClassContainer aodClassContainer = new AODProfileClassContainer();
-					
+		aodClassContainer.setName(bean.getName());
+		aodClassContainer.setDescription(bean.getDescription());
+		
 		for (NLPDependencyWord cl: classes){
 			
 			AODProfileClass possibleClass = new AODProfileClass();

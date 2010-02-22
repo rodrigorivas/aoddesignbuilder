@@ -20,45 +20,57 @@ public class AODProfileJoinPointBuilder{
 		AODProfileJoinPoint jp = null;
 		if (isknownJoinPoint(word)){
 			if (word.equalsIgnoreCase("call") || word.equalsIgnoreCase("execution") || word.equalsIgnoreCase("new")){
-				jp = buildComplexDefault();
-				if (param!=null){
-					((AODProfileComplexJoinPoint)jp).setResponsabilityName(DataFormatter.javanize(param,true));
-				}
+				jp = buildComplexDefault(param);
+			}
+			else if (word.equalsIgnoreCase("exception")){
+				jp = buildSimpleDefault(param);
+				if (param==null || param.length()==0)
+					((AODProfileSimpleJoinPoint)jp).setParam("Exception");
 			}
 			else{
-				jp = buildSimpleDefault();
-				if (param!=null){
-					((AODProfileSimpleJoinPoint)jp).setParam(DataFormatter.javanize(param,true));
-				}
+				jp = buildSimpleDefault(param);
 			}
 	
 			jp.setName(word);
 			jp.setType(word);
-		}		
+		} else{
+			jp = buildSimpleDefault(param);
+		}
+		
 		
 		Log4jConfigurator.getLogger().info("Build complete. JoinPoint: "+jp);
 		return jp;
 		
 	}
 	
-	private AODProfileJoinPoint buildComplexDefault() {
+	public AODProfileJoinPoint buildComplexDefault(String param) {
 		Log4jConfigurator.getLogger().info("Building new default Complex JoinPoint.");
 		AODProfileComplexJoinPoint jp = new AODProfileComplexJoinPoint();
 		/* set default values */
-		jp.setType("call");
+		jp.setType(AODProfileComplexJoinPoint.DEFAULT_JP);
+		jp.setName(AODProfileComplexJoinPoint.DEFAULT_JP);
 		jp.setResponsability((new AODProfileResponsabilityBuilder()).buildDefault());
-		
+
+		if (param!=null){
+			jp.setResponsabilityName(DataFormatter.javanize(param,true));
+		}
+
 		Log4jConfigurator.getLogger().info("Build complete.");
 		return jp;
 	}
 
-	private AODProfileJoinPoint buildSimpleDefault() {
+	public AODProfileJoinPoint buildSimpleDefault(String param) {
 		Log4jConfigurator.getLogger().info("Building new default Simple JoinPoint.");
 		AODProfileSimpleJoinPoint jp = new AODProfileSimpleJoinPoint();
 		/* set default values */
-		jp.setType("call");
+		jp.setType(AODProfileSimpleJoinPoint.DEFAULT_JP);
+		jp.setName(AODProfileSimpleJoinPoint.DEFAULT_JP);
 		jp.setParam(AODProfileBean.ANY_MATCH);
-		
+
+		if (param!=null){
+			jp.setParam(DataFormatter.javanize(param,true));
+		}
+
 		Log4jConfigurator.getLogger().info("Build complete.");
 		return jp;
 	}

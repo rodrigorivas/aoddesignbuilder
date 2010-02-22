@@ -154,7 +154,7 @@ public class JoinPointDetector {
 	public void completeJoinPoints(Collection<AODProfileJoinPoint> joinPoints, Collection<AODProfileResponsability> responsabilities){
 		for (AODProfileJoinPoint jp: joinPoints){
 			for (AODProfileResponsability resp: responsabilities){
-				if (jp.applies(resp, null)){
+				if (jp.applies(resp, null) && jp.getResponsability()!=null){
 					jp.getResponsability().merge(resp);
 					logger.info("Refining joinPoint:"+jp);
 				}
