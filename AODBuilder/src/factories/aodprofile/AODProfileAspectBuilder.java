@@ -153,7 +153,11 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 				for (AODProfileJoinPoint joinPoint: source.getUnassociatedJoinPoint()){
 					if (joinPoint.applies(source, aodAssoc)){
 						AODProfileJoinPoint newDefaultJp = new AODProfileJoinPointBuilder().buildSimpleDefault(targetFromList.getName());
+						if (joinPoint.getTargetClass().equals(AODProfileBean.ANY_MATCH) && targetFromList.getName()!=null && targetFromList.getName().length()>0)
+							newDefaultJp.setTargetClass(targetFromList.getName());
 						AODProfileJoinPoint newJp = new AODProfileJoinPointBuilder().build(joinPoint);
+						if (joinPoint.getTargetClass().equals(AODProfileBean.ANY_MATCH) && targetFromList.getName()!=null && targetFromList.getName().length()>0)
+							newJp.setTargetClass(targetFromList.getName());
 						if (!newDefaultJp.equals(newJp))
 							aodAssoc.addJoinPoint(newDefaultJp);
 						aodAssoc.addJoinPoint(newJp);
