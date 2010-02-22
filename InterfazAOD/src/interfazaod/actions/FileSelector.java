@@ -275,7 +275,7 @@ public class FileSelector extends javax.swing.JFrame {
 	public void endLoading() {
 		logger.info("End loading.");
 		ProposedSolution proposedSolution = ProposedSolution.getInstance(aodClasses);
-		proposedSolution.setFileSelector(this);
+		proposedSolution.setPreviousFrame(this);
 		proposedSolution.setVisible(true);
 		this.setVisible(false);
 	}

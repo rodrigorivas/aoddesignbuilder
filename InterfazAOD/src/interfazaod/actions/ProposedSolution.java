@@ -15,6 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -26,6 +27,10 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
+
+import org.apache.log4j.Logger;
+
+import util.Log4jConfigurator;
 
 import beans.aodprofile.AODProfileAspect;
 import beans.aodprofile.AODProfileAssociation;
@@ -71,9 +76,10 @@ public class ProposedSolution extends javax.swing.JFrame {
 	private JPanel jPanelBR;
 	private JPanel jPanelTR;
 	private JScrollPane sClasses, sAttributes, sResponsibilities;
-	private FileSelector fileSelector;
+	private JFrame previousFrame;
 	private CheckListManager cMClasses, cMAttributes, cMResponsibilities;
 	Object[] aodClasses;
+	Logger logger = Log4jConfigurator.getLogger();
 
 	private static ProposedSolution proposedSolution;
 
@@ -254,12 +260,12 @@ public class ProposedSolution extends javax.swing.JFrame {
 		list.setModel(jModel);
 	}
 
-	public void setFileSelector(FileSelector fileSelector) {
-		this.fileSelector = fileSelector;
+	public void setPreviousFrame(JFrame previousFrame) {
+		this.previousFrame = previousFrame;
 	}
 	
 	private void jPreviousMouseClicked(MouseEvent evt) {
-		fileSelector.setVisible(true);
+		previousFrame.setVisible(true);
 		this.setVisible(false);
 	}
 
@@ -269,6 +275,7 @@ public class ProposedSolution extends javax.swing.JFrame {
 
 		ProposedSolutionAssociations psassoc = new ProposedSolutionAssociations(selectedAssociations.toArray());
 		psassoc.setAodClasses(selectedClasses.toArray());
+		psassoc.setPreviousFrame(this);
 		psassoc.setVisible(true);
 		this.setVisible(false);
 	}
