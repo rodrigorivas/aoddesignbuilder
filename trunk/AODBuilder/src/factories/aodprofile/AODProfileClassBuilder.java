@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 
 import util.DataFormatter;
 import util.Log4jConfigurator;
-
 import analyser.AttributeDetector;
 import analyser.ResponsabilityDetector;
 import analyser.SentenceAnalizer;
@@ -77,9 +76,25 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 			source = (AODProfileClass) map.get(sourceKey);
 		}
 		else{
-			source = (AODProfileClass) AODProfileFactory.getInstance().factoryMethod(umlAssoc.getSource());
+			AODProfileBean aodBean = AODProfileFactory.getInstance().factoryMethod(umlAssoc.getSource());
+			if (aodBean instanceof AODProfileClass){
+				source = (AODProfileClass) aodBean;
+			} else if (aodBean instanceof AODProfileClassContainer){
+				aodBean.processInnerBeans(map);
+				UMLClass cl = new UMLClass(bean.getId(), aodBean.getName());
+				cl.setDescription(((AODProfileClassContainer)aodBean).getDescription());
+				source = (AODProfileClass) new AODProfileClassBuilder().build(cl);
+			}
 		}
 		
+		doAssociation(logger, umlAssoc, map, source, targetKey);
+		logger.info("Build complete.\n"+source);
+		return source;
+	}
+
+	private void doAssociation(Logger logger, UMLAssociation umlAssoc,
+			Map<String, AODProfileBean> map, AODProfileClass source,
+			String targetKey) throws Exception {
 		if (source!=null){
 			logger.info("Found source: "+source);
 			/* Get targets */
@@ -89,7 +104,6 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 				AODProfileAssociation aodAssoc = new AODProfileAssociation();
 	
 				aodAssoc.setTarget((AODProfileClass) targetFromList);
-//				aodAssoc.setId(umlAssoc.getId());
 				aodAssoc.setName(source.getName()+"."+DataFormatter.javanize(targetFromList.getName(), true));
 			
 				if (!source.getPossibleAssociations().contains(aodAssoc))
@@ -98,8 +112,6 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 				logger.info("Found target: "+targetFromList);
 			}			
 		}
-		logger.info("Build complete.\n"+source);
-		return source;
 	}
 
 	protected ArrayList<AODProfileClass> getTargets(UMLAssociation umlAssoc, 

@@ -9,6 +9,7 @@ import util.UniqueID;
 
 public class AODProfileComplexJoinPoint extends AODProfileJoinPoint {
 
+	public static final String DEFAULT_JP = "call";
 	private AODProfileResponsability responsability;
 	
 	public AODProfileComplexJoinPoint() {
@@ -94,7 +95,7 @@ public class AODProfileComplexJoinPoint extends AODProfileJoinPoint {
 			return responsability.equals(source);
 		}
 		else if (source instanceof AODProfileAspect){
-			if (aodAssoc.getTarget()!=null && DataFormatter.equalsRegExp(targetClass, aodAssoc.getTarget().getName())){
+			if (aodAssoc!=null && aodAssoc.getTarget()!=null && DataFormatter.equalsRegExp(targetClass, aodAssoc.getTarget().getName())){
 				return true;
 			}
 		}

@@ -5,6 +5,7 @@ import util.UniqueID;
 
 public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 
+	public static final String DEFAULT_JP = "target";
 	private String param;
 	
 	public AODProfileSimpleJoinPoint() {
@@ -30,22 +31,22 @@ public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 
 	public void setParam(String param) {
 		this.param = param;
+		targetClass = param;
 	}
 	
 	@Override
 	public boolean applies(AODProfileBean source, AODProfilePointcut aodAssoc) {
-		if (type.equalsIgnoreCase("target")){
-			if (aodAssoc.getTarget()!=null && DataFormatter.equalsRegExp(targetClass, aodAssoc.getTarget().getName())){
+		if (type.equalsIgnoreCase("target") || type.equalsIgnoreCase("this") || type.equalsIgnoreCase("within")){
+			if (aodAssoc!=null && aodAssoc.getTarget()!=null && 
+					targetClass!=null && DataFormatter.equalsRegExp(targetClass, aodAssoc.getTarget().getName())){
+				if (targetClass.equals(AODProfileBean.ANY_MATCH) && aodAssoc.getTarget().getName()!=null && aodAssoc.getTarget().getName().length()>0)
+					setParam(aodAssoc.getTarget().getName());
 				return true;
 			}			
 		}
-		if (type.equalsIgnoreCase("this") || type.equalsIgnoreCase("within")){
-			if (source!=null && DataFormatter.equalsRegExp(param, source.getName())){
-				return true;
-			}						
-		}
 		if (type.equalsIgnoreCase("exception"))
 			return true;
+		
 		return false;
 	}
 	
@@ -54,7 +55,7 @@ public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 	}
 
 	public boolean matchByMethodName(String targetMethodName) {
-		return false;
+		return true;
 	}
 
 	@Override

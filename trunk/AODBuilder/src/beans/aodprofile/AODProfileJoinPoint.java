@@ -1,5 +1,7 @@
 package beans.aodprofile;
 
+import util.DataFormatter;
+
 
 
 public abstract class AODProfileJoinPoint extends AODProfileBean{
@@ -45,7 +47,7 @@ public abstract class AODProfileJoinPoint extends AODProfileBean{
 	public boolean match (AODProfileBean bean){
 		if (bean instanceof AODProfileAdvice){
 			AODProfileAdvice adv = (AODProfileAdvice) bean;
-			return (this.getType().equals(adv.getJoinPointType()));
+			return (DataFormatter.equalsRegExpDual(this.getType(), adv.getJoinPointType()));
 		}
 		return false;		
 	}

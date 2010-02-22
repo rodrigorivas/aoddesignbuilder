@@ -50,8 +50,8 @@ public class AODProfileResponsabilityBuilder {
 	public AODProfileResponsability buildDefault() {
 		Log4jConfigurator.getLogger().info("Building new default Responsability.");
 		AODProfileResponsability responsability = new AODProfileResponsability();
-		responsability.setName("");
 		responsability.setReturningType(AODProfileBean.ANY_MATCH);
+		responsability.setName(AODProfileBean.ANY_MATCH);
 		
 		Log4jConfigurator.getLogger().info("Build complete.");
 		return responsability;
