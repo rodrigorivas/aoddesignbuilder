@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import util.DataFormatter;
 import beans.aodprofile.AODProfileAdvice;
 import beans.aodprofile.AODProfileAspect;
 import beans.aodprofile.AODProfileAssociation;
@@ -30,10 +31,11 @@ import beans.aodprofile.AODProfilePointcut;
 import beans.aodprofile.AODProfileResponsability;
 import beans.aodprofile.AODProfileAdvice.advice_type;
 
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-
 
 public class XMIExporter {
+
+	public static final String DEFAULT_EXTENSION=".uml";
+
 	private Document doc;
 	private Collection <AODProfileBean> aodProfileBeans;
 	//private static XMIExporter instance;
@@ -41,6 +43,7 @@ public class XMIExporter {
 	private static Integer umlRootId;
 	private Map <String,String> memberEndKeys;
 	private Map <String,String> advicesKeys;
+	String fileName;
 	
 	public XMIExporter(Collection <AODProfileBean> aodProfileBeans) throws Exception {
 		super();
@@ -48,17 +51,14 @@ public class XMIExporter {
 		memberEndKeys = new HashMap <String,String>();
 		advicesKeys = new HashMap <String,String>();
 		this.aodProfileBeans = aodProfileBeans;
-		doc = makeDoc();
-		generateUMLFile();
 	}
 	
-/*	public static XMIExporter getInstance () {
-		if (instance==null)  
-			return new XMIExporter();
-		return instance;
-	}
-*/
-	public void generateUMLFile() throws Exception {
+	public void generateUMLFile(String fileName) throws Exception {
+			fileName = DataFormatter.removeExtension(fileName);
+			this.fileName = DataFormatter.getSimpleFileName(fileName);
+			
+			doc = makeDoc();
+			
 		    Transformer transformer = TransformerFactory.newInstance().newTransformer();
 		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		    
@@ -70,11 +70,7 @@ public class XMIExporter {
 		    String xmlString = result.getWriter().toString();
 		    System.out.println(xmlString);
 		    
-		    XMLSerializer serializer = new XMLSerializer();
-		    serializer.setOutputCharStream(
-		    new java.io.FileWriter("aodDesign.xml"));
-		     
-		    java.io.File file = new java.io.File("aodDesign.uml");
+		    java.io.File file = new java.io.File(fileName+DEFAULT_EXTENSION);
 		    java.io.BufferedWriter writer = new java.io.BufferedWriter(new
 		    		java.io.FileWriter(file));
 		    writer.write(sw.toString());
@@ -129,7 +125,7 @@ public class XMIExporter {
 	      Element root = doc.createElement("uml:Model");
 	      setUmlRootId(getId());
 	      root.setAttribute("xmi:id",getUmlRootId().toString()); //Este valor se usará dsp en el di2 
-	      root.setAttribute("xmi:name", "aodDesign");
+	      root.setAttribute("xmi:name", fileName);
 	      //Agrega el nodo packageImport
 	      Element packageImport = doc.createElement("packageImport");
 	      packageImport.setAttribute("xmi:id", getId().toString());  

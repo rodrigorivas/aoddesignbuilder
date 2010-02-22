@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import util.DataFormatter;
 import beans.aodprofile.AODProfileAdvice;
 import beans.aodprofile.AODProfileAspect;
 import beans.aodprofile.AODProfileAssociation;
@@ -29,17 +30,17 @@ import beans.aodprofile.AODProfilePointcut;
 import beans.aodprofile.AODProfileResponsability;
 import beans.aodprofile.AODProfileAdvice.advice_type;
 
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-
 
 public class Di2Generator {
 
+	public static final String DEFAULT_EXTENSION = ".di2";
 	private Document doc;
 	private Collection <AODProfileBean> aodProfileBeans;
 	private ArrayList <LocationBean> locationElements;
 	private Map <String,String> classAnchorages;
 	private Map <String,String> associationAnchorages ;
 	private Integer associationNumber;
+	private String fileName;
 	
 	public Di2Generator(Collection <AODProfileBean> aodProfileBeans) throws Exception {
 		super();
@@ -48,12 +49,15 @@ public class Di2Generator {
 		associationAnchorages = new HashMap <String,String> ();
 		setAssociationNumber(new Integer(0));
 		this.aodProfileBeans = aodProfileBeans;
-		doc = makeDoc();
-		generateUMLFile();
 	}
 	
-	public void generateUMLFile() throws Exception {
-		    Transformer transformer = TransformerFactory.newInstance().newTransformer();
+	public void generateUMLFile(String fileName) throws Exception {
+			fileName = DataFormatter.removeExtension(fileName);
+			this.fileName = DataFormatter.getSimpleFileName(fileName);
+
+			doc = makeDoc();
+
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		    
 		    //initialize StreamResult with File object to save to file
@@ -64,11 +68,7 @@ public class Di2Generator {
 		    String xmlString = result.getWriter().toString();
 		    System.out.println(xmlString);
 		    
-		    XMLSerializer serializer = new XMLSerializer();
-		    serializer.setOutputCharStream(
-		    new java.io.FileWriter("aodDesign.xml"));
-		     
-		    java.io.File file = new java.io.File("aodDesign.di2");
+		    java.io.File file = new java.io.File(fileName+DEFAULT_EXTENSION);
 		    java.io.BufferedWriter writer = new java.io.BufferedWriter(new
 		    		java.io.FileWriter(file));
 		    writer.write(sw.toString());
@@ -102,7 +102,7 @@ public class Di2Generator {
 		      di2Root.appendChild(owner);
 		      Element element = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","element");
 		      element.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", "uml:Model");
-		      element.setAttribute("href","aodDesign.uml#"+XMIExporter.getUmlRootId());
+		      element.setAttribute("href",fileName+XMIExporter.DEFAULT_EXTENSION+"#"+XMIExporter.getUmlRootId());
 		      owner.appendChild(element);
 		      
 		      return doc;
@@ -440,7 +440,7 @@ public class Di2Generator {
 		      aSemanticModel.setAttribute("presentation", "TextStereotype");
 		      Element aSemanticElement = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","element");
 		      aSemanticElement.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", semanticElement);
-		      aSemanticElement.setAttribute("href","aodDesign.uml#"+ id);//Referencia al elemento del .uml. Una vez que sepamos cómo definirlo habría que pasarlo como parámetro :)
+		      aSemanticElement.setAttribute("href",fileName+XMIExporter.DEFAULT_EXTENSION+"#"+ id);//Referencia al elemento del .uml. Una vez que sepamos cómo definirlo habría que pasarlo como parámetro :)
 		      aSemanticModel.appendChild(aSemanticElement);
 		      return aSemanticModel;
 		}
@@ -488,7 +488,7 @@ public class Di2Generator {
 					for (int j=0; j< node.getChildNodes().getLength(); j++) {
 						if (node.getChildNodes().item(j).getNodeName().equals("semanticModel")) {
 							Node element = node.getChildNodes().item(j).getFirstChild();
-							String name = "aodDesign.uml#" + target;
+							String name = fileName+XMIExporter.DEFAULT_EXTENSION+"#" + target;
 							if(element.getAttributes().item(0).getNodeValue().equals(name)) {
 								String value = classAnchorages.get(key);
 								String anchoragePosition = calculateTargetPosition(locationElements.get(i),element);
