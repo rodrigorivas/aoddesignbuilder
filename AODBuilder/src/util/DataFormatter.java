@@ -178,4 +178,38 @@ public class DataFormatter  {
 		}
 		return ret;
 	}
+
+
+	public static String removeExtension(String fileName) {
+		if (fileName!=null){
+			int pos = fileName.indexOf(".");
+			if (pos > 0){
+				fileName = fileName.substring(0, pos);
+			}
+		}
+		return fileName;
+	}
+
+	public static String removePath(String fileName) {
+		if (fileName!=null){
+			int pos = fileName.lastIndexOf("/");
+			if (pos > 0 && pos < fileName.length()){
+				fileName = fileName.substring(pos+1, fileName.length());
+			}
+			else{
+				pos = fileName.lastIndexOf("\\");
+				if (pos > 0 && pos < fileName.length()){
+					fileName = fileName.substring(pos+1, fileName.length());
+				}				
+			}
+		}
+		return fileName;
+	}
+
+
+	public static String getSimpleFileName(String fileName) {
+		fileName = removePath(fileName);
+		fileName = removeExtension(fileName);
+		return fileName;
+	}
 }
