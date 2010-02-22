@@ -185,7 +185,7 @@ public class Di2Generator {
 		      
 		      //Genera los seis contained para el elemento
 		      Element contained1 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
-		      	setAttributes(contained1,"0:-20","100:100","157:124:47","false","248:249:214");
+		      	setAttributes(contained1,"0:-20","100:100","157:124:47","false","248:249:214","0:0:0");
 		      	contained1.setAttribute("fontSize", "9");
 		      	Element propStereotype1 = createStereotypeProp(doc);
 			    contained1.appendChild(propStereotype1);
@@ -194,7 +194,7 @@ public class Di2Generator {
 			  contained.appendChild(contained1);
 		      
 			  Element contained2 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
-		      	setAttributes(contained2,"-60:20","100:100","157:124:47","false","248:249:214");
+		      	setAttributes(contained2,"-60:20","100:100","157:124:47","false","248:249:214","0:0:0");
 		      	contained2.setAttribute("fontSize", "9");
 		      	Element propStereotype2 = createStereotypeProp(doc);
 			    contained2.appendChild(propStereotype2);
@@ -205,7 +205,7 @@ public class Di2Generator {
 			  contained.appendChild(contained2);
 			  
 			  Element contained3 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
-		      	setAttributes(contained3,"20:-20","100:100","157:124:47","false","248:249:214");
+		      	setAttributes(contained3,"20:-20","100:100","157:124:47","false","248:249:214","0:0:0");
 		      	contained3.setAttribute("fontSize", "9");
 		      	Element propStereotype3 = createStereotypeProp(doc);
 			    contained3.appendChild(propStereotype3);
@@ -216,7 +216,7 @@ public class Di2Generator {
 			  contained.appendChild(contained3);
 			  
 		      Element contained4 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
-		      	setAttributes(contained4,"-60:-20","100:100","157:124:47","false","248:249:214");
+		      	setAttributes(contained4,"-60:-20","100:100","157:124:47","false","248:249:214","0:0:0");
 		      	contained4.setAttribute("fontSize", "9");
 		      	Element propStereotype4 = createStereotypeProp(doc);
 			    contained4.appendChild(propStereotype4);
@@ -225,7 +225,7 @@ public class Di2Generator {
 			  contained.appendChild(contained4);
 
 			  Element contained5 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
-		      	setAttributes(contained5,"20:20","100:100","157:124:47","false","248:249:214");
+		      	setAttributes(contained5,"20:20","100:100","157:124:47","false","248:249:214","0:0:0");
 		      	contained5.setAttribute("fontSize", "9");
 		      	Element propStereotype5 = createStereotypeProp(doc);
 			    contained5.appendChild(propStereotype5);
@@ -234,7 +234,7 @@ public class Di2Generator {
 			  contained.appendChild(contained5);
 		      
 			  Element contained6 = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
-		      	setAttributes(contained6,"0:-20","100:100","157:124:47","true","248:249:214");
+		      	setAttributes(contained6,"0:-20","100:100","157:124:47","true","248:249:214","0:0:0");
 		      	contained6.setAttribute("fontSize", "9");
 		      	Element propStereotype6 = createStereotypeProp(doc);
 			    contained6.appendChild(propStereotype6);
@@ -297,9 +297,9 @@ public class Di2Generator {
 		private Element createClass (Document doc, LocationBean locationBean) {
 		      Element contained = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance", "contained");
 		      if (locationBean.getAODProfileBean() instanceof AODProfileAspect)
-		    	  setAttributes(contained,locationBean.getPosition(),locationBean.getSize(),"157:124:47","true","221:254:197");//position, size
+		    	  setAttributes(contained,locationBean.getPosition(),locationBean.getSize(),"157:124:47","true","202:252:197","0:0:0");//position, size
 		      else
-		    	  setAttributes(contained,locationBean.getPosition(),locationBean.getSize(),"157:124:47","true","248:249:214");//position, size
+		    	  setAttributes(contained,locationBean.getPosition(),locationBean.getSize(),"157:124:47","true","248:249:214","0:0:0");//position, size
 
 		      //Properties obligatorias
 		      Element propStereotype = createStereotypeProp(doc);
@@ -367,7 +367,7 @@ public class Di2Generator {
 
 		private Element createAttribute (Document doc, AODProfileAttribute aodProfileAttribute) {
 			  Element attribContained = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
-			  setAttributes(attribContained,"20:20","100:100","166:157:183","true","248:249:214");
+			  setAttributes(attribContained,"20:20","100:100","166:157:183","true","248:249:214","0:0:0");
 			  Element propStereotype = createStereotypeProp(doc);
 			  attribContained.appendChild(propStereotype);
 			  Element propQualifiedName = createQualifiedNameProp(doc);
@@ -380,9 +380,9 @@ public class Di2Generator {
 		private Element createOperation (Document doc, AODProfileResponsability aodProfileResponsability) {
 		      Element methodContained = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance","contained");
 		      if (aodProfileResponsability instanceof AODProfileAdvice)
-		    	  setAttributes(methodContained,"20:20","100:100","157:124:47","true","0:204:0");
+		    	  setAttributes(methodContained,"20:20","100:100","157:124:47","true","248:249:214","0:204:0");
 		      else
-		    	  setAttributes(methodContained,"20:20","100:100","157:124:47","true","248:249:214");
+		    	  setAttributes(methodContained,"20:20","100:100","157:124:47","true","248:249:214","0:0:0");
 			  Element propStereotype = createStereotypeProp(doc);
 			  methodContained.appendChild(propStereotype);
 			  Element propQualifiedName = createQualifiedNameProp(doc);
@@ -419,12 +419,12 @@ public class Di2Generator {
 		      return propQName;
 		}
 		
-		private void setAttributes (Element contained,String position, String size, String borderColor, String visible, String backColor) {
+		private void setAttributes (Element contained,String position, String size, String borderColor, String visible, String backColor, String fontColor) {
 			  contained.setAttributeNS("http://www.w3.org/2001/XMLSchema-instance", "xsi:type", "di2:GraphNode");
 		      contained.setAttribute("isVisible",visible);
 		      contained.setAttribute("fontFamily", "Arial");
 		      contained.setAttribute("lineStyle", "solid");
-		      contained.setAttribute("fontColor", "0:0:0");
+		      contained.setAttribute("fontColor", fontColor);
 		      contained.setAttribute("foregroundColor", "248:249:214");
 		      contained.setAttribute("backgroundColor", backColor);
 		      contained.setAttribute("borderColor", borderColor);
@@ -434,7 +434,7 @@ public class Di2Generator {
 
 		private Element createAttribSpace (Document doc) {
 		      Element cAttrib = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance", "contained");
-		      setAttributes(cAttrib,"20:20","100:100","157:124:47","true","248:249:214");
+		      setAttributes(cAttrib,"20:20","100:100","157:124:47","true","248:249:214","0:0:0");
 		      return cAttrib;
 		}
 		
@@ -458,7 +458,7 @@ public class Di2Generator {
 
 		private Element createMethodSpace (Document doc) {
 		      Element cMethod = doc.createElementNS("http://www.w3.org/2001/XMLSchema-instance", "contained");
-		      setAttributes(cMethod,"20:20","100:100","157:124:47","true","248:249:214");
+		      setAttributes(cMethod,"20:20","100:100","157:124:47","true","248:249:214","0:0:0");
 		      return cMethod;
 		}
 
