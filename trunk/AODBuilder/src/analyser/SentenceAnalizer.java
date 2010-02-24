@@ -170,17 +170,19 @@ public class SentenceAnalizer {
 
 	private Collection<TypedDependency> parseNLP(String sentence) {
 		logger.info("Parsing sentence: "+ sentence);
-		if (lp.parse(sentence)){
-			Tree parse = lp.getBestParse();
-	
-			TreebankLanguagePack tlp = new PennTreebankLanguagePack();
-			GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
-			GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
-	
-			Collection<TypedDependency> tdl = gs.typedDependenciesCollapsed();
-			
-			logger.info("Parsing sentence ended.");
-			return tdl;
+		if (sentence!=null && sentence.trim().length()>0){
+			if (lp.parse(sentence)){
+				Tree parse = lp.getBestParse();
+		
+				TreebankLanguagePack tlp = new PennTreebankLanguagePack();
+				GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
+				GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
+		
+				Collection<TypedDependency> tdl = gs.typedDependenciesCollapsed();
+				
+				logger.info("Parsing sentence ended.");
+				return tdl;
+			}
 		}
 		return null;
 	}

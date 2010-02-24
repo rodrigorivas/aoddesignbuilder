@@ -6,16 +6,18 @@ import beans.aodprofile.AODProfileBean;
 import beans.aodprofile.AODProfileComplexJoinPoint;
 import beans.aodprofile.AODProfileJoinPoint;
 import beans.aodprofile.AODProfileSimpleJoinPoint;
+import beans.nlp.NLPDependencyWord;
 
 public class AODProfileJoinPointBuilder{
 
 	private static String[] knownJoinPoints = {"call", "execution", "new", "within", "exception", "target", "this"};
 
-	public AODProfileJoinPoint build(String word) throws Exception {
-		return build(word, null);
+	public AODProfileJoinPoint build(NLPDependencyWord dependencyWord) throws Exception {
+		return build(dependencyWord, null);
 	}	
 
-	public AODProfileJoinPoint build(String word, String param) throws Exception {
+	public AODProfileJoinPoint build(NLPDependencyWord dependencyWord, String param) throws Exception {
+		String word = dependencyWord.getWord();
 		Log4jConfigurator.getLogger().info("Building new JoinPoint...");
 		AODProfileJoinPoint jp = null;
 		if (isknownJoinPoint(word)){
@@ -34,7 +36,13 @@ public class AODProfileJoinPointBuilder{
 			jp.setName(word);
 			jp.setType(word);
 		} else{
-			jp = buildSimpleDefault(param);
+			if (dependencyWord.isVerb()){
+				jp = buildComplexDefault(param);
+				jp.setMethodName(word);
+			}
+			else{
+				jp = buildSimpleDefault(param);
+			}
 		}
 		
 		

@@ -56,7 +56,7 @@ public class AdviceDetector {
 					}
 				}
 			}
-			else if (dr.getRelationType().equalsIgnoreCase("prep")){
+			else if (dr.getRelationType().toLowerCase().startsWith("prep")){
 				if (dr.getDepDW().isRelated(classContainer, true)){
 					AODProfileAdvice newAdvice = (new AODProfileAdviceBuilder()).build(dr.getSpecific(), dr.getDepDW().getWord());
 					if (newAdvice!=null && !advices.contains(newAdvice)){

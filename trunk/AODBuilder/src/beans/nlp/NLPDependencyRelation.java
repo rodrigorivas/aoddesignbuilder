@@ -37,7 +37,7 @@ public class NLPDependencyRelation {
 //			if ("nn".equalsIgnoreCase(relationType) && govDW.getPosition() == depDW.getPosition()+1){
 //				govDW.setWord(depDW.getWord()+" "+govDW.getWord());
 //			}
-			if (relationType.equalsIgnoreCase("nsubj"))
+			if (relationType.equalsIgnoreCase("nsubj") || relationType.equalsIgnoreCase("nsubjpass"))
 				govDW.addParent(depDW);
 			else
 				depDW.addParent(govDW);

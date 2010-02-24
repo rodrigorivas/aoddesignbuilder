@@ -36,19 +36,27 @@ public class JoinPointDetector {
 		Collection<AODProfileJoinPoint> joinPoints = new ArrayList<AODProfileJoinPoint>();
 		
 		for (NLPDependencyRelation dr: relations){
-			if (dr.getRelationType().equalsIgnoreCase("mark") ||  
-					dr.getRelationType().equalsIgnoreCase("pcomp")){
+			if (dr.getRelationType().equalsIgnoreCase("mark")){
 				if (dr.getGovDW().isRelated(classContainer, true)){
-					AODProfileJoinPoint newJoinPoint = (new AODProfileJoinPointBuilder()).build(dr.getGovDW().getWord());
+					AODProfileJoinPoint newJoinPoint = (new AODProfileJoinPointBuilder()).build(dr.getGovDW());
 					if (newJoinPoint!=null && !joinPoints.contains(newJoinPoint)){
 						logger.info("Found new joinpoint: "+newJoinPoint);
 						joinPoints.add(newJoinPoint);
 					}
 				}
 			}
-			else if (dr.getRelationType().equalsIgnoreCase("prep")){
+			else if (dr.getRelationType().equalsIgnoreCase("pcomp")){
 				if (dr.getDepDW().isRelated(classContainer, true)){
-					AODProfileJoinPoint newJoinPoint = (new AODProfileJoinPointBuilder()).build(dr.getDepDW().getWord());
+					AODProfileJoinPoint newJoinPoint = (new AODProfileJoinPointBuilder()).build(dr.getDepDW());
+					if (newJoinPoint!=null && !joinPoints.contains(newJoinPoint)){
+						logger.info("Found new joinpoint: "+newJoinPoint);
+						joinPoints.add(newJoinPoint);
+					}
+				}
+			}
+			else if (dr.getRelationType().equalsIgnoreCase("prep") || dr.getRelationType().equalsIgnoreCase("prepc")){
+				if (dr.getDepDW().isRelated(classContainer, true)){
+					AODProfileJoinPoint newJoinPoint = (new AODProfileJoinPointBuilder()).build(dr.getDepDW());
 					if (newJoinPoint!=null && !joinPoints.contains(newJoinPoint)){
 						logger.info("Found new joinpoint: "+newJoinPoint);
 						joinPoints.add(newJoinPoint);
@@ -63,7 +71,6 @@ public class JoinPointDetector {
 	
 	
 	public void completeJoinPoints(Collection<AODProfileJoinPoint> joinPoints, Collection<NLPDependencyWord> words, Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){
-	
 		ArrayList<NLPDependencyWord> verbsRelatedToJoinPoint = getRelatedVerbs(words, joinPoints);
 		
 		for (NLPDependencyWord word: words){
@@ -95,6 +102,26 @@ public class JoinPointDetector {
 		}
 		
 	}
+
+//	private ArrayList<NLPDependencyWord> getRelatedNouns(Collection<NLPDependencyWord> words, NLPDependencyWord classContainer) {
+//		ArrayList<NLPDependencyWord> nounsRelatedToClass = new ArrayList<NLPDependencyWord>();
+//		for (NLPDependencyWord word: words){
+//			if (word.isNoun() && word.isRelated(classContainer, true)){
+//				nounsRelatedToClass.add(word);
+//			}
+//		}
+//		return nounsRelatedToClass;
+//	}
+//
+//	private ArrayList<NLPDependencyWord> getRelatedVerbs(Collection<NLPDependencyWord> words, NLPDependencyWord classContainer) {
+//		ArrayList<NLPDependencyWord> verbsRelatedToClass = new ArrayList<NLPDependencyWord>();
+//		for (NLPDependencyWord word: words){
+//			if (word.isVerb() && word.isRelated(classContainer, true)){
+//				verbsRelatedToClass.add(word);
+//			}
+//		}
+//		return verbsRelatedToClass;
+//	}
 
 	private ArrayList<NLPDependencyWord> getRelatedVerbs(Collection<NLPDependencyWord> words, Collection<AODProfileJoinPoint> joinPoints) {
 		ArrayList<NLPDependencyWord> verbsRelatedToJoinPoint = new ArrayList<NLPDependencyWord>();
