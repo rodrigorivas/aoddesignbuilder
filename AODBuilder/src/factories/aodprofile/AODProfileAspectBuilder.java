@@ -160,7 +160,8 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 							newJp.setTargetClass(targetFromList.getName());
 						if (!newDefaultJp.equals(newJp))
 							aodAssoc.addJoinPoint(newDefaultJp);
-						aodAssoc.addJoinPoint(newJp);
+						if (!aodAssoc.getJoinPoints().contains(newJp))
+							aodAssoc.addJoinPoint(newJp);
 					}
 				}
 				
