@@ -22,26 +22,41 @@ public class DataFormatter  {
 	private static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 	private static String SHORT_DATE_FORMAT = "yyyy-MM-dd";
 	
-	public static String safeTrim(String str) {
-		 if(str == null)
-		 	return "";
-		 return str.trim();
+	public static String capitalize(String word) {
+		if (word!=null){
+//			word = word.toLowerCase();
+			String firstLetter = Character.toString(word.charAt(0)).toUpperCase();
+			word = firstLetter+word.substring(1, word.length());
+		}
+		return word;
 	}
 
 	
-	public static java.sql.Date parseSqlDate(Date date) {
+	public static String convertIllegalXMLChars(String valueStr) {
+		StringBuffer value = new StringBuffer();			
+
+		char[] buffer = valueStr.toCharArray();
 		
-		java.sql.Date sqlDate = null;
-		try {
-			if (date != null) {
-				sqlDate = new java.sql.Date(date.getTime());
+		for (int i = 0; i < buffer.length; i++) {
+			switch (buffer[i]) {
+			case '&':
+				value.append("&amp;");
+				break;
+			case '<':
+				value.append("&lt;");
+				break;
+			case '"':
+				value.append("&quot;");
+				break;
+			case '\'':
+				value.append("&apos;");
+				break;
+			default:
+				value.append(buffer[i]);
+				break;
 			}
- 	 
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		 
-		return sqlDate;
+		return value.toString();
 	}
 
 	/**
@@ -104,33 +119,6 @@ public class DataFormatter  {
 	}
 
 
-	public static String convertIllegalXMLChars(String valueStr) {
-		StringBuffer value = new StringBuffer();			
-
-		char[] buffer = valueStr.toCharArray();
-		
-		for (int i = 0; i < buffer.length; i++) {
-			switch (buffer[i]) {
-			case '&':
-				value.append("&amp;");
-				break;
-			case '<':
-				value.append("&lt;");
-				break;
-			case '"':
-				value.append("&quot;");
-				break;
-			case '\'':
-				value.append("&apos;");
-				break;
-			default:
-				value.append(buffer[i]);
-				break;
-			}
-		}
-		return value.toString();
-	}
-	
 	public static boolean equalsRegExp(String regExp,String text) {		
 		if (regExp!=null && text!=null){
 			Pattern p = Pattern.compile(regExp);			
@@ -139,8 +127,7 @@ public class DataFormatter  {
 		}
 		return false;
 	}
-
-
+	
 	public static boolean equalsRegExpDual(String text1, String text2) {
 		if (equalsRegExp(text1, text2))
 			return true;
@@ -148,23 +135,13 @@ public class DataFormatter  {
 	}
 
 
-	public static String capitalize(String word) {
-		if (word!=null){
-//			word = word.toLowerCase();
-			String firstLetter = Character.toString(word.charAt(0)).toUpperCase();
-			word = firstLetter+word.substring(1, word.length());
-		}
-		return word;
+	public static String getSimpleFileName(String fileName) {
+		fileName = removePath(fileName);
+		fileName = removeExtension(fileName);
+		return fileName;
 	}
 
-	public static String unCapitalize(String word) {
-		if (word!=null){
-			String firstLetter = Character.toString(word.charAt(0)).toLowerCase();
-			word = firstLetter+word.substring(1, word.length());
-		}
-		return word;
-	}
-	
+
 	public static String javanize(String text, boolean className){
 		String ret = "";
 		if (text!=null && !ListUtils.contains(returnTypes, text)){
@@ -179,7 +156,21 @@ public class DataFormatter  {
 		return ret;
 	}
 
-
+	public static java.sql.Date parseSqlDate(Date date) {
+		
+		java.sql.Date sqlDate = null;
+		try {
+			if (date != null) {
+				sqlDate = new java.sql.Date(date.getTime());
+			}
+ 	 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		 
+		return sqlDate;
+	}
+	
 	public static String removeExtension(String fileName) {
 		if (fileName!=null){
 			int pos = fileName.indexOf(".");
@@ -189,6 +180,7 @@ public class DataFormatter  {
 		}
 		return fileName;
 	}
+
 
 	public static String removePath(String fileName) {
 		if (fileName!=null){
@@ -206,10 +198,18 @@ public class DataFormatter  {
 		return fileName;
 	}
 
+	public static String safeTrim(String str) {
+		 if(str == null)
+		 	return "";
+		 return str.trim();
+	}
 
-	public static String getSimpleFileName(String fileName) {
-		fileName = removePath(fileName);
-		fileName = removeExtension(fileName);
-		return fileName;
+
+	public static String unCapitalize(String word) {
+		if (word!=null){
+			String firstLetter = Character.toString(word.charAt(0)).toLowerCase();
+			word = firstLetter+word.substring(1, word.length());
+		}
+		return word;
 	}
 }
