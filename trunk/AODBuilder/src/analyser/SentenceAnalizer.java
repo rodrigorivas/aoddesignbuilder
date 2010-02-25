@@ -1,19 +1,25 @@
 package analyser;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.log4j.Logger;
-
-import constants.Constants;
 
 import util.Log4jConfigurator;
 import util.ResourceLoader;
 import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
+import constants.Constants;
+import constants.FileConstants;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
+import edu.stanford.nlp.parser.lexparser.ParserData;
 import edu.stanford.nlp.trees.GrammaticalRelation;
 import edu.stanford.nlp.trees.GrammaticalStructure;
 import edu.stanford.nlp.trees.GrammaticalStructureFactory;
@@ -32,7 +38,7 @@ public class SentenceAnalizer {
 	private LexicalizedParser lp;
 	ArrayList<NLPDependencyRelation> relations;
 	HashMap<String,NLPDependencyWord> words;
-	Logger logger;
+	Logger logger = Log4jConfigurator.getLogger();
 
 	public ArrayList<NLPDependencyRelation> getRelations() {
 		return relations;
@@ -45,18 +51,71 @@ public class SentenceAnalizer {
 	private static SentenceAnalizer instance = null;
 	
 	private SentenceAnalizer() {
-		URL url = Constants.PARSER_ENGLISH_RESOURCE_URL;
-		if (url==null){
-			//get local resource URL
-			url = ResourceLoader.getResourceURL(PARSER_ENGLISH);
-		}
-		lp = new LexicalizedParser(url.getFile());
+		logger.info("Start SentenceAnalizer...");
+
+		loadParser();
 		lp.setOptionFlags(new String[]{"-maxLength", "70"});
 		relations = new ArrayList<NLPDependencyRelation>();
 		words = new HashMap<String,NLPDependencyWord>();
 		logger = Log4jConfigurator.getLogger();
 	}
+
+	private void loadParser() {
+		//get global resource URL
+		URL url = Constants.PARSER_ENGLISH_RESOURCE_URL;
+		if (url==null){
+			//get local resource URL
+			url = ResourceLoader.getResourceURL(PARSER_ENGLISH);
+		}
+		try{
+			loadFromURL(url);
+		}catch (Exception e) {
+			logger.warn("Unable to open parser using URL"+url.getFile());
+			try{
+				loadFromOject(url);
+			}catch (Exception e1) {
+				logger.warn("Unable to open parser from object on URL"+url.getFile());
+				loadDefault();
+			}
+		}
+		
+
+	}
+
+	private void loadFromOject(URL url) throws Exception{
+	    InputStream is;
+	    URLConnection uc = url.openConnection();
+	    is = uc.getInputStream();
+	    if (url.getFile().endsWith(".gz")) {
+	      is = new GZIPInputStream(is);
+	    }
+		ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(is));
+		ParserData pd = (ParserData) ois.readObject();
+		lp = new LexicalizedParser(pd);
+		logger.info("Parser created from Object on "+url.getFile());
+		is.close();
+	}
+
+	private void loadDefault() {
+		logger.info("Trying to load resource: "+FileConstants.PARSER_PATH+PARSER_ENGLISH);
+		lp = new LexicalizedParser(FileConstants.PARSER_PATH+PARSER_ENGLISH);
+		logger.info("Parser created from default file on "+FileConstants.PARSER_PATH+PARSER_ENGLISH);
+	}
+
+	private void loadFromURL(URL url) {
+		logger.info("Trying to load resource: "+url.getFile());
+		lp = new LexicalizedParser(url.getFile());
+		logger.info("Parser created from URL on "+url.getFile());
+	}
 	
+	private SentenceAnalizer(LexicalizedParser parser) {
+		lp = parser;
+		lp.setOptionFlags(new String[]{"-maxLength", "70"});
+		relations = new ArrayList<NLPDependencyRelation>();
+		words = new HashMap<String,NLPDependencyWord>();
+		logger = Log4jConfigurator.getLogger();
+	}
+
 	public static SentenceAnalizer getInstance(){
 		if (instance == null)
 			instance = new SentenceAnalizer();

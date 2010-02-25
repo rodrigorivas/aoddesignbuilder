@@ -11,6 +11,7 @@ import analyser.AttributeDetector;
 import analyser.ClassDetector;
 import analyser.ResponsabilityDetector;
 import analyser.SentenceAnalizer;
+import beans.aodprofile.AODProfileAssociation;
 import beans.aodprofile.AODProfileAttribute;
 import beans.aodprofile.AODProfileBean;
 import beans.aodprofile.AODProfileClass;
@@ -47,8 +48,47 @@ public class AODProfileClassContainerBuilder implements AODProfileBuilder{
 			aodClassContainer.addClass(possibleClass);
 		}
 		
+		findAssociations(aodClassContainer, classes);
+		
 		Log4jConfigurator.getLogger().info("Build complete.\n"+aodClassContainer);
 		return aodClassContainer;
+	}
+
+	private void findAssociations(AODProfileClassContainer aodClassContainer, ArrayList<NLPDependencyWord> classes) {
+		for (AODProfileClass sourceClass: aodClassContainer.getPossibleClasses()){
+			for (NLPDependencyWord classWord: classes){
+				if (!sourceClass.getName().equalsIgnoreCase(DataFormatter.javanize(classWord.getWord(),true))){
+					Collection<NLPDependencyWord> nouns = classWord.getRelatedNouns();
+					for (NLPDependencyWord noun: nouns){
+						if (sourceClass.getName().equalsIgnoreCase(DataFormatter.javanize(noun.getWord(),true))){
+							AODProfileClass targetClass = findClass(aodClassContainer, DataFormatter.javanize(classWord.getWord(),true));
+							if (targetClass!=null)
+								createAssociation(sourceClass, targetClass);					
+						}
+					}
+				}
+			}
+		}
+		
+	}
+
+	private void createAssociation(AODProfileClass sourceClass,
+			AODProfileClass targetClass) {
+		AODProfileAssociation aodAssoc = new AODProfileAssociation();						
+		aodAssoc.setTarget(targetClass);
+		aodAssoc.setName(sourceClass.getName()+"."+targetClass.getName());
+
+		if (!sourceClass.getPossibleAssociations().contains(aodAssoc))
+			sourceClass.addAssociation(aodAssoc);
+	}
+
+	private AODProfileClass findClass(AODProfileClassContainer aodClassContainer, String className) {
+		for (AODProfileClass aodClass: aodClassContainer.getPossibleClasses()){
+			if (aodClass.getName().equalsIgnoreCase(className)){
+				return aodClass;
+			}
+		}
+		return null;
 	}
 	
 
