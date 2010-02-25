@@ -83,14 +83,14 @@ public class ProposedSolution extends javax.swing.JFrame {
 
 	private static ProposedSolution proposedSolution;
 
+	public static ProposedSolution getInstance() {
+		return proposedSolution;
+	}
+	
 	public static ProposedSolution getInstance(Object[] values) {
 		if (proposedSolution==null) {
 			proposedSolution = new ProposedSolution(values);
 		}
-		return proposedSolution;
-	}
-	
-	public static ProposedSolution getInstance() {
 		return proposedSolution;
 	}
 
@@ -101,6 +101,81 @@ public class ProposedSolution extends javax.swing.JFrame {
 		initGUI();
 	}
 	
+	public Object[] getAodClasses() {
+		return aodClasses;
+	}
+
+	private JButton getJCancel() {
+		if(jCancel == null) {
+			jCancel = new JButton();
+			jCancel.setText("Quit");
+			jCancel.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/block_16.png")));
+			jCancel.setPreferredSize(new java.awt.Dimension(93, 28));
+			jCancel.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent evt) {
+					jCancelMouseClicked(evt);
+				}
+			});
+		}
+		return jCancel;
+	}
+
+	private JLabel getJLabel1() {
+		if (jLabel1 == null) {
+			jLabel1 = new JLabel();
+			jLabel1.setText("Select the elements to be included in your design");
+			jLabel1.setBounds(155, 14, 297, 21);
+			jLabel1.setFont(new java.awt.Font("Tahoma",1,11));
+		}
+		return jLabel1;
+	}
+	
+	private JLabel getJLabel5() {
+		if(jLabel5 == null) {
+			jLabel5 = new JLabel();
+			jLabel5.setBounds(24, 6, 51, 45);
+			jLabel5.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/Settings.png")));
+		}
+		return jLabel5;
+	}
+
+	private JButton getJNext() {
+		if(jNext == null) {
+			jNext = new JButton();
+			jNext.setText("Next");
+			jNext.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/001_21.png")));
+			jNext.setPreferredSize(new java.awt.Dimension(93, 28));
+			jNext.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent evt) {
+					jNextMouseClicked(evt);
+				}
+			});
+		}
+		return jNext;
+	}
+	
+	private JPanel getJPanel1() {
+		if(jPanel1 == null) {
+			jPanel1 = new JPanel();
+			jPanel1.setPreferredSize(new java.awt.Dimension(583, 50));
+			jPanel1.setLayout(null);
+			jPanel1.add(getJLabel1());
+			jPanel1.add(getJLabel5());
+		}
+		return jPanel1;
+	}
+
+	private ArrayList<AODProfileClass> getSelectedClasses() {
+		ArrayList<AODProfileClass> classes = new ArrayList<AODProfileClass>();
+		for (Object o: aodClasses){
+			AODProfileClass bean = (AODProfileClass) o;
+			if (bean.isSelected()){
+				classes.add(bean);
+			}
+		}		
+		return classes;
+	}
+
 	private void initGUI() {
 		try {
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -249,6 +324,37 @@ public class ProposedSolution extends javax.swing.JFrame {
 			e.printStackTrace();
 		}
 	}
+	
+	private void jCancelMouseClicked(MouseEvent evt) {
+		Integer value = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Confirm exit", JOptionPane.YES_NO_OPTION);
+		if (value == JOptionPane.OK_OPTION) {
+			this.dispose();
+		}
+	}
+	
+	private void jClassesMouseClicked(MouseEvent evt) {
+		AODProfileClass cl = (AODProfileClass) jClasses.getSelectedValue();
+		setListModel(jAttributes, cl.getAttributes().toArray());
+		setListModel(jResponsibilities, cl.getResponsabilities().toArray());
+	}
+
+	private void jNextMouseClicked(MouseEvent evt) {
+		ArrayList<AODProfileClass> selectedClasses = getSelectedClasses();
+		ArrayList<AODProfileAssociation> selectedAssociations = updateAssociationSelection(selectedClasses);
+
+		ProposedSolutionAssociations psassoc = new ProposedSolutionAssociations(selectedAssociations.toArray());
+		psassoc.setAodClasses(selectedClasses.toArray());
+		psassoc.setPreviousFrame(this);
+		psassoc.setVisible(true);
+		this.setVisible(false);
+	}
+	private void jPreviousMouseClicked(MouseEvent evt) {
+		previousFrame.setVisible(true);
+		this.setVisible(false);
+	}
+	public void setAodClasses(Object[] aodClasses) {
+		this.aodClasses = aodClasses;
+	}
 
 	private void setListModel(JList list, Object[] items) {
 		ListModel jModel = null;
@@ -264,33 +370,6 @@ public class ProposedSolution extends javax.swing.JFrame {
 		this.previousFrame = previousFrame;
 	}
 	
-	private void jPreviousMouseClicked(MouseEvent evt) {
-		previousFrame.setVisible(true);
-		this.setVisible(false);
-	}
-
-	private void jNextMouseClicked(MouseEvent evt) {
-		ArrayList<AODProfileClass> selectedClasses = getSelectedClasses();
-		ArrayList<AODProfileAssociation> selectedAssociations = updateAssociationSelection(selectedClasses);
-
-		ProposedSolutionAssociations psassoc = new ProposedSolutionAssociations(selectedAssociations.toArray());
-		psassoc.setAodClasses(selectedClasses.toArray());
-		psassoc.setPreviousFrame(this);
-		psassoc.setVisible(true);
-		this.setVisible(false);
-	}
-	
-	private ArrayList<AODProfileClass> getSelectedClasses() {
-		ArrayList<AODProfileClass> classes = new ArrayList<AODProfileClass>();
-		for (Object o: aodClasses){
-			AODProfileClass bean = (AODProfileClass) o;
-			if (bean.isSelected()){
-				classes.add(bean);
-			}
-		}		
-		return classes;
-	}
-
 	private ArrayList<AODProfileAssociation> updateAssociationSelection(ArrayList<AODProfileClass> classes) {
 		ArrayList<AODProfileAssociation> assocList = new ArrayList<AODProfileAssociation>();
 		for (AODProfileClass cl: classes){
@@ -314,86 +393,6 @@ public class ProposedSolution extends javax.swing.JFrame {
 			}
 		}
 		return assocList;
-	}
-
-	private JButton getJNext() {
-		if(jNext == null) {
-			jNext = new JButton();
-			jNext.setText("Next");
-			jNext.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/001_21.png")));
-			jNext.setPreferredSize(new java.awt.Dimension(93, 28));
-			jNext.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent evt) {
-					jNextMouseClicked(evt);
-				}
-			});
-		}
-		return jNext;
-	}
-	
-	private JButton getJCancel() {
-		if(jCancel == null) {
-			jCancel = new JButton();
-			jCancel.setText("Quit");
-			jCancel.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/block_16.png")));
-			jCancel.setPreferredSize(new java.awt.Dimension(93, 28));
-			jCancel.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent evt) {
-					jCancelMouseClicked(evt);
-				}
-			});
-		}
-		return jCancel;
-	}
-	
-	private void jCancelMouseClicked(MouseEvent evt) {
-		Integer value = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Confirm exit", JOptionPane.YES_NO_OPTION);
-		if (value == JOptionPane.OK_OPTION) {
-			this.dispose();
-			System.exit(NORMAL);
-		}
-	}
-
-	private JPanel getJPanel1() {
-		if(jPanel1 == null) {
-			jPanel1 = new JPanel();
-			jPanel1.setPreferredSize(new java.awt.Dimension(583, 50));
-			jPanel1.setLayout(null);
-			jPanel1.add(getJLabel1());
-			jPanel1.add(getJLabel5());
-		}
-		return jPanel1;
-	}
-	private JLabel getJLabel1() {
-		if (jLabel1 == null) {
-			jLabel1 = new JLabel();
-			jLabel1.setText("Select the elements to be included in your design");
-			jLabel1.setBounds(155, 14, 297, 21);
-			jLabel1.setFont(new java.awt.Font("Tahoma",1,11));
-		}
-		return jLabel1;
-	}
-	private JLabel getJLabel5() {
-		if(jLabel5 == null) {
-			jLabel5 = new JLabel();
-			jLabel5.setBounds(24, 6, 51, 45);
-			jLabel5.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/Settings.png")));
-		}
-		return jLabel5;
-	}
-
-	public Object[] getAodClasses() {
-		return aodClasses;
-	}
-
-	public void setAodClasses(Object[] aodClasses) {
-		this.aodClasses = aodClasses;
-	}
-	
-	private void jClassesMouseClicked(MouseEvent evt) {
-		AODProfileClass cl = (AODProfileClass) jClasses.getSelectedValue();
-		setListModel(jAttributes, cl.getAttributes().toArray());
-		setListModel(jResponsibilities, cl.getResponsabilities().toArray());
 	}
 
 }

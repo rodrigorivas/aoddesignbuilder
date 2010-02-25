@@ -41,16 +41,8 @@ import util.Log4jConfigurator;
 */
 public class Welcome extends javax.swing.JFrame {
 
-	{
-		//Set Look & Feel
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	private JPanel jPanelTop;
+
 	private JPanel jPanelBottom;
 	private JButton jButtonExit;
 	private JLabel jLabel3;
@@ -59,13 +51,21 @@ public class Welcome extends javax.swing.JFrame {
 	private JLabel jLabel1;
 	private FileSelector fileSelector;
 	private static Welcome welcome;
-	
-	Logger logger;
-
 	public static Welcome getInstance() {
 		if (welcome==null)
 			welcome = new Welcome();
 		return welcome;
+	}
+	
+	Logger logger;
+
+	{
+		//Set Look & Feel
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	protected Welcome() {
@@ -164,7 +164,6 @@ public class Welcome extends javax.swing.JFrame {
 		if (value == JOptionPane.OK_OPTION) {
 			logger.info("Exiting program.");
 			this.dispose();
-//			System.exit(NORMAL);
 		}
 	}
 	
