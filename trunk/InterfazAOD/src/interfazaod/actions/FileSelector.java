@@ -8,10 +8,22 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -32,12 +44,22 @@ import main.AODBuilderRunner;
 
 import org.apache.log4j.Logger;
 
+
 import util.ExceptionUtil;
 import util.Log4jConfigurator;
 import util.ResourceLoader;
 import analyser.SentenceAnalizer;
 import beans.aodprofile.AODProfileBean;
 import constants.Constants;
+import edu.stanford.nlp.io.IOUtils;
+import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
+import edu.stanford.nlp.parser.lexparser.ParserData;
+import edu.stanford.nlp.trees.GrammaticalStructure;
+import edu.stanford.nlp.trees.GrammaticalStructureFactory;
+import edu.stanford.nlp.trees.PennTreebankLanguagePack;
+import edu.stanford.nlp.trees.Tree;
+import edu.stanford.nlp.trees.TreebankLanguagePack;
+import edu.stanford.nlp.trees.TypedDependency;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
@@ -51,19 +73,96 @@ import constants.Constants;
  */
 public class FileSelector extends javax.swing.JFrame {
 
+	public class MyProgressMonitor extends JPanel implements ActionListener,
+			PropertyChangeListener {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6301668128751298649L;
+		private ProgressMonitor progressMonitor;
+		private AODBuilderRunner task;
+		private String fileName;
+
+		public MyProgressMonitor(String fileName) {
+			super(new BorderLayout());
+			this.fileName = fileName;
+			load();
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// load();
+
+		}
+
+		/**
+		 * Invoked when the user presses the start button.
+		 */
+		public void load() {
+			progressMonitor = new ProgressMonitor(MyProgressMonitor.this,
+					"Loading solution...", "", 0, 100);
+			progressMonitor.setProgress(0);
+			task = AODBuilderRunner.getInstance(fileName);
+			task.addPropertyChangeListener(this);
+
+			 setParserResource(SentenceAnalizer.PARSER_ENGLISH);
+			
+			task.execute();
+		}
+
+		/**
+		 * Invoked when task's progress property changes.
+		 */
+		public void propertyChange(PropertyChangeEvent evt) {
+			if ("progress" == evt.getPropertyName()) {
+				int progress = (Integer) evt.getNewValue();
+				progressMonitor.setProgress(progress);
+				String message = String.format("Completed %d%%.\n", progress);
+				progressMonitor.setNote(message);
+				if (progressMonitor.isCanceled() || task.isDone()) {
+					Toolkit.getDefaultToolkit().beep();
+					if (progressMonitor.isCanceled()) {
+						task.cancel(true);
+						AODBuilderRunner.destroy();
+						enableButtons();
+					}
+					else{
+						Map<String, AODProfileBean> map = AODBuilder.getInstance().getMap();
+						if (map!=null && map.values().size()>0)
+							aodClasses = map.values().toArray();
+						AODBuilderRunner.destroy();
+						enableButtons();
+						endLoading();
+					}
+				}
+			}
+
+		}
+
+		@SuppressWarnings("deprecation")
+		private void setParserResource(String resourceName) {
+			try {
+				URL bundleURL = ResourceLoader.getResourceURL(resourceName);
+				URL nativeURL = org.eclipse.core.runtime.Platform.resolve(bundleURL);
+				//set global Parser URL
+				Constants.PARSER_ENGLISH_RESOURCE_URL = nativeURL;
+			} catch (IOException e) {
+				logger.error(ExceptionUtil.getTrace(e));
+			}
+		}
+	}
+
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8682306540428689255L;
-
-
-	{
-		// Set Look & Feel
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			e.printStackTrace();
+	public static FileSelector getInstance() {
+		if (fileSelector == null) {
+			fileSelector = new FileSelector();
 		}
+		return fileSelector;
 	}
 	private JPanel jPanelTop;
 	private JButton jCancel;
@@ -81,13 +180,16 @@ public class FileSelector extends javax.swing.JFrame {
 	private static FileSelector fileSelector;
 	Object[] aodClasses;
 	Object[] aodAspects;
+
 	Logger logger = Log4jConfigurator.getLogger();
 
-	public static FileSelector getInstance() {
-		if (fileSelector == null) {
-			fileSelector = new FileSelector();
+	{
+		// Set Look & Feel
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return fileSelector;
 	}
 
 	protected FileSelector() {
@@ -95,12 +197,35 @@ public class FileSelector extends javax.swing.JFrame {
 		initGUI();
 	}
 
-	public Welcome getWelcome() {
-		return this.welcome;
+	private void disableButtons() {
+		this.jButtonPrevious.setEnabled(false);
+		this.jCancel.setEnabled(false);
+		this.jNext.setEnabled(false);
+		this.jButtonBrowse.setEnabled(false);
+		this.jButtonBrowse.disable();
 	}
 
-	public void setWelcome(Welcome welcome) {
-		this.welcome = welcome;
+	private void enableButtons() {
+		this.jButtonPrevious.setEnabled(true);
+		this.jCancel.setEnabled(true);
+		this.jNext.setEnabled(true);
+		this.jButtonBrowse.setEnabled(true);
+	}
+
+	public void endLoading() {
+		logger.info("End loading.");
+		ProposedSolution proposedSolution = ProposedSolution.getInstance(aodClasses);
+		proposedSolution.setPreviousFrame(this);
+		proposedSolution.setVisible(true);
+		this.setVisible(false);
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public Welcome getWelcome() {
+		return this.welcome;
 	}
 
 	private void initGUI() {
@@ -227,11 +352,6 @@ public class FileSelector extends javax.swing.JFrame {
 		}
 	}
 
-	private void jButtonPreviousMouseClicked(MouseEvent evt) {
-		welcome.setVisible(true);
-		this.setVisible(false);
-	}
-
 	private void jButtonBrowseMouseClicked(MouseEvent evt) {
 		logger.info("Choosing input file...");
 		JFileChooser fileChooser = new JFileChooser();
@@ -248,35 +368,8 @@ public class FileSelector extends javax.swing.JFrame {
 		}
 	}
 
-	private void jNextMouseClicked(MouseEvent evt) {
-		//Disable buttons
-		disableButtons();
-		
-		//Create and set up the content pane.
-        JPanel newContentPane = new MyProgressMonitor(fileName);
-        jPanelTop = newContentPane;
-
-	}
-
-	private void disableButtons() {
-		this.jButtonPrevious.setEnabled(false);
-		this.jCancel.setEnabled(false);
-		this.jNext.setEnabled(false);
-		this.jButtonBrowse.setEnabled(false);
-	}
-
-	private void enableButtons() {
-		this.jButtonPrevious.setEnabled(true);
-		this.jCancel.setEnabled(true);
-		this.jNext.setEnabled(true);
-		this.jButtonBrowse.setEnabled(true);
-	}
-
-	public void endLoading() {
-		logger.info("End loading.");
-		ProposedSolution proposedSolution = ProposedSolution.getInstance(aodClasses);
-		proposedSolution.setPreviousFrame(this);
-		proposedSolution.setVisible(true);
+	private void jButtonPreviousMouseClicked(MouseEvent evt) {
+		welcome.setVisible(true);
 		this.setVisible(false);
 	}
 
@@ -290,89 +383,19 @@ public class FileSelector extends javax.swing.JFrame {
 		}
 	}
 
-	public String getFileName() {
-		return fileName;
+	private void jNextMouseClicked(MouseEvent evt) {
+		//Disable buttons
+		disableButtons();
+		
+		//Create and set up the content pane.
+        JPanel newContentPane = new MyProgressMonitor(fileName);
+        jPanelTop = newContentPane;
+
 	}
 
 
-	public class MyProgressMonitor extends JPanel implements ActionListener,
-			PropertyChangeListener {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 6301668128751298649L;
-		private ProgressMonitor progressMonitor;
-		private AODBuilderRunner task;
-		private String fileName;
-
-		public MyProgressMonitor(String fileName) {
-			super(new BorderLayout());
-			this.fileName = fileName;
-			load();
-		}
-
-		/**
-		 * Invoked when the user presses the start button.
-		 */
-		public void load() {
-			progressMonitor = new ProgressMonitor(MyProgressMonitor.this,
-					"Loading solution...", "", 0, 100);
-			progressMonitor.setProgress(0);
-			task = AODBuilderRunner.getInstance(fileName);
-			task.addPropertyChangeListener(this);
-
-			 setParserResource(SentenceAnalizer.PARSER_ENGLISH);
-			
-			task.execute();
-		}
-
-		@SuppressWarnings("deprecation")
-		private void setParserResource(String resourceName) {
-			URL nativeURL;
-			try {
-				nativeURL = org.eclipse.core.runtime.Platform.resolve(
-								ResourceLoader.getResourceURL(resourceName));
-				Constants.PARSER_ENGLISH_RESOURCE_URL = nativeURL;
-			} catch (IOException e) {
-				logger.error(ExceptionUtil.getTrace(e));
-			}
-		}
-
-		/**
-		 * Invoked when task's progress property changes.
-		 */
-		public void propertyChange(PropertyChangeEvent evt) {
-			if ("progress" == evt.getPropertyName()) {
-				int progress = (Integer) evt.getNewValue();
-				progressMonitor.setProgress(progress);
-				String message = String.format("Completed %d%%.\n", progress);
-				progressMonitor.setNote(message);
-				if (progressMonitor.isCanceled() || task.isDone()) {
-					Toolkit.getDefaultToolkit().beep();
-					if (progressMonitor.isCanceled()) {
-						task.cancel(true);
-						AODBuilderRunner.destroy();
-						enableButtons();
-					}
-					else{
-						Map<String, AODProfileBean> map = AODBuilder.getInstance().getMap();
-						if (map!=null && map.values().size()>0)
-							aodClasses = map.values().toArray();
-						AODBuilderRunner.destroy();
-						enableButtons();
-						endLoading();
-					}
-				}
-			}
-
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			// load();
-
-		}
+	public void setWelcome(Welcome welcome) {
+		this.welcome = welcome;
 	}
 
 }

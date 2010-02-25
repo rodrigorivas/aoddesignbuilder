@@ -95,14 +95,14 @@ public class ProposedSolutionAssociations extends javax.swing.JFrame {
 	
 	private static ProposedSolutionAssociations proposedSolution;
 
+	public static ProposedSolutionAssociations getInstance() {
+		return proposedSolution;
+	}
+	
 	public static ProposedSolutionAssociations getInstance(Object[] values) {
 		if (proposedSolution==null) {
 			proposedSolution = new ProposedSolutionAssociations(values);
 		}
-		return proposedSolution;
-	}
-	
-	public static ProposedSolutionAssociations getInstance() {
 		return proposedSolution;
 	}
 
@@ -113,6 +113,71 @@ public class ProposedSolutionAssociations extends javax.swing.JFrame {
 		initGUI();
 	}
 	
+	private JButton getJCancel() {
+		if(jCancel == null) {
+			jCancel = new JButton();
+			jCancel.setText("Quit");
+			jCancel.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/block_16.png")));
+			jCancel.setPreferredSize(new java.awt.Dimension(93, 28));
+			jCancel.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent evt) {
+					jCancelMouseClicked(evt);
+				}
+			});
+		}
+		return jCancel;
+	}
+
+	private JLabel getJLabel1() {
+		if (jLabel1 == null) {
+			jLabel1 = new JLabel();
+			jLabel1.setText("Select the elements to be included in your design");
+			jLabel1.setBounds(155, 14, 297, 21);
+			jLabel1.setFont(new java.awt.Font("Tahoma",1,11));
+		}
+		return jLabel1;
+	}
+
+	
+	private JLabel getJLabel5() {
+		if(jLabel5 == null) {
+			jLabel5 = new JLabel();
+			jLabel5.setBounds(24, 6, 51, 45);
+			jLabel5.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/Settings.png")));
+		}
+		return jLabel5;
+	}
+
+	private JButton getJNext() {
+		if(jNext == null) {
+			jNext = new JButton();
+			jNext.setText("Next");
+			jNext.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/001_21.png")));
+			jNext.setPreferredSize(new java.awt.Dimension(93, 28));
+			jNext.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent evt) {
+					jNextMouseClicked(evt);
+				}
+			});
+		}
+		return jNext;
+	}
+	
+	private JPanel getJPanel1() {
+		if(jPanel1 == null) {
+			jPanel1 = new JPanel();
+			jPanel1.setPreferredSize(new java.awt.Dimension(583, 50));
+			jPanel1.setLayout(null);
+			jPanel1.add(getJLabel1());
+			jPanel1.add(getJLabel5());
+		}
+		return jPanel1;
+	}
+
+	public Object[] getObjects() {
+		return objects;
+	}
+
 	private void initGUI() {
 		try {
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -266,23 +331,42 @@ public class ProposedSolutionAssociations extends javax.swing.JFrame {
 			e.printStackTrace();
 		}
 	}
-
-	private void setListModel(JList list, Object[] items) {
-		ListModel jModel = null;
-		if (items!=null)
-			jModel = new DefaultComboBoxModel(items);
-		else
-			jModel = new DefaultComboBoxModel();
-
-		list.setModel(jModel);
-	}
-
 	
-	private void jPreviousMouseClicked(MouseEvent evt) {
-		previousFrame.setVisible(true);
-		this.setVisible(false);
+	private void jCancelMouseClicked(MouseEvent evt) {
+		Integer value = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Confirm exit", JOptionPane.YES_NO_OPTION);
+		if (value == JOptionPane.OK_OPTION) {
+			this.dispose();
+		}
+	}
+	
+	private void jClassesMouseClicked(MouseEvent evt) {
+		AODProfileAssociation assoc = (AODProfileAssociation) jAssociations.getSelectedValue();
+		if (assoc instanceof AODProfilePointcut){
+			AODProfilePointcut pc = (AODProfilePointcut) assoc;
+			setListModel(jJoinpoints, pc.getJoinPoints().toArray());
+			setListModel(jAdvices, null);
+		}
+		else{
+			setListModel(jJoinpoints, null);
+			setListModel(jAdvices, null);
+		}
 	}
 
+	private void jJointpointsMouseClicked(MouseEvent evt) {
+		AODProfileJoinPoint jp = (AODProfileJoinPoint) jJoinpoints.getSelectedValue();
+		AODProfileAssociation assoc = (AODProfileAssociation) jAssociations.getSelectedValue();
+		if (assoc instanceof AODProfilePointcut){
+			AODProfilePointcut pc = (AODProfilePointcut) assoc;
+			List<AODProfileAdvice> advices = pc.getAdvices();
+			List<AODProfileAdvice> selectedAdvices = new ArrayList<AODProfileAdvice>();
+			for (AODProfileAdvice adv: advices){
+				if (jp.match(adv)){
+					selectedAdvices.add(adv);
+				}
+			}		
+			setListModel(jAdvices, selectedAdvices.toArray());
+		}
+	}
 	private void jNextMouseClicked(MouseEvent evt) {
 			Integer value = JOptionPane.showConfirmDialog(null, "Are you sure you want to generate this .uml?", "Confirm UML generation", JOptionPane.YES_NO_OPTION);
 			if (value == JOptionPane.OK_OPTION) {
@@ -295,14 +379,19 @@ public class ProposedSolutionAssociations extends javax.swing.JFrame {
 						Di2Generator di2 = new Di2Generator(selectedBeans);
 						di2.generateUMLFile(fileName);
 						JOptionPane.showMessageDialog(this, "Generation completed succesfully!");
-						System.exit(NORMAL);
+						this.setVisible(false);
+						this.dispose();
 					}catch (Exception e) {
 						JOptionPane.showMessageDialog(this, "Generation failed!");
 					}
 				}
 			}
 		}
-	
+	private void jPreviousMouseClicked(MouseEvent evt) {
+		previousFrame.setVisible(true);
+		this.setVisible(false);
+	}
+
 	private String openSaveDialog() {
 		String fileName = null;
 		JFileChooser fileChooser = new JFileChooser();
@@ -315,6 +404,28 @@ public class ProposedSolutionAssociations extends javax.swing.JFrame {
 		}
 		
 		return fileName;
+	}
+
+	public void setAodClasses(Object[] aodClasses) {
+		this.aodClasses = aodClasses;
+	}
+	
+	private void setListModel(JList list, Object[] items) {
+		ListModel jModel = null;
+		if (items!=null)
+			jModel = new DefaultComboBoxModel(items);
+		else
+			jModel = new DefaultComboBoxModel();
+
+		list.setModel(jModel);
+	}
+	
+	public void setObjects(Object[] aodClasses) {
+		this.objects = aodClasses;
+	}
+
+	public void setPreviousFrame(JFrame previousFrame) {
+		this.previousFrame = previousFrame;
 	}
 
 	private ArrayList<AODProfileBean> updateSelection() {
@@ -386,117 +497,6 @@ public class ProposedSolutionAssociations extends javax.swing.JFrame {
 		}
 		
 		return list;
-	}
-
-	private JButton getJNext() {
-		if(jNext == null) {
-			jNext = new JButton();
-			jNext.setText("Next");
-			jNext.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/001_21.png")));
-			jNext.setPreferredSize(new java.awt.Dimension(93, 28));
-			jNext.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent evt) {
-					jNextMouseClicked(evt);
-				}
-			});
-		}
-		return jNext;
-	}
-	
-	private JButton getJCancel() {
-		if(jCancel == null) {
-			jCancel = new JButton();
-			jCancel.setText("Quit");
-			jCancel.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/block_16.png")));
-			jCancel.setPreferredSize(new java.awt.Dimension(93, 28));
-			jCancel.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent evt) {
-					jCancelMouseClicked(evt);
-				}
-			});
-		}
-		return jCancel;
-	}
-	
-	private void jCancelMouseClicked(MouseEvent evt) {
-		Integer value = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Confirm exit", JOptionPane.YES_NO_OPTION);
-		if (value == JOptionPane.OK_OPTION) {
-			this.dispose();
-			System.exit(NORMAL);
-		}
-	}
-
-	private JPanel getJPanel1() {
-		if(jPanel1 == null) {
-			jPanel1 = new JPanel();
-			jPanel1.setPreferredSize(new java.awt.Dimension(583, 50));
-			jPanel1.setLayout(null);
-			jPanel1.add(getJLabel1());
-			jPanel1.add(getJLabel5());
-		}
-		return jPanel1;
-	}
-	private JLabel getJLabel1() {
-		if (jLabel1 == null) {
-			jLabel1 = new JLabel();
-			jLabel1.setText("Select the elements to be included in your design");
-			jLabel1.setBounds(155, 14, 297, 21);
-			jLabel1.setFont(new java.awt.Font("Tahoma",1,11));
-		}
-		return jLabel1;
-	}
-	private JLabel getJLabel5() {
-		if(jLabel5 == null) {
-			jLabel5 = new JLabel();
-			jLabel5.setBounds(24, 6, 51, 45);
-			jLabel5.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/Settings.png")));
-		}
-		return jLabel5;
-	}
-
-	public Object[] getObjects() {
-		return objects;
-	}
-
-	public void setObjects(Object[] aodClasses) {
-		this.objects = aodClasses;
-	}
-	
-	private void jClassesMouseClicked(MouseEvent evt) {
-		AODProfileAssociation assoc = (AODProfileAssociation) jAssociations.getSelectedValue();
-		if (assoc instanceof AODProfilePointcut){
-			AODProfilePointcut pc = (AODProfilePointcut) assoc;
-			setListModel(jJoinpoints, pc.getJoinPoints().toArray());
-			setListModel(jAdvices, null);
-		}
-		else{
-			setListModel(jJoinpoints, null);
-			setListModel(jAdvices, null);
-		}
-	}
-	
-	private void jJointpointsMouseClicked(MouseEvent evt) {
-		AODProfileJoinPoint jp = (AODProfileJoinPoint) jJoinpoints.getSelectedValue();
-		AODProfileAssociation assoc = (AODProfileAssociation) jAssociations.getSelectedValue();
-		if (assoc instanceof AODProfilePointcut){
-			AODProfilePointcut pc = (AODProfilePointcut) assoc;
-			List<AODProfileAdvice> advices = pc.getAdvices();
-			List<AODProfileAdvice> selectedAdvices = new ArrayList<AODProfileAdvice>();
-			for (AODProfileAdvice adv: advices){
-				if (jp.match(adv)){
-					selectedAdvices.add(adv);
-				}
-			}		
-			setListModel(jAdvices, selectedAdvices.toArray());
-		}
-	}
-
-	public void setAodClasses(Object[] aodClasses) {
-		this.aodClasses = aodClasses;
-	}
-
-	public void setPreviousFrame(JFrame previousFrame) {
-		this.previousFrame = previousFrame;
 	}
 
 	

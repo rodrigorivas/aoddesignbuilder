@@ -10,11 +10,11 @@
             id="InterfazAOD.actionSet">
           
         <menu
-               label="Sample &amp;Menu"
+               label="AODBuilder"
                id="sampleMenu">
          </menu>
          <action
-               label="&amp;Sample Action"
+               label="Launch AODBuilder"
                icon="icons/releng_gears.gif"
                class="interfazaod.actions.ClasesAction"
                tooltip="AOD Builder"
