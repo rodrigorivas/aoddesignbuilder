@@ -13,17 +13,13 @@ import beans.nlp.NLPDependencyRelation;
 import beans.nlp.NLPDependencyWord;
 
 public class AttributeDetector {
-	private static AttributeDetector instance = null;
 	Logger logger;
 	private AttributeDetector() {
 		logger = Log4jConfigurator.getLogger();
 	}
 	
 	public static AttributeDetector getInstance(){
-		if (instance == null)
-			instance = new AttributeDetector();
-		
-		return instance;
+		return new AttributeDetector();	
 	}
 		
 	public Collection<AODProfileAttribute> detectAttribute(Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){

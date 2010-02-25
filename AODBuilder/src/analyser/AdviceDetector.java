@@ -36,16 +36,17 @@ public class AdviceDetector {
 			if (dr.getRelationType().equalsIgnoreCase("mark") ||  
 					dr.getRelationType().equalsIgnoreCase("pcomp")){
 				if (dr.getGovDW().isRelated(classContainer, true)){
-					AODProfileAdvice newAdvice = (new AODProfileAdviceBuilder()).build(dr.getDepDW().getWord(),dr.getGovDW().getWord());
+					NLPDependencyWord word = dr.getDepDW();
+					AODProfileAdvice newAdvice = (new AODProfileAdviceBuilder()).build(word.getWord(),dr.getGovDW().getWord());
 					if (newAdvice!=null){
-						if ("before".equalsIgnoreCase(dr.getDepDW().getWord()))
+						if ("before".equalsIgnoreCase(word.getWord()))
 							newAdvice.setType(AODProfileAdvice.advice_type.before);
-						else if ("after".equalsIgnoreCase(dr.getDepDW().getWord()))
+						else if ("after".equalsIgnoreCase(word.getWord()))
 							newAdvice.setType(AODProfileAdvice.advice_type.after);
-						else if ("around".equalsIgnoreCase(dr.getDepDW().getWord()) ||
-								"on".equalsIgnoreCase(dr.getDepDW().getWord()) ||
-								"in".equalsIgnoreCase(dr.getDepDW().getWord()) ||
-								"at".equalsIgnoreCase(dr.getDepDW().getWord()))
+						else if ("around".equalsIgnoreCase(word.getWord()) ||
+								"on".equalsIgnoreCase(word.getWord()) ||
+								"in".equalsIgnoreCase(word.getWord()) ||
+								"at".equalsIgnoreCase(word.getWord()))
 							newAdvice.setType(AODProfileAdvice.advice_type.around);
 						else
 							break;

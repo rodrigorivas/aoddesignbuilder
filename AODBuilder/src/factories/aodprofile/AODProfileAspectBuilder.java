@@ -13,6 +13,7 @@ import util.ListUtils;
 import util.Log4jConfigurator;
 import analyser.AdviceDetector;
 import analyser.AttributeDetector;
+import analyser.JoinPointAndAdviceDetector;
 import analyser.JoinPointDetector;
 import analyser.ResponsabilityDetector;
 import analyser.SentenceAnalizer;
@@ -81,15 +82,17 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 			/* Detect Responsabilities */
 			Collection<AODProfileResponsability> responsabilities = ResponsabilityDetector.getInstance().detectResponsability(relations, cl);
 			aodClass.addResponsabilities(responsabilities);
-			/* Detect JoinPoints */
-			Collection<AODProfileJoinPoint> joinPoints = JoinPointDetector.getInstance().detectJoinPoints(relations, cl);
-			JoinPointDetector.getInstance().completeJoinPoints(joinPoints, wordsHM.values(), relations, cl);
-			JoinPointDetector.getInstance().completeJoinPoints(joinPoints, responsabilities);
-			aodClass.setUnassociatedJoinPoint((List<AODProfileJoinPoint>) joinPoints);
-			/* Detect Advices */
-			Collection<AODProfileAdvice> advices = AdviceDetector.getInstance().detectAdvices(relations, cl);		
-			AdviceDetector.getInstance().completeAdvices(advices, wordsHM.values(), relations, cl);
-			aodClass.setUnassociatedAdvices((List<AODProfileAdvice>) advices);			
+			
+			JoinPointAndAdviceDetector.getInstance().detect(aodClass, relations, cl, wordsHM.values(), responsabilities);
+//			/* Detect JoinPoints */
+//			Collection<AODProfileJoinPoint> joinPoints = JoinPointDetector.getInstance().detectJoinPoints(relations, cl);
+//			JoinPointDetector.getInstance().completeJoinPoints(joinPoints, wordsHM.values(), relations, cl);
+//			JoinPointDetector.getInstance().completeJoinPoints(joinPoints, responsabilities);
+//			aodClass.setUnassociatedJoinPoint((List<AODProfileJoinPoint>) joinPoints);
+//			/* Detect Advices */
+//			Collection<AODProfileAdvice> advices = AdviceDetector.getInstance().detectAdvices(relations, cl);		
+//			AdviceDetector.getInstance().completeAdvices(advices, wordsHM.values(), relations, cl);
+//			aodClass.setUnassociatedAdvices((List<AODProfileAdvice>) advices);			
 		}
 	}
 

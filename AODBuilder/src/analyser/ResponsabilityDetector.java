@@ -15,7 +15,6 @@ import beans.nlp.NLPDependencyWord;
 import factories.aodprofile.AODProfileResponsabilityBuilder;
 
 public class ResponsabilityDetector {
-	private static ResponsabilityDetector instance = null;
 	
 	private static final String[] reservedWords = {"occurs","happens","do","is"};
 	Logger logger;
@@ -25,10 +24,7 @@ public class ResponsabilityDetector {
 	}
 	
 	public static ResponsabilityDetector getInstance(){
-		if (instance == null)
-			instance = new ResponsabilityDetector();
-		
-		return instance;
+		return new ResponsabilityDetector();
 	}
 	
 	public Collection<AODProfileResponsability> detectResponsability(Collection<NLPDependencyRelation> relations, NLPDependencyWord classContainer){
