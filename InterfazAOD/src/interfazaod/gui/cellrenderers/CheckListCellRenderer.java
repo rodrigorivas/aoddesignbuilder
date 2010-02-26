@@ -1,4 +1,5 @@
-package interfazaod.actions;
+package interfazaod.gui.cellrenderers;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 
@@ -8,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 
-import beans.aodprofile.AODProfileBean;
+import aodbuilder.beans.aodprofile.AODProfileBean;
 
 public class CheckListCellRenderer extends JPanel implements ListCellRenderer{ 
     private ListCellRenderer delegate; 

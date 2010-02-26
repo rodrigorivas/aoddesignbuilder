@@ -1,4 +1,4 @@
-package interfazaod.actions;
+package interfazaod.gui.cellrenderers;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -7,10 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import beans.aodprofile.AODProfileAdvice;
-import beans.aodprofile.AODProfileBean;
-import beans.aodprofile.AODProfileClass;
-import beans.aodprofile.AODProfileJoinPoint;
+import aodbuilder.beans.aodprofile.*;
+
 
 public class AODBeanCellRenderer extends JLabel implements ListCellRenderer {
 	

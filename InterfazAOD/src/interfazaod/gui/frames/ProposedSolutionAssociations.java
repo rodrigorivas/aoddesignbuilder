@@ -1,4 +1,7 @@
-package interfazaod.actions;
+package interfazaod.gui.frames;
+
+import interfazaod.gui.cellrenderers.AODBeanCellRenderer;
+import interfazaod.gui.components.CheckListManager;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -7,14 +10,10 @@ import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,28 +26,23 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListModel;
 import javax.swing.UIManager;
-
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.log4j.Logger;
 
-import util.Log4jConfigurator;
-import xmi.Di2Generator;
-import xmi.XMIExporter;
-
-import beans.aodprofile.AODProfileAdvice;
-import beans.aodprofile.AODProfileAspect;
-import beans.aodprofile.AODProfileAssociation;
-import beans.aodprofile.AODProfileAttribute;
-import beans.aodprofile.AODProfileBean;
-import beans.aodprofile.AODProfileClass;
-import beans.aodprofile.AODProfileJoinPoint;
-import beans.aodprofile.AODProfilePointcut;
-import beans.aodprofile.AODProfileResponsability;
-import main.AODBuilder;
+import aodbuilder.beans.aodprofile.AODProfileAdvice;
+import aodbuilder.beans.aodprofile.AODProfileAspect;
+import aodbuilder.beans.aodprofile.AODProfileAssociation;
+import aodbuilder.beans.aodprofile.AODProfileAttribute;
+import aodbuilder.beans.aodprofile.AODProfileBean;
+import aodbuilder.beans.aodprofile.AODProfileClass;
+import aodbuilder.beans.aodprofile.AODProfileJoinPoint;
+import aodbuilder.beans.aodprofile.AODProfilePointcut;
+import aodbuilder.beans.aodprofile.AODProfileResponsability;
+import aodbuilder.util.Log4jConfigurator;
+import aodbuilder.xmi.Di2Generator;
+import aodbuilder.xmi.XMIExporter;
 
 
 /**

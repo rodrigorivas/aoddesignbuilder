@@ -2,13 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: InterfazAOD Plug-in
 Bundle-SymbolicName: InterfazAOD; singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Bundle-Activator: interfazaod.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.console,
  org.eclipse.jdt.ui,
- com.cea.papyrus.core;bundle-version="1.11.0"
+ com.cea.papyrus.core;bundle-version="1.11.0",
+ ProfileAodPlugin;bundle-version="1.0.2"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/AODBuilder.jar,
@@ -16,12 +17,18 @@ Bundle-ClassPath: lib/AODBuilder.jar,
  lib/stanford-parser.jar,
  bin/,
  resources/
-Export-Package: analyser,
- beans.aodprofile,
- beans.db,
- beans.nlp,
- beans.uml,
- constants,
+Export-Package: aodbuilder.analyser,
+ aodbuilder.beans.aodprofile,
+ aodbuilder.beans.nlp,
+ aodbuilder.beans.uml,
+ aodbuilder.constants,
+ aodbuilder.factories.aodprofile,
+ aodbuilder.factories.nlp,
+ aodbuilder.factories.uml,
+ aodbuilder.main,
+ aodbuilder.tests,
+ aodbuilder.util,
+ aodbuilder.xmi,
  edu.stanford.nlp.fsm,
  edu.stanford.nlp.io,
  edu.stanford.nlp.io.ui,
@@ -45,10 +52,6 @@ Export-Package: analyser,
  edu.stanford.nlp.util,
  edu.stanford.nlp.util.concurrent,
  edu.stanford.nlp.web,
- factories.aodprofile,
- factories.nlp,
- factories.uml,
- main,
  org.apache.log4j,
  org.apache.log4j.chainsaw,
  org.apache.log4j.config,
@@ -69,7 +72,4 @@ Export-Package: analyser,
  org.apache.log4j.or.sax,
  org.apache.log4j.spi,
  org.apache.log4j.varia,
- org.apache.log4j.xml,
- tests,
- util,
- xmi
+ org.apache.log4j.xml
