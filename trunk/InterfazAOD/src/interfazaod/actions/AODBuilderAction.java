@@ -1,5 +1,7 @@
 package interfazaod.actions;
 
+import interfazaod.gui.frames.Welcome;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -16,12 +18,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
  * delegated to it.
  * @see IWorkbenchWindowActionDelegate
  */
-public class ClasesAction implements IWorkbenchWindowActionDelegate {
+public class AODBuilderAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	/**
 	 * The constructor.
 	 */
-	public ClasesAction() {
+	public AODBuilderAction() {
 	}
 
 	/**

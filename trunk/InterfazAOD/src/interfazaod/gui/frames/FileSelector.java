@@ -1,4 +1,4 @@
-package interfazaod.actions;
+package interfazaod.gui.frames;
 
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
@@ -8,22 +8,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -39,27 +27,16 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import main.AODBuilder;
-import main.AODBuilderRunner;
-
 import org.apache.log4j.Logger;
 
-
-import util.ExceptionUtil;
-import util.Log4jConfigurator;
-import util.ResourceLoader;
-import analyser.SentenceAnalizer;
-import beans.aodprofile.AODProfileBean;
-import constants.Constants;
-import edu.stanford.nlp.io.IOUtils;
-import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
-import edu.stanford.nlp.parser.lexparser.ParserData;
-import edu.stanford.nlp.trees.GrammaticalStructure;
-import edu.stanford.nlp.trees.GrammaticalStructureFactory;
-import edu.stanford.nlp.trees.PennTreebankLanguagePack;
-import edu.stanford.nlp.trees.Tree;
-import edu.stanford.nlp.trees.TreebankLanguagePack;
-import edu.stanford.nlp.trees.TypedDependency;
+import aodbuilder.analyser.SentenceAnalizer;
+import aodbuilder.beans.aodprofile.AODProfileBean;
+import aodbuilder.constants.Constants;
+import aodbuilder.main.AODBuilder;
+import aodbuilder.main.AODBuilderRunner;
+import aodbuilder.util.ExceptionUtil;
+import aodbuilder.util.Log4jConfigurator;
+import aodbuilder.util.ResourceLoader;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI

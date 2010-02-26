@@ -1,4 +1,4 @@
-package interfazaod.actions;
+package interfazaod.gui.frames;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -17,8 +17,8 @@ import javax.swing.WindowConstants;
 
 import org.apache.log4j.Logger;
 
-import util.ExceptionUtil;
-import util.Log4jConfigurator;
+import aodbuilder.util.ExceptionUtil;
+import aodbuilder.util.Log4jConfigurator;
 
 
 

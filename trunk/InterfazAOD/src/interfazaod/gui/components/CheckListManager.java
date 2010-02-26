@@ -1,4 +1,6 @@
-package interfazaod.actions;
+package interfazaod.gui.components;
+
+import interfazaod.gui.cellrenderers.CheckListCellRenderer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +17,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import beans.aodprofile.AODProfileBean;
+import aodbuilder.beans.aodprofile.AODProfileBean;
 
 
 public class CheckListManager extends MouseAdapter implements ListSelectionListener, ActionListener{ 

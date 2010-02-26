@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            label="Sample Action Set"
+            label="AODBuilder Action Set"
             visible="false"
             id="InterfazAOD.actionSet">
           
@@ -16,11 +16,11 @@
          <action
                label="Launch AODBuilder"
                icon="icons/releng_gears.gif"
-               class="interfazaod.actions.ClasesAction"
+               class="interfazaod.actions.AODBuilderAction"
                tooltip="AOD Builder"
                menubarPath="sampleMenu/sampleGroup"
                toolbarPath="sampleGroup"
-               id="interfazaod.actions.ClasesAction">
+               id="interfazaod.actions.AODBuilderAction">
          </action>
          
       </actionSet>
