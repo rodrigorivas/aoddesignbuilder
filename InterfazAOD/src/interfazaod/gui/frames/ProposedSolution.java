@@ -210,8 +210,8 @@ public class ProposedSolution extends javax.swing.JFrame {
 					{
 						jLabel2 = new JLabel();
 						jPanelLeft.add(jLabel2);
-						jLabel2.setText("Classes and Aspects");
-						jLabel2.setBounds(31, 11, 98, 14);
+						jLabel2.setText("Classes and <<Aspects>>");
+						jLabel2.setBounds(31, 11, 160, 14);
 						jLabel2.setFont(new java.awt.Font("Tahoma",2,11));
 					}
 					cMClasses = new CheckListManager(jClasses, null); 
