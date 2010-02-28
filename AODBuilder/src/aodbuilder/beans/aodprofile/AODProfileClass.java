@@ -78,7 +78,7 @@ public class AODProfileClass extends AODProfileBean {
 		
 		if (obj instanceof AODProfileClass){
 			AODProfileClass aodpc = (AODProfileClass) obj;
-			if (this.getName()!=null && this.getName().equalsIgnoreCase(aodpc.getName())){
+			if (this.generateId().equalsIgnoreCase(aodpc.generateId())){
 				return true;
 			}
 		}
