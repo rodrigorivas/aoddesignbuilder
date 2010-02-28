@@ -23,6 +23,10 @@ public class AODBeanCellRenderer extends JLabel implements ListCellRenderer {
 				AODProfileAdvice adv = (AODProfileAdvice)value;
 				setText(adv.getType().toString());
 			}
+			else if (value instanceof AODProfileAspect) {
+				AODProfileAspect asp = (AODProfileAspect) value;
+				setText("<<"+asp.getName()+">>");
+			}
 			else if (value instanceof AODProfileClass) {
 				AODProfileBean bean = (AODProfileBean) value;
 				setText(bean.getName());
