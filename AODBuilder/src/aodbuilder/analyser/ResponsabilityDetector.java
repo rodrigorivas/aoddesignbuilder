@@ -6,17 +6,16 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-
 import aodbuilder.beans.aodprofile.AODProfileResponsability;
 import aodbuilder.beans.nlp.NLPDependencyRelation;
 import aodbuilder.beans.nlp.NLPDependencyWord;
 import aodbuilder.factories.aodprofile.AODProfileResponsabilityBuilder;
 import aodbuilder.util.ListUtils;
 import aodbuilder.util.Log4jConfigurator;
+import aodbuilder.util.ReservedWords;
 
 public class ResponsabilityDetector {
 	
-	private static final String[] reservedWords = {"occurs","happens","do","is"};
 	Logger logger;
 	
 	private ResponsabilityDetector() {
@@ -39,7 +38,7 @@ public class ResponsabilityDetector {
 				processResponsability(responsabilities, dr.getGovDW(), dr.getDepDW(), classContainer, null, false);
 			}
 			else if (dr.getRelationType().equalsIgnoreCase("nsubj")){
-				processResponsability(responsabilities, dr.getGovDW(), dr.getDepDW(), classContainer, null, false);
+				processResponsability(responsabilities, dr.getDepDW(), dr.getGovDW(), classContainer, null, false);
 			}
 			else if (dr.getRelationType().startsWith("conj")){
 				processResponsability(responsabilities, dr.getDepDW(), dr.getDepDW(), classContainer, null, true);
@@ -68,15 +67,16 @@ public class ResponsabilityDetector {
 				processResponsability(responsabilities, dr.getGovDW(), dr.getGovDW(), classContainer, null, true);
 			}
 		}	
+				
 		logger.info("Responsabilities detection completed.");
 		
 		return responsabilities;
 	}
 
 	private void processResponsability(Collection<AODProfileResponsability> responsabilities, NLPDependencyWord relatedWord, NLPDependencyWord respWord, NLPDependencyWord classContainer, NLPDependencyWord param, boolean lookupParent) {
-		if (relatedWord.isRelated(classContainer, lookupParent) && respWord.isVerb()){
+		if (relatedWord.isRelated(classContainer, lookupParent) && respWord.isVerb() && !ReservedWords.isReservedResponsabilityWord(respWord.getWord())){
 			AODProfileResponsability newResponsability = (new AODProfileResponsabilityBuilder()).build(respWord,param);
-			if (newResponsability!=null && !ListUtils.contains(reservedWords, newResponsability.getName())){
+			if (newResponsability!=null){
 				if (!responsabilities.contains(newResponsability)){
 					logger.info("Found new responsability: "+ newResponsability);
 					responsabilities.add(newResponsability);
@@ -87,8 +87,7 @@ public class ResponsabilityDetector {
 					oldResponsability.merge(newResponsability);
 				}
 			}
-		}				
-		
+		}					
 	}
 
 }

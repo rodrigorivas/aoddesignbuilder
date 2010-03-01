@@ -81,18 +81,34 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 			aodClass.addResponsabilities(responsabilities);
 			
 			JoinPointAndAdviceDetector.getInstance().detect(aodClass, relations, cl, wordsHM.values(), responsabilities);
-//			/* Detect JoinPoints */
-//			Collection<AODProfileJoinPoint> joinPoints = JoinPointDetector.getInstance().detectJoinPoints(relations, cl);
-//			JoinPointDetector.getInstance().completeJoinPoints(joinPoints, wordsHM.values(), relations, cl);
-//			JoinPointDetector.getInstance().completeJoinPoints(joinPoints, responsabilities);
-//			aodClass.setUnassociatedJoinPoint((List<AODProfileJoinPoint>) joinPoints);
-//			/* Detect Advices */
-//			Collection<AODProfileAdvice> advices = AdviceDetector.getInstance().detectAdvices(relations, cl);		
-//			AdviceDetector.getInstance().completeAdvices(advices, wordsHM.values(), relations, cl);
-//			aodClass.setUnassociatedAdvices((List<AODProfileAdvice>) advices);			
+			
+			deleteResponsabilitiesAssociatedToJoinPoint(aodClass);
+			
 		}
 	}
 
+
+	private void deleteResponsabilitiesAssociatedToJoinPoint(
+			AODProfileAspect aodClass) {
+		for (AODProfileJoinPoint jp: aodClass.getUnassociatedJoinPoint()){
+			deleteResponsabilitiesAssociatedToJoinPoint(aodClass.getResponsabilities(), jp);
+		}
+		
+	}
+
+	private void deleteResponsabilitiesAssociatedToJoinPoint(Collection<AODProfileResponsability> responsabilities, AODProfileJoinPoint joinPoint) {
+		Collection<AODProfileResponsability> responsabilitiesToDelete = new ArrayList<AODProfileResponsability>();
+		for (AODProfileResponsability resp: responsabilities){
+				if (resp.getName().equalsIgnoreCase(joinPoint.getTargetMethod())){
+					responsabilitiesToDelete.add(resp);
+				}
+		}
+		
+		for (AODProfileResponsability respToDelete: responsabilitiesToDelete){
+			responsabilities.remove(respToDelete);
+		}
+		
+	}
 
 	public AODProfileBean build(UMLAssociation bean) throws Exception {
 		Logger logger = Log4jConfigurator.getLogger();
@@ -160,8 +176,9 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 							newJp.setTargetClass(targetFromList.getName());
 						if (!newDefaultJp.equals(newJp))
 							aodAssoc.addJoinPoint(newDefaultJp);
-						if (!aodAssoc.getJoinPoints().contains(newJp))
+						if (!aodAssoc.getJoinPoints().contains(newJp)){
 							aodAssoc.addJoinPoint(newJp);
+						}
 					}
 				}
 				

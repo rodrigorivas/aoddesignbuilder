@@ -3,6 +3,7 @@ package aodbuilder.beans.aodprofile;
 import java.util.ArrayList;
 
 import aodbuilder.util.DataFormatter;
+import aodbuilder.util.Inflector;
 
 
 
@@ -37,7 +38,8 @@ public abstract class AODProfileJoinPoint extends AODProfileBean{
 	}
 
 	public void addPossibleMethodTarget(String possibleMethodTarget) {
-		possibleMethodTargetList.add(possibleMethodTarget);
+		String singMethodName = Inflector.getInstance().singularize(possibleMethodTarget);
+		possibleMethodTargetList.add(singMethodName);
 	}
 
 	public String getType() {
@@ -94,4 +96,6 @@ public abstract class AODProfileJoinPoint extends AODProfileBean{
 		}
 		return false;		
 	}
+
+	public abstract String getTargetMethod();
 }

@@ -113,4 +113,9 @@ public class AODProfileComplexJoinPoint extends AODProfileJoinPoint {
 		return false;
 	}
 
+	@Override
+	public String getTargetMethod() {
+		return responsability.getName();
+	}
+
 }

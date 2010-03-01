@@ -27,7 +27,7 @@ public class NLPDependencyWordBuilder {
 				Object value = label.get(key);
 				if (key.getName().equalsIgnoreCase("edu.stanford.nlp.ling.CoreAnnotations$ValueAnnotation"))
 					dw.setWord((String) value);
-				if (key.getName().equalsIgnoreCase("edu.stanford.nlp.ling.CoreAnnotations$TagAnnotation"))
+				if (key.getName().equalsIgnoreCase("edu.stanford.nlp.ling.CoreAnnotations$PartOfSpeechAnnotation"))
 					dw.setType((String) value);
 				if (key.getName().equalsIgnoreCase("edu.stanford.nlp.ling.CoreAnnotations$IndexAnnotation"))
 					dw.setPosition((Integer)value);

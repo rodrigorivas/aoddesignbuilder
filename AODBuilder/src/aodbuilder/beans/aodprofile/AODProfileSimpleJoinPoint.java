@@ -1,6 +1,7 @@
 package aodbuilder.beans.aodprofile;
 
 import aodbuilder.util.DataFormatter;
+import aodbuilder.util.Inflector;
 import aodbuilder.util.UniqueID;
 
 public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
@@ -58,7 +59,8 @@ public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 
 	@Override
 	public void setMethodName(String name) {
-		setParam(name);
+		String singName = Inflector.getInstance().singularize(name);
+		setParam(singName);
 	}
 
 	@Override
@@ -80,6 +82,10 @@ public class AODProfileSimpleJoinPoint extends AODProfileJoinPoint {
 				return true;
 		}
 		return false;
+	}
+	@Override
+	public String getTargetMethod() {
+		return "";
 	}
 
 }

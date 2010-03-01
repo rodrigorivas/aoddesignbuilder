@@ -72,7 +72,17 @@ public class AODProfileAspect extends AODProfileClass {
 		for (AODProfileAssociation assoc: possiblePointcuts){
 			ret+=assoc.toString()+"\n";
 		}
-		
+
+		ret+="=====JOINPOINTS====\n";		
+		for (AODProfileJoinPoint jp: unassociatedJoinPoint){
+			ret+=jp.toString()+"\n";
+		}
+
+		ret+="=====ADVICES====\n";		
+		for (AODProfileAdvice adv: unassociatedAdvices){
+			ret+=adv.toString()+"\n";
+		}
+
 		return ret;
 	}
 

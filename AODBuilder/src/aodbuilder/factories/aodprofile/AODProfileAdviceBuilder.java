@@ -4,13 +4,14 @@ import aodbuilder.beans.aodprofile.AODProfileAdvice;
 import aodbuilder.beans.aodprofile.AODProfileBean;
 import aodbuilder.beans.aodprofile.AODProfileAdvice.advice_type;
 import aodbuilder.util.Log4jConfigurator;
+import aodbuilder.util.ReservedWords;
 
 public class AODProfileAdviceBuilder{
 
 	public AODProfileAdvice build(String word, String param) {
 		Log4jConfigurator.getLogger().info("Building new Advice...");
 		AODProfileAdvice newAdvice = null;
-		if (AODProfileJoinPointBuilder.isknownJoinPoint(param)){
+		if (ReservedWords.isKnownJoinPoint(param)){
 			newAdvice = buildDefault();
 			if ("before".equalsIgnoreCase(word)){
 				newAdvice.setType(AODProfileAdvice.advice_type.before);

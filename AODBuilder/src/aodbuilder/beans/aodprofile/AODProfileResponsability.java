@@ -3,7 +3,9 @@ package aodbuilder.beans.aodprofile;
 import java.util.ArrayList;
 import java.util.List;
 
+import aodbuilder.Stemmer.StemmerIngles;
 import aodbuilder.util.DataFormatter;
+import aodbuilder.util.Inflector;
 import aodbuilder.util.UniqueID;
 
 
@@ -30,6 +32,12 @@ public class AODProfileResponsability extends AODProfileBean{
 		}
 	}
 
+	@Override
+	public void setName(String name) {
+		String singName = Inflector.getInstance().singularize(name);
+		super.setName(singName);
+	}
+	
 	public String getReturningType() {
 		return returningType;
 	}
@@ -63,14 +71,25 @@ public class AODProfileResponsability extends AODProfileBean{
 			if (DataFormatter.equalsRegExpDual(this.name,resp.getName())){
 				equalName = true;
 			}
+			else{
+				String thisNameSteam = new StemmerIngles().stemmer(this.name);
+				String respNameSteam = new StemmerIngles().stemmer(resp.getName());
+				equalName = DataFormatter.equalsRegExpDual(thisNameSteam, respNameSteam);
+			}
 			if (DataFormatter.equalsRegExpDual(this.returningType,resp.getReturningType())){
 				equalRet = true;
 			}
 			equalParameters = this.getParameters().size() == resp.getParameters().size();
-			for (AODProfileAttribute param: parameters){
-				if (!resp.getParameters().contains(param)){
-					equalParameters = false;
+			if (equalParameters){
+				for (AODProfileAttribute param: parameters){
+					if (!resp.getParameters().contains(param)){
+						equalParameters = false;
+					}
 				}
+			}
+			else{
+				if (this.getParameters().size()==0 || resp.getParameters().size()==0)
+					equalParameters = true;
 			}
 			
 			return (equalName&&equalParameters&&equalRet);
@@ -78,6 +97,21 @@ public class AODProfileResponsability extends AODProfileBean{
 		
 		return false;
 	}
+	
+	public boolean equalsName(String name) {
+		boolean equalName = false;
+		if (DataFormatter.equalsRegExpDual(this.name, name)) {
+			equalName = true;
+		} else {
+			String thisNameSteam = new StemmerIngles().stemmer(this.name);
+			String respNameSteam = new StemmerIngles().stemmer(name);
+			equalName = DataFormatter.equalsRegExpDual(thisNameSteam,
+					respNameSteam);
+		}
+		return (equalName);
+
+	}
+
 	@Override
 	public void merge(AODProfileBean aodBean) {
 		if (aodBean instanceof AODProfileResponsability){
@@ -91,9 +125,12 @@ public class AODProfileResponsability extends AODProfileBean{
 			if (this.name==null && newResp.getName()!=null){
 				setName(newResp.getName());
 			}
-			for (AODProfileAttribute param: newResp.getParameters()){
-				if (!parameters.contains(param)){
-					parameters.add(param);
+			if (newResp.getParameters().size()> parameters.size()){
+				parameters.clear();
+				for (AODProfileAttribute param: newResp.getParameters()){
+					if (!parameters.contains(param)){
+						parameters.add(param);
+					}
 				}
 			}
 		}
@@ -108,7 +145,10 @@ public class AODProfileResponsability extends AODProfileBean{
 		if (params.length()>0)
 			params = params.substring(0,params.length()-1);
 
-		return returningType.replaceAll("[.]", "")+" "+name+"("+params+")";
+		if (returningType.equals(AODProfileBean.ANY_MATCH) && name.equals(AODProfileBean.ANY_MATCH))
+			return name.replaceAll("[.]", "")+"("+params+")";
+		
+		return returningType.replaceAll("[.]", "")+" "+name.replaceAll("[.]", "")+"("+params+")";
 			
 	}
 }

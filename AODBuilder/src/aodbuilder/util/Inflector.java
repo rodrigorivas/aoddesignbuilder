@@ -53,7 +53,7 @@ public class Inflector {
         singular("([ti])a$", "$1um");
         singular("((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$", "$1$2sis");
         singular("(^analy)ses$", "$1sis");
-        singular("([^f])ves$", "$1fe");
+        singular("([^f])ves$", "$1ve");
         singular("(hive)s$", "$1");
         singular("(tive)s$", "$1");
         singular("([lr])ves$", "$1f");

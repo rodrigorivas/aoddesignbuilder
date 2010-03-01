@@ -9,13 +9,12 @@ import aodbuilder.beans.aodprofile.AODProfileClass;
 import aodbuilder.beans.nlp.NLPDependencyWord;
 import aodbuilder.util.DataFormatter;
 import aodbuilder.util.Inflector;
-import aodbuilder.util.ListUtils;
 import aodbuilder.util.Log4jConfigurator;
+import aodbuilder.util.ReservedWords;
 
 public class ClassDetector {
 	private static ClassDetector instance = null;
 	
-	String[] reservedWords = {"USECASE", "USE CASE", "SYSTEM", "USE", "CASE", "ASPECT", "CLASS", "ENTITY"};
 	Logger logger;
 	
 	private ClassDetector() {
@@ -38,7 +37,7 @@ public class ClassDetector {
 				if (word.getType().toUpperCase().startsWith("NN")){
 					if (!contained(classes, word)){
 						word.setWord(DataFormatter.javanize(Inflector.getInstance().singularize(word.getWord()),true));
-						if (!ListUtils.contains(reservedWords, word.getWord())){
+						if (!ReservedWords.isReservedClassWord(word.getWord())){
 							logger.info("Found new class :"+word.getWord());
 							classes.add(word);
 						}

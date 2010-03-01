@@ -4,6 +4,6 @@
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.8.jar"/>
-	<classpathentry kind="lib" path="lib/stanford-parser.jar"/>
+	<classpathentry kind="lib" path="lib/stanford-parser-2010-02-26.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
