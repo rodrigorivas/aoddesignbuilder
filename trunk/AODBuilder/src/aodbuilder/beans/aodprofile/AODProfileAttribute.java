@@ -15,13 +15,14 @@ public class AODProfileAttribute extends AODProfileBean{
 		setType(ANY_MATCH);
 	}
 	
-	public AODProfileAttribute(AODProfileAttribute param) {
+	public AODProfileAttribute(AODProfileAttribute attr) {
 		setId(UniqueID.generateUniqueID());
 		setName("ATTR_"+getId());
-		if (param!=null){
-			this.type = param.getType();
-			this.value = param.getValue();
-			this.selected = param.isSelected();
+		if (attr!=null){
+			this.type = attr.getType();
+			this.value = attr.getValue();
+			this.selected = attr.isSelected();
+			this.name = attr.getName();
 		}
 	}
 
@@ -30,6 +31,8 @@ public class AODProfileAttribute extends AODProfileBean{
 	}
 	public void setType(String type) {
 		this.type = type;
+		if (name.equalsIgnoreCase("ATTR_"+getId()))
+			setName(DataFormatter.javanize(type,false));
 	}
 	public Object getValue() {
 		return value;

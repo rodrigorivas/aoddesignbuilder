@@ -73,7 +73,7 @@ public class NLPDependencyWord {
 		return roots.values();
 	}
 
-	public Collection<NLPDependencyWord> getRelatedNouns(){
+	public Collection<NLPDependencyWord> getRootNouns(){
 		HashMap<String,NLPDependencyWord> roots = new HashMap<String, NLPDependencyWord>();
 		HashMap<String,Boolean> visited = new HashMap<String, Boolean>();
 		for (NLPDependencyWord parent: this.getParents()){
@@ -82,7 +82,7 @@ public class NLPDependencyWord {
 		
 		return roots.values();
 	}
-
+	
 	private HashMap<String,NLPDependencyWord> getRelatedWords(NLPDependencyWord word, HashMap<String,NLPDependencyWord> roots, NLPDependencyWord lastFound, HashMap<String, Boolean> visited, String type, boolean firstMatch) {
 		if (!visited.containsKey(word.getKey())){
 
@@ -111,6 +111,59 @@ public class NLPDependencyWord {
 		return roots;
 	}
 
+	public boolean isRelatedOnLevel(NLPDependencyWord classContainer, int level){
+		if (this.equals(classContainer)){
+			return true;
+		}
+		else{
+			Collection<NLPDependencyWord> nouns = this.getRelatedNounsOnLevel(level);
+			for (NLPDependencyWord noun: nouns){
+				if (noun.equals(classContainer))
+					return true;
+			}
+		}		
+		return false;
+	}
+	
+	public Collection<NLPDependencyWord> getRelatedNounsOnLevel(int level){
+		HashMap<String,NLPDependencyWord> roots = new HashMap<String, NLPDependencyWord>();
+		HashMap<String,Boolean> visited = new HashMap<String, Boolean>();
+		for (NLPDependencyWord parent: this.getParents()){
+			roots = getRelatedWordsOnLevel(parent, roots, null, visited, "NN", true, new Integer(level));
+		}
+		
+		return roots.values();
+	}
+	
+	private HashMap<String,NLPDependencyWord> getRelatedWordsOnLevel(NLPDependencyWord word, HashMap<String,NLPDependencyWord> roots, NLPDependencyWord lastFound, HashMap<String, Boolean> visited, String type, boolean firstMatch, Integer nounLevel) {
+		if (!visited.containsKey(word.getKey())){
+
+			visited.put(word.getKey(), true);
+			if (word.type!=null && word.type.toUpperCase().startsWith(type)){
+				lastFound = word;
+				nounLevel--;
+			}
+	
+			if (word.getParents()==null || word.getParents().size()==0){		
+				if (lastFound!=null && !roots.containsKey(lastFound.getKey()) && nounLevel==0){
+					roots.put(lastFound.getKey(), lastFound);
+					lastFound = null;
+				}
+			}
+			else if (firstMatch &&lastFound!=null && !roots.containsKey(lastFound.getKey()) && nounLevel==0){
+					roots.put(lastFound.getKey(), lastFound);
+					lastFound = null;				
+			}
+			else{
+				for (NLPDependencyWord parent: word.getParents()){
+					getRelatedWordsOnLevel(parent, roots, lastFound, visited, type, firstMatch, nounLevel);
+				}
+			}
+		}
+		
+		return roots;
+	}
+
 	public boolean isAdjective(){		
 		return (type!=null && type.toUpperCase().startsWith("JJ"));
 	}
@@ -127,6 +180,9 @@ public class NLPDependencyWord {
 		return (type!=null && type.equalsIgnoreCase("DT"));		
 	}
 
+	public boolean isPronoun() {
+		return (type!=null && type.toUpperCase().startsWith("PRP"));		
+	}
 	public boolean isRelated(NLPDependencyWord classContainer, boolean lookupParent){
 		if (!lookupParent){
 			return this.equals(classContainer);
@@ -136,7 +192,7 @@ public class NLPDependencyWord {
 				return true;
 			}
 			else{
-				Collection<NLPDependencyWord> roots = this.getRelatedNouns();
+				Collection<NLPDependencyWord> roots = this.getRootNouns();
 				for (NLPDependencyWord root: roots){
 					if (root.equals(classContainer))
 						return true;
@@ -161,7 +217,6 @@ public class NLPDependencyWord {
 	
 	@Override
 	public boolean equals(Object obj) {
-		//TODO: Ver si no hay problemas con este equals!!!
 		if (obj!=null && obj instanceof NLPDependencyWord){
 			NLPDependencyWord word = (NLPDependencyWord) obj;
 			

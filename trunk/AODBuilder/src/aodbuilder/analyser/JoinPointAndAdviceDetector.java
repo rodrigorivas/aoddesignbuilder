@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-
 import aodbuilder.beans.aodprofile.AODProfileAdvice;
 import aodbuilder.beans.aodprofile.AODProfileAspect;
 import aodbuilder.beans.aodprofile.AODProfileJoinPoint;
@@ -16,11 +15,10 @@ import aodbuilder.beans.nlp.NLPDependencyWord;
 import aodbuilder.factories.aodprofile.AODProfileAdviceBuilder;
 import aodbuilder.factories.aodprofile.AODProfileJoinPointBuilder;
 import aodbuilder.util.DataFormatter;
-import aodbuilder.util.ListUtils;
 import aodbuilder.util.Log4jConfigurator;
+import aodbuilder.util.ReservedWords;
 
 public class JoinPointAndAdviceDetector {
-	public static String[] reservedMethodWords = {"every","any","all"};
 	Logger logger;
 	List<AODProfileJoinPoint> joinPoints = new ArrayList<AODProfileJoinPoint>();
 	List<AODProfileAdvice> advices = new ArrayList<AODProfileAdvice>();
@@ -155,7 +153,7 @@ public class JoinPointAndAdviceDetector {
 		for (NLPDependencyWord verb: verbs){
 			for (AODProfileJoinPoint joinPoint: joinPoints){
 				if (verb.isParent(joinPoint.getName()) || verb.isParent(joinPoint.getType())){
-					if (!ListUtils.contains(reservedMethodWords, word.getWord())){
+					if (!ReservedWords.isReservedMethodWord(word.getWord())){
 						return DataFormatter.javanize(verb.getWord(),false);
 					}
 				}

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-
 import aodbuilder.analyser.AttributeDetector;
 import aodbuilder.analyser.ClassDetector;
 import aodbuilder.analyser.ResponsabilityDetector;
@@ -44,7 +43,7 @@ public class AODProfileClassContainerBuilder implements AODProfileBuilder{
 			
 			Collection<AODProfileResponsability> responsabilitiesList = ResponsabilityDetector.getInstance().detectResponsability(SentenceAnalizer.getInstance().getRelations(), cl);
 			possibleClass.addResponsabilities(responsabilitiesList);
-			
+						
 			aodClassContainer.addClass(possibleClass);
 		}
 		
@@ -58,7 +57,7 @@ public class AODProfileClassContainerBuilder implements AODProfileBuilder{
 		for (AODProfileClass sourceClass: aodClassContainer.getPossibleClasses()){
 			for (NLPDependencyWord classWord: classes){
 				if (!sourceClass.getName().equalsIgnoreCase(DataFormatter.javanize(classWord.getWord(),true))){
-					Collection<NLPDependencyWord> nouns = classWord.getRelatedNouns();
+					Collection<NLPDependencyWord> nouns = classWord.getRootNouns();
 					for (NLPDependencyWord noun: nouns){
 						if (sourceClass.getName().equalsIgnoreCase(DataFormatter.javanize(noun.getWord(),true))){
 							AODProfileClass targetClass = findClass(aodClassContainer, DataFormatter.javanize(classWord.getWord(),true));

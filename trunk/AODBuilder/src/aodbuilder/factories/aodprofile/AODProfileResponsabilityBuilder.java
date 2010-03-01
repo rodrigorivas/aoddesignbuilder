@@ -7,21 +7,16 @@ import aodbuilder.beans.aodprofile.AODProfileBean;
 import aodbuilder.beans.aodprofile.AODProfileResponsability;
 import aodbuilder.beans.nlp.NLPDependencyWord;
 import aodbuilder.util.DataFormatter;
-import aodbuilder.util.ListUtils;
 import aodbuilder.util.Log4jConfigurator;
+import aodbuilder.util.ReservedWords;
 
 public class AODProfileResponsabilityBuilder {
-	
-	private String[] returnTypes = {"int", "float", "void", "boolean", "char", "String"};
-	private String[] returnKeyWords = {"return", "returning"};
-	private String[] methodsKeyWords = {"method", "responsability"};
-	private String[] classKeyWords = {"class", "instance", "object"};
-	
+		
 	public AODProfileResponsability build(NLPDependencyWord resp, NLPDependencyWord param) {
 		Log4jConfigurator.getLogger().info("Building new Responsability...");
 		AODProfileResponsability newResponsability = new AODProfileResponsability();
 
-		if (ListUtils.contains(returnKeyWords, resp.getWord())){
+		if (ReservedWords.isReturnMethodKeyWord(resp.getWord())){
 			Collection<NLPDependencyWord> relVerbs = resp.getRelatedVerbs();
 			if (relVerbs!=null && relVerbs.size()>0)
 				newResponsability.setName(DataFormatter.javanize(relVerbs.iterator().next().getWord(),false));
@@ -32,10 +27,10 @@ public class AODProfileResponsabilityBuilder {
 			newResponsability.setName(DataFormatter.javanize(resp.getWord(),false));
 		}
 		if (param!=null){
-			if (ListUtils.contains(returnTypes, param.getWord())){
+			if (ReservedWords.isReturnMethodType(param.getWord())){
 				newResponsability.setReturningType(param.getWord());
 			}
-			else if (!ListUtils.contains(methodsKeyWords, param.getWord()) && !ListUtils.contains(classKeyWords, param.getWord())){
+			else if (!ReservedWords.isMethodKeyWord(param.getWord()) && !ReservedWords.isClassKeyWord(param.getWord()) && param.isNoun()){
 				AODProfileAttribute newAttr = new AODProfileAttribute();
 				newAttr.setName(DataFormatter.javanize(param.getWord(),false));
 				newAttr.setType(DataFormatter.javanize(param.getWord(),true));

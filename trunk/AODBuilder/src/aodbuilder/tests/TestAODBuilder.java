@@ -25,10 +25,10 @@ public class TestAODBuilder {
 					i++;
 				}
 				
-				XMIExporter xmiExporter = new XMIExporter(mapAOD.values());
-				xmiExporter.generateUMLFile(args[1]);
-				Di2Generator di2 = new Di2Generator(mapAOD.values());
-				di2.generateUMLFile(args[1]);
+//				XMIExporter xmiExporter = new XMIExporter(mapAOD.values());
+//				xmiExporter.generateUMLFile(args[1]);
+//				Di2Generator di2 = new Di2Generator(mapAOD.values());
+//				di2.generateUMLFile(args[1]);
 	
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

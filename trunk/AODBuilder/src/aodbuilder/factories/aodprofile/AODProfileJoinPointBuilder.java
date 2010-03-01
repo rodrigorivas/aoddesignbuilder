@@ -7,10 +7,9 @@ import aodbuilder.beans.aodprofile.AODProfileSimpleJoinPoint;
 import aodbuilder.beans.nlp.NLPDependencyWord;
 import aodbuilder.util.DataFormatter;
 import aodbuilder.util.Log4jConfigurator;
+import aodbuilder.util.ReservedWords;
 
 public class AODProfileJoinPointBuilder{
-
-	private static String[] knownJoinPoints = {"call", "execution", "new", "within", "exception", "target", "this"};
 
 	public AODProfileJoinPoint build(NLPDependencyWord dependencyWord) throws Exception {
 		return build(dependencyWord, null);
@@ -20,8 +19,8 @@ public class AODProfileJoinPointBuilder{
 		String word = dependencyWord.getWord();
 		Log4jConfigurator.getLogger().info("Building new JoinPoint...");
 		AODProfileJoinPoint jp = null;
-		if (isknownJoinPoint(word)){
-			if (word.equalsIgnoreCase("call") || word.equalsIgnoreCase("execution") || word.equalsIgnoreCase("new")){
+		if (ReservedWords.isKnownJoinPoint(word)){
+			if (ReservedWords.isComplexJoinPoint(word)){
 				jp = buildComplexDefault(param);
 			}
 			else if (word.equalsIgnoreCase("exception")){
@@ -81,14 +80,6 @@ public class AODProfileJoinPointBuilder{
 
 		Log4jConfigurator.getLogger().info("Build complete.");
 		return jp;
-	}
-
-	public static boolean isknownJoinPoint(String word) {
-		for (String jp: knownJoinPoints){
-			if (jp.equalsIgnoreCase(word))
-				return true;
-		}
-		return false;
 	}
 
 	public AODProfileJoinPoint build(AODProfileJoinPoint joinPoint) {

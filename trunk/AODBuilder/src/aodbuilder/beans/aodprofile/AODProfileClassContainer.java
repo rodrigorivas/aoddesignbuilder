@@ -41,7 +41,8 @@ public class AODProfileClassContainer extends AODProfileBean{
 			map.put(aodclass.getId(), aodclass);
 		}
 		else{
-			aodclass.merge((AODProfileClass) map.get(aodclass.getId()));
+			AODProfileClass classToMerge = (AODProfileClass) map.get(aodclass.getId());
+			classToMerge.merge(aodclass);
 		}
 	}
 	
