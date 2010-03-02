@@ -1,5 +1,6 @@
 package aodbuilder.beans.aodprofile;
 
+import aodbuilder.stemmer.EnglishStemmer;
 import aodbuilder.util.DataFormatter;
 import aodbuilder.util.UniqueID;
 
@@ -53,6 +54,11 @@ public class AODProfileAttribute extends AODProfileBean{
 			AODProfileAttribute attr = (AODProfileAttribute)obj;
 			if (DataFormatter.equalsRegExpDual(this.name, attr.getName())){
 				return true;
+			}
+			else{
+				String thisNameSteam = new EnglishStemmer().stemmer(this.name);
+				String attrNameSteam = new EnglishStemmer().stemmer(attr.getName());
+				return DataFormatter.equalsRegExpDual(thisNameSteam, attrNameSteam);
 			}
 		}
 		
