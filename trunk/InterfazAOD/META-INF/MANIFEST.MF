@@ -14,7 +14,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/AODBuilder.jar,
  lib/log4j-1.2.8.jar,
- lib/stanford-parser.jar,
+ lib/stanford-parser-2010-02-26.jar,
  bin/,
  resources/
 Export-Package: aodbuilder.analyser,
