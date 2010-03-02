@@ -24,7 +24,6 @@ public class DataFormatter  {
 	
 	public static String capitalize(String word) {
 		if (word!=null){
-//			word = word.toLowerCase();
 			String firstLetter = Character.toString(word.charAt(0)).toUpperCase();
 			word = firstLetter+word.substring(1, word.length());
 		}
