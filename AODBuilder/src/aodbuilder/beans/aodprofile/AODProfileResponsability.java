@@ -3,7 +3,7 @@ package aodbuilder.beans.aodprofile;
 import java.util.ArrayList;
 import java.util.List;
 
-import aodbuilder.Stemmer.StemmerIngles;
+import aodbuilder.stemmer.EnglishStemmer;
 import aodbuilder.util.DataFormatter;
 import aodbuilder.util.Inflector;
 import aodbuilder.util.UniqueID;
@@ -72,8 +72,8 @@ public class AODProfileResponsability extends AODProfileBean{
 				equalName = true;
 			}
 			else{
-				String thisNameSteam = new StemmerIngles().stemmer(this.name);
-				String respNameSteam = new StemmerIngles().stemmer(resp.getName());
+				String thisNameSteam = new EnglishStemmer().stemmer(this.name);
+				String respNameSteam = new EnglishStemmer().stemmer(resp.getName());
 				equalName = DataFormatter.equalsRegExpDual(thisNameSteam, respNameSteam);
 			}
 			if (DataFormatter.equalsRegExpDual(this.returningType,resp.getReturningType())){
@@ -103,8 +103,8 @@ public class AODProfileResponsability extends AODProfileBean{
 		if (DataFormatter.equalsRegExpDual(this.name, name)) {
 			equalName = true;
 		} else {
-			String thisNameSteam = new StemmerIngles().stemmer(this.name);
-			String respNameSteam = new StemmerIngles().stemmer(name);
+			String thisNameSteam = new EnglishStemmer().stemmer(this.name);
+			String respNameSteam = new EnglishStemmer().stemmer(name);
 			equalName = DataFormatter.equalsRegExpDual(thisNameSteam,
 					respNameSteam);
 		}
