@@ -1,6 +1,6 @@
 package aodbuilder.util;
 
-import aodbuilder.Stemmer.StemmerIngles;
+import aodbuilder.stemmer.EnglishStemmer;
 
 public class ReservedWords {
 
@@ -37,7 +37,7 @@ public class ReservedWords {
 	}
 
 	public static boolean isReservedResponsabilityWord(String word){
-		String steamWord = new StemmerIngles().stemmer(word);
+		String steamWord = new EnglishStemmer().stemmer(word);
 		if (ListUtils.contains(reservedResponsabilityWords, steamWord))
 			return true;
 		else{
