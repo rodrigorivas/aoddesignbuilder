@@ -7,6 +7,7 @@ public class UMLClass extends UMLBean{
 	UMLBean extend;
 	boolean abstractClass;
 	String type;
+	boolean mainClass=false;
 	
 	public UMLClass(String id, String name) {
 		super(id, name);
@@ -15,6 +16,14 @@ public class UMLClass extends UMLBean{
 	public UMLClass(String id, String name, boolean abstractClass) {
 		super(id,name);
 		this.abstractClass = abstractClass;
+	}
+
+	public boolean isMainClass() {
+		return mainClass;
+	}
+
+	public void setMainClass(boolean isMainClass) {
+		this.mainClass = isMainClass;
 	}
 
 	public UMLBean getExtend() {

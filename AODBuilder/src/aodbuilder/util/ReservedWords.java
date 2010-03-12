@@ -4,9 +4,9 @@ import aodbuilder.stemmer.EnglishStemmer;
 
 public class ReservedWords {
 
-	private static final String[] reservedClassWords = {"usecase", "use case", "use", "case", "aspect", "class", "entity", "id"} ;
+	private static final String[] reservedClassWords = {"usecase", "use case", "use", "case", "aspect", "class", "entity", "id", "flow", "every", "everything"} ;
 	private static final String[] reservedMethodWordsForJP = {"every","any","all"};
-	private static final String[] reservedResponsabilityWords = {"occur","happen","do","is","have","want","did","ha"};
+	private static final String[] reservedResponsabilityWords = {"occur","happen","do","is","want","did", "have","ha","contain","wish"}; //ha-> has stemmed
 	private static final String[] returnMethodTypes = {"int", "float", "void", "boolean", "char", "String"};
 	private static final String[] returnMethodKeyWords = {"return", "returning"};
 	private static final String[] methodKeyWords = {"method", "responsability"};
@@ -14,10 +14,15 @@ public class ReservedWords {
 	private static final String[] knownJoinPoints = {"call", "execution", "new", "within", "exception", "target", "this"};
 	private static final String[] simpleJoinPoints = {"within", "exception", "target", "this"};
 	private static final String[] complexJoinPoints = {"call", "execution", "new"};
+	private static final String[] reservedAttributeWords = {"every", "everything", "new"};
 
 	public static boolean isReservedClassWord(String word){
 		String singWord = Inflector.getInstance().singularize(word);
 		return ListUtils.contains(reservedClassWords, singWord);
+	}
+	
+	public static boolean isReservedAttributeWord(String word){
+		return ListUtils.contains(reservedAttributeWords, word);
 	}
 	
 	public static boolean isReservedMethodWord(String word){
@@ -45,7 +50,7 @@ public class ReservedWords {
 			return ListUtils.contains(reservedResponsabilityWords, singWord);
 		}
 	}
-
+	
 	public static boolean isReturnMethodType(String word){
 		return ListUtils.contains(returnMethodTypes, word);
 	}

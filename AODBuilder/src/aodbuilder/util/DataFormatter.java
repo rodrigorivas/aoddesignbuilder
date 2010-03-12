@@ -146,8 +146,10 @@ public class DataFormatter  {
 		if (text!=null && !ListUtils.contains(returnTypes, text)){
 			String[] words = text.split(" ");
 			for (String word: words){
-				if (ret.equals("") && !className)
+				if (ret.equals("") && !className){
+					word = word.toLowerCase();
 					ret=unCapitalize(word);
+				}
 				else
 					ret+=capitalize(word);
 			}

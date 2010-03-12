@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import aodbuilder.analyser.AttributeDetector;
 import aodbuilder.analyser.ResponsabilityDetector;
-import aodbuilder.analyser.SentenceAnalizer;
+import aodbuilder.analyser.NLPProcessor;
 import aodbuilder.analyser.UMLBeanAnalyzer;
 import aodbuilder.beans.aodprofile.AODProfileAssociation;
 import aodbuilder.beans.aodprofile.AODProfileAttribute;
@@ -29,7 +29,9 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 	@Override
 	public AODProfileBean build(UMLBean bean) throws Exception {
 		if (bean instanceof UMLClass){
-			return build((UMLClass)bean);
+			UMLClass umlClass = (UMLClass) bean;
+			umlClass.setMainClass(true);
+			return build(umlClass);
 		}
 		if (bean instanceof UMLAssociation){
 			return build((UMLAssociation)bean);
@@ -42,7 +44,6 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 		AODProfileClass aodClass = new AODProfileClass();
 		aodClass.setName(DataFormatter.javanize(bean.getName(),true));
 		aodClass.setId(aodClass.generateId());
-		
 		analyzeClass(bean, aodClass);	
 		
 		Log4jConfigurator.getLogger().info("Build complete.\n"+aodClass);
@@ -50,14 +51,14 @@ public class AODProfileClassBuilder implements AODProfileBuilder{
 	}
 
 	protected void analyzeClass(UMLBean bean, AODProfileClass aodClass) {
-		SentenceAnalizer.getInstance().analyze(bean.getDescription());
-		Collection<NLPDependencyRelation> depList = SentenceAnalizer.getInstance().getRelations();
-		NLPDependencyWord cl = SentenceAnalizer.getInstance().getWord(aodClass.getName());
+		NLPProcessor.getInstance().parse(bean.getDescription());
+		Collection<NLPDependencyRelation> depList = NLPProcessor.getInstance().getRelations();
+		NLPDependencyWord cl = NLPProcessor.getInstance().getWord(aodClass.getName());
 		
 		if (depList!=null && cl!=null){
 			Collection<AODProfileAttribute> attributesList = AttributeDetector.getInstance().detectAttribute(depList, cl);		
 			aodClass.addAttributes(attributesList);
-			Collection<AODProfileResponsability> responsabilitiesList = ResponsabilityDetector.getInstance().detectResponsability(SentenceAnalizer.getInstance().getRelations(), cl);
+			Collection<AODProfileResponsability> responsabilitiesList = ResponsabilityDetector.getInstance().detectResponsability(NLPProcessor.getInstance().getRelations(), cl, aodClass.isMainClass());
 			aodClass.addResponsabilities(responsabilitiesList);
 		}
 	}

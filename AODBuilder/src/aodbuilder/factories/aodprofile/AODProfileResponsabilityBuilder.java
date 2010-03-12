@@ -13,7 +13,7 @@ import aodbuilder.util.ReservedWords;
 public class AODProfileResponsabilityBuilder {
 		
 	public AODProfileResponsability build(NLPDependencyWord resp, NLPDependencyWord param) {
-		Log4jConfigurator.getLogger().info("Building new Responsability...");
+		Log4jConfigurator.getLogger().info("Building new Responsability with "+resp.getWord()+" and param:"+ ((param!=null)?param.getWord():"null"));
 		AODProfileResponsability newResponsability = new AODProfileResponsability();
 
 		if (ReservedWords.isReturnMethodKeyWord(resp.getWord())){
@@ -31,10 +31,9 @@ public class AODProfileResponsabilityBuilder {
 				newResponsability.setReturningType(param.getWord());
 			}
 			else if (!ReservedWords.isMethodKeyWord(param.getWord()) && !ReservedWords.isClassKeyWord(param.getWord()) && param.isNoun()){
-				AODProfileAttribute newAttr = new AODProfileAttribute();
-				newAttr.setName(DataFormatter.javanize(param.getWord(),false));
-				newAttr.setType(DataFormatter.javanize(param.getWord(),true));
-				newResponsability.addParameter(newAttr);
+				AODProfileAttribute newAttr = (new AODProfileAttributeBuilder()).build(param);
+				if (newAttr!=null)
+					newResponsability.addParameter(newAttr);
 			}
 		}
 		

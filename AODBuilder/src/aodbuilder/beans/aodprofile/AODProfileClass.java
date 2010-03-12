@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import aodbuilder.analyser.SentenceAnalizer;
+import aodbuilder.analyser.NLPProcessor;
 import aodbuilder.beans.nlp.NLPDependencyWord;
 import aodbuilder.util.Inflector;
 
@@ -15,16 +15,23 @@ public class AODProfileClass extends AODProfileBean {
 	protected List<AODProfileResponsability> responsabilities;
 	protected AODProfileClass baseClass;
 	protected List<AODProfileAssociation> possibleAssociations;
-
-	@Override
-	public void setName(String name) {
-		super.setName(AODProfileClass.convertClassName(name));
-	}
+	protected boolean mainClass = false;	
 	
 	public AODProfileClass() {
 		attributes = new ArrayList<AODProfileAttribute>();
 		responsabilities = new ArrayList<AODProfileResponsability>();
 		possibleAssociations = new ArrayList<AODProfileAssociation>();
+	}
+	@Override
+	public void setName(String name) {
+		super.setName(AODProfileClass.convertClassName(name));
+	}
+
+	public boolean isMainClass() {
+		return mainClass;
+	}
+	public void setMainClass(boolean mainClass) {
+		this.mainClass = mainClass;
 	}
 	public List<AODProfileAttribute> getAttributes() {
 		return attributes;
@@ -117,7 +124,7 @@ public class AODProfileClass extends AODProfileBean {
 		if (nameParts.length<=1)
 			return name;
 		
-		HashMap<String,NLPDependencyWord> words = SentenceAnalizer.getInstance().convertToWords(name);
+		HashMap<String,NLPDependencyWord> words = NLPProcessor.getInstance().convertToWords(name);
 		
 		for (String namePart: nameParts){
 			NLPDependencyWord word = words.get(namePart);
@@ -155,6 +162,9 @@ public class AODProfileClass extends AODProfileBean {
 							this.addAssociation(assoc);
 					}
 				}
+				
+				if (profileClass.isMainClass())
+					setMainClass(true);
 			}
 		}
 	}
