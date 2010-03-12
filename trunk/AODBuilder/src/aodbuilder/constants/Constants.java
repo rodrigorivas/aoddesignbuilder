@@ -43,6 +43,8 @@ public class Constants {
 	public static final String TIPO_ADVERBIO = "ADV";
 	public static final String TIPO_DESCONOCIDO = "DSC";
 	
+	public static final String DEFAULT_ASPECT_ID = "S.234.1736.29";
+	
 	public static URL PARSER_ENGLISH_RESOURCE_URL = null;
 	
 	

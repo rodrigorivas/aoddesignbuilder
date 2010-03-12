@@ -35,7 +35,7 @@ public abstract class AODProfileBean implements Comparable{
 		this.name = name;
 	}
 	public abstract void merge(AODProfileBean aodBean);
-	public boolean processInnerBeans(Map<String, AODProfileBean> newMap){
+	public boolean processInnerBeans(Map<String, AODProfileBean> newMap) throws Exception{
 		return false;
 	}
 	

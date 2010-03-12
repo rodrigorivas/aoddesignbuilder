@@ -38,13 +38,13 @@ public class JoinPointAndAdviceDetector {
 			if (dr.getRelationType().equalsIgnoreCase("mark")){
 				NLPDependencyWord jpWord = dr.getGovDW();
 				String adviceWord = dr.getDepDW().getWord();
-				if (jpWord.isRelated(classContainer, true)){
+				if (jpWord.isRoot(classContainer, true)){
 					addJoinPoint(joinPoints, jpWord);
 					addAvice(advices, adviceWord, jpWord.getWord());
 				}
 			}
 			else if (dr.getRelationType().equalsIgnoreCase("pcomp")){
-				if (dr.getDepDW().isRelated(classContainer, true)){
+				if (dr.getDepDW().isRoot(classContainer, true)){
 					NLPDependencyWord jpWord = dr.getDepDW();
 					String adviceWord = dr.getGovDW().getWord();
 					addJoinPoint(joinPoints, jpWord);
@@ -52,7 +52,7 @@ public class JoinPointAndAdviceDetector {
 				}
 			}
 			else if (dr.getRelationType().equalsIgnoreCase("prep") || dr.getRelationType().equalsIgnoreCase("prepc")){
-				if (dr.getDepDW().isRelated(classContainer, true)){
+				if (dr.getDepDW().isRoot(classContainer, true)){
 					NLPDependencyWord jpWord = dr.getDepDW();
 					String adviceWord = dr.getSpecific();
 					addJoinPoint(joinPoints, jpWord);
@@ -108,7 +108,7 @@ public class JoinPointAndAdviceDetector {
 			if (("class".equalsIgnoreCase(word.getWord()) || 
 					"object".equalsIgnoreCase(word.getWord()) || 
 					"instance".equalsIgnoreCase(word.getWord())) && 
-					word.isRelated(classContainer, true)){
+					word.isRoot(classContainer, true)){
 					AODProfileJoinPoint jp = getRelatedJoinPoint(joinPoints, word, verbsRelatedToJoinPoint);
 					if (jp!=null){
 						String className = findClassName(words, word.getWord());
@@ -121,7 +121,7 @@ public class JoinPointAndAdviceDetector {
 					"responsability".equalsIgnoreCase(word.getWord()) || 
 					"procedure".equalsIgnoreCase(word.getWord()) || 
 					"function".equalsIgnoreCase(word.getWord())) && 
-					word.isRelated(classContainer, true)){
+					word.isRoot(classContainer, true)){
 					AODProfileJoinPoint jp = getRelatedJoinPoint(joinPoints, word, verbsRelatedToJoinPoint);
 					if (jp!=null){
 						String methodName = findMethodName(word, joinPoints);

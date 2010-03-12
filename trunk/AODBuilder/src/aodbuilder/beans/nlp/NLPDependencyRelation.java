@@ -34,13 +34,13 @@ public class NLPDependencyRelation {
 	
 	public void relateWords(){
 		if (govDW!=null && depDW != null && relationType!=null){
-//			if ("nn".equalsIgnoreCase(relationType) && govDW.getPosition() == depDW.getPosition()+1){
-//				govDW.setWord(depDW.getWord()+" "+govDW.getWord());
-//			}
-			if (relationType.equalsIgnoreCase("nsubj") || relationType.equalsIgnoreCase("nsubjpass"))
+			if (relationType.equalsIgnoreCase("nsubj") || 
+					relationType.equalsIgnoreCase("nsubjpass") || 
+					relationType.equalsIgnoreCase("aux") ||
+					((relationType.equalsIgnoreCase("prep") && specific!=null && specific.length()>0 )))
 				govDW.addParent(depDW);
 			else
-				depDW.addParent(govDW);
+				depDW.addParent(govDW);			
 		}
 	}
 	

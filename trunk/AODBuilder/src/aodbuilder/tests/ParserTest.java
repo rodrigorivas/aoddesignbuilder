@@ -19,14 +19,23 @@ import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 
 class ParserTest {
 	public static void main(String[] args) {
-		try{
-			LexicalizedParser lp = new LexicalizedParser("c:/temp/parser.ser.gz");
-		}catch (Exception e) {
-			e.printStackTrace();
+		LexicalizedParser lp = new LexicalizedParser("c:/temp/englishPCFG.ser.gz");
+		lp.setOptionFlags(new String[]{"-maxLength", "80", "-retainTmpSubcategories"});
+
+		String text = "Logging occurs after every method call. The method parameters are saved to a logfile.";
+		
+		lp.parse(text);
+		
+		Tree tree = lp.getBestParse();
+		ArrayList<NLPDependencyWord> words=null;
+		if (tree!=null){
+			Tree firstChild = tree.firstChild();
+			words = getLeaf(firstChild);
 		}
-//		lp.setOptionFlags(new String[]{"-maxLength", "80", "-retainTmpSubcategories"});
-//
-//		String text = "Logging occurs before call to class display";
+		
+		for (NLPDependencyWord word: words){
+			System.out.println(word);
+		}
 //		String[] sentences= text.split("[.]");
 //		for (String sentence: sentences){
 //			String[] sent = TextSplitter.split(sentence);
@@ -155,5 +164,41 @@ class ParserTest {
 //		
 //		
 //		return list;
+	}
+
+	private static ArrayList<NLPDependencyWord> getLeaf(Tree tree) {
+		return getLeaf(tree, new ArrayList<NLPDependencyWord>());
+	}
+
+	private static ArrayList<NLPDependencyWord> getLeaf(Tree tree, ArrayList<NLPDependencyWord> words) {
+		for(Tree t:  tree.getChildrenAsList()){
+			int childNo= t.numChildren();
+			if (childNo==1){
+				String type="";
+				while (!t.isLeaf()){
+					type = t.value();
+					t = t.firstChild();
+				}
+				words = addNewWord(words, type, t.value());
+			}
+			else{
+				getLeaf(t, words);
+			}
+		}
+		return words;
+	}
+
+	private static ArrayList<NLPDependencyWord> addNewWord(
+			ArrayList<NLPDependencyWord> words, String type,
+			String word) {
+		if (words==null)
+			words = new ArrayList<NLPDependencyWord>();
+
+		NLPDependencyWord newWord = new NLPDependencyWord();
+		newWord.setPosition(words.size()+1);
+		newWord.setType(type);
+		newWord.setWord(word);
+		words.add(newWord);
+		return words;
 	}
 }

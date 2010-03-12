@@ -8,6 +8,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.log4j.Logger;
@@ -28,10 +29,11 @@ import edu.stanford.nlp.trees.GrammaticalStructureFactory;
 import edu.stanford.nlp.trees.PennTreebankLanguagePack;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeGraphNode;
+import edu.stanford.nlp.trees.TreePrint;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
 import edu.stanford.nlp.trees.TypedDependency;
 
-public class SentenceAnalizer {
+public class NLPProcessor {
 	
 	public static final String PARSER_ENGLISH = "englishPCFG.ser.gz";
 	public static final String PARSER_ENGLISH_FULL_PATH = "C:/workspaces/eclipse/AODBuilder/bin/englishPCFG.ser.gz";
@@ -48,10 +50,10 @@ public class SentenceAnalizer {
 		return words;
 	}
 
-	private static SentenceAnalizer instance = null;
+	private static NLPProcessor instance = null;
 	
-	private SentenceAnalizer() {
-		logger.info("Start SentenceAnalizer...");
+	private NLPProcessor() {
+		logger.info("Start NLPProcessor...");
 
 		loadParser();
 		lp.setOptionFlags(new String[]{"-maxLength", "70"});
@@ -78,8 +80,6 @@ public class SentenceAnalizer {
 				loadDefault();
 			}
 		}
-		
-
 	}
 
 	private void loadFromOject(URL url) throws Exception{
@@ -92,23 +92,23 @@ public class SentenceAnalizer {
 		ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(is));
 		ParserData pd = (ParserData) ois.readObject();
 		lp = new LexicalizedParser(pd);
-		logger.info("Parser created from Object on "+url.getFile());
+		logger.info("Parser loaded from Object on "+url.getFile());
 		is.close();
 	}
 
 	private void loadDefault() {
 		logger.info("Trying to load resource: "+FileConstants.PARSER_PATH+PARSER_ENGLISH);
 		lp = new LexicalizedParser(FileConstants.PARSER_PATH+PARSER_ENGLISH);
-		logger.info("Parser created from default file on "+FileConstants.PARSER_PATH+PARSER_ENGLISH);
+		logger.info("Parser loaded from default file on "+FileConstants.PARSER_PATH+PARSER_ENGLISH);
 	}
 
 	private void loadFromURL(URL url) {
 		logger.info("Trying to load resource: "+url.getFile());
 		lp = new LexicalizedParser(url.getFile());
-		logger.info("Parser created from URL on "+url.getFile());
+		logger.info("Parser loaded from URL on "+url.getFile());
 	}
 	
-	private SentenceAnalizer(LexicalizedParser parser) {
+	private NLPProcessor(LexicalizedParser parser) {
 		lp = parser;
 		lp.setOptionFlags(new String[]{"-maxLength", "70"});
 		relations = new ArrayList<NLPDependencyRelation>();
@@ -116,9 +116,9 @@ public class SentenceAnalizer {
 		logger = Log4jConfigurator.getLogger();
 	}
 
-	public static SentenceAnalizer getInstance(){
+	public static NLPProcessor getInstance(){
 		if (instance == null)
-			instance = new SentenceAnalizer();
+			instance = new NLPProcessor();
 		
 		return instance;
 	}
@@ -129,34 +129,36 @@ public class SentenceAnalizer {
 		words.clear();
 	}
 	
-	public void analyze(String text){
-		logger.info("Starting SentenceAnalizer...");
+	public void parse(String text){
+		logger.info("Starting NLPProcessor parsing...");
+		reset();
+
 		if (text !=null && text.length()>0){
 			/* reset all properties before starting*/
-			reset();
 			
-			String[] sentences = text.split("[.]");
-			
-			for (String sentence: sentences){
+			String sentence = text;
+//			String[] sentences = text.split("[.]");
+//			
+//			for (String sentence: sentences){
 				
 				//Parse the sentence using Standford parser.
 				Collection<TypedDependency> tdl = parseNLP(sentence);
 				
-				ArrayList<NLPDependencyRelation> previousNN = new ArrayList<NLPDependencyRelation>();
-
+				ArrayList<NLPDependencyWord> nnWords = new ArrayList<NLPDependencyWord>();
+				Map<String, NLPDependencyWord> mapNN = new HashMap<String, NLPDependencyWord>();
 
 				if (tdl!=null){
 					//Convert the parser output in something more simple to use
-					logger.info("Converting parsing tree into something more simple...");
+					logger.info("Converting parsing tree into NLP objects...");
 					for (TypedDependency td: tdl){
 						NLPDependencyRelation dr = createNLPDependencyRelation(td, words);
 						if (dr!=null){
 							if ("nn".equalsIgnoreCase(dr.getRelationType())){
-								processNN(dr,previousNN,1);
-							}						
-							dr.relateWords();
-							relations.add(dr);
-							
+								processNN(dr, nnWords, mapNN);
+							}	
+							else{
+								relations.add(dr);
+							}
 							if (dr.getDepDW()!=null && !words.containsKey(dr.getDepDW().getKey()))
 								words.put(dr.getDepDW().getKey(), dr.getDepDW());
 
@@ -165,44 +167,110 @@ public class SentenceAnalizer {
 														
 						}
 					}
+					
+					//replace all relations containing a word joined in a NN relation 
+					refineRelations(mapNN);
+					
+					//delete words that are part of some other union 
+					filterWords(mapNN);
+					
+					logResults();
+					
 					logger.info("Convertion complete.");
 				}			
 			}					
-		}		
-		logger.info("Sentence analisis completed.");
+//		}		
+			
+		logger.info("NLPProcessor parsing completed.");
 	}
 
-	private boolean processNN(NLPDependencyRelation dr, ArrayList<NLPDependencyRelation> previousNN, int position) {
-		if (dr.getGovDW().getPosition() == dr.getDepDW().getPosition()+position){
+	private void logResults() {
+		logger.info("Resulting words processed: ");
+		for (NLPDependencyWord word: words.values()){
+			logger.info(word);
+		}
+
+		logger.info("Resulting relations processed: ");
+		for (NLPDependencyRelation rel: relations){
+			logger.info(rel);
+		}
+
+	}
+
+	private void filterWords(Map<String, NLPDependencyWord> mapNN) {
+		for (String key: mapNN.keySet()){
+			words.remove(key);
+		}
+	}
+
+	private void refineRelations(Map<String, NLPDependencyWord> mapNN) {
+		for (NLPDependencyRelation rel: relations){
+			replaceRelation(mapNN, rel, rel.getDepDW(), false);
+			replaceRelation(mapNN, rel, rel.getGovDW(), true);
+			rel.relateWords();
+		}
+	}
+
+	private void replaceRelation(Map<String, NLPDependencyWord> mapNN, NLPDependencyRelation rel, NLPDependencyWord word, boolean isGov) {
+		NLPDependencyWord wordToReplace = mapNN.get(word.getKey());
+		if (wordToReplace!=null){
+			if (isGov)
+				rel.setGovDW(wordToReplace);
+			else
+				rel.setDepDW(wordToReplace);
+		}
+	}
+	
+	
+	private boolean processNN(NLPDependencyRelation dr, ArrayList<NLPDependencyWord> nnWords, Map<String, NLPDependencyWord> mapNN) {
+		if (dr.getGovDW().getPosition() == dr.getDepDW().getPosition()+1){
+			NLPDependencyWord oldWord = new NLPDependencyWord(dr.getGovDW());
 			dr.getGovDW().setWord(dr.getDepDW().getWord()+" "+dr.getGovDW().getWord());
-			position++;
-			NLPDependencyRelation nextNN = getNextNN(previousNN, dr.getDepDW().getPosition()-1);
-			if (nextNN!=null){
-				processNN(nextNN, previousNN, position);
-			}
+			
+			NLPDependencyWord previousWord = null;
+			int pos = dr.getDepDW().getPosition()-1;
+			do{
+				previousWord = getPreviousWord(pos, nnWords);
+				if (previousWord!=null){
+					dr.getGovDW().setWord(previousWord.getWord()+" "+dr.getGovDW().getWord());
+					pos--;
+				}
+			} while (previousWord!=null);
+			
+			nnWords.add(oldWord);
+			nnWords.add(dr.getDepDW());
+			
+			putAllNNWordsOnMap(nnWords, mapNN, dr.getGovDW());
 			return true;
 		}
 		else{
-			if (!previousNN.contains(dr))
-				previousNN.add(dr);
+			if (!nnWords.contains(dr.getDepDW()))
+				nnWords.add(dr.getDepDW());
 		}
 		
 		return false;
 		
 	}
 
-	private NLPDependencyRelation getNextNN(ArrayList<NLPDependencyRelation> previousNN, int position) {
-		NLPDependencyRelation ret = null;
-		if (previousNN!=null){
-			for (NLPDependencyRelation nn: previousNN){
-				if (nn.getDepDW().getPosition()==position){
-					ret = nn;
-					previousNN.remove(nn);
-					break;
-				}
+
+	private void putAllNNWordsOnMap(ArrayList<NLPDependencyWord> nnWords,
+			Map<String, NLPDependencyWord> mapNN, NLPDependencyWord replacedWord) {
+		
+		for (NLPDependencyWord word: nnWords){
+			if (!mapNN.containsKey(word.getKey()))
+				mapNN.put(word.getKey(), replacedWord);						
+		}
+		
+		nnWords.clear();
+	}
+
+	private NLPDependencyWord getPreviousWord(int pos, ArrayList<NLPDependencyWord> nnWords) {
+		for (NLPDependencyWord word: nnWords){
+			if (word.getPosition()==pos){
+				return word;
 			}
 		}
-		return ret;
+		return null;
 	}
 
 	private NLPDependencyRelation createNLPDependencyRelation(TypedDependency td, HashMap<String, NLPDependencyWord> words) {
@@ -231,15 +299,14 @@ public class SentenceAnalizer {
 		logger.info("Parsing sentence: "+ sentence);
 		if (sentence!=null && sentence.trim().length()>0){
 			if (lp.parse(sentence)){
-				Tree parse = lp.getBestParse();
-		
-				TreebankLanguagePack tlp = new PennTreebankLanguagePack();
-				GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
-				GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
-		
-				Collection<TypedDependency> tdl = gs.typedDependenciesCollapsed();
-				
-				logger.info("Parsing sentence ended.");
+			    Tree parse = lp.getBestParse();
+
+			    TreebankLanguagePack tlp = new PennTreebankLanguagePack();
+			    GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
+			    GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
+			    Collection<TypedDependency> tdl = gs.typedDependenciesCollapsed();
+
+			    logger.info("Parsing sentence ended.");
 				return tdl;
 			}
 		}
@@ -275,5 +342,55 @@ public class SentenceAnalizer {
 		return words;
 		
 	}
+	
+	public ArrayList<NLPDependencyWord> parseWithNoRelations(String sentence){
+		lp.parse(sentence);
+		
+		Tree tree = lp.getBestParse();
+		ArrayList<NLPDependencyWord> words=null;
+		if (tree!=null){
+			Tree firstChild = tree.firstChild();
+			words = getLeaf(firstChild);
+		}
+
+		return words;
+	}
+	
+	private ArrayList<NLPDependencyWord> getLeaf(Tree tree) {
+		return getLeaf(tree, new ArrayList<NLPDependencyWord>());
+	}
+
+	private ArrayList<NLPDependencyWord> getLeaf(Tree tree, ArrayList<NLPDependencyWord> words) {
+		for(Tree t:  tree.getChildrenAsList()){
+			int childNo= t.numChildren();
+			if (childNo==1){
+				String type="";
+				while (!t.isLeaf()){
+					type = t.value();
+					t = t.firstChild();
+				}
+				words = addNewWord(words, type, t.value());
+			}
+			else{
+				getLeaf(t, words);
+			}
+		}
+		return words;
+	}
+
+	private ArrayList<NLPDependencyWord> addNewWord(
+			ArrayList<NLPDependencyWord> words, String type,
+			String word) {
+		if (words==null)
+			words = new ArrayList<NLPDependencyWord>();
+
+		NLPDependencyWord newWord = new NLPDependencyWord();
+		newWord.setPosition(words.size()+1);
+		newWord.setType(type);
+		newWord.setWord(word);
+		words.add(newWord);
+		return words;
+	}
+
 	
 }

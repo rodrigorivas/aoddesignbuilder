@@ -1,7 +1,7 @@
 package aodbuilder.analyser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 
 import org.apache.log4j.Logger;
 
@@ -28,12 +28,12 @@ public class ClassDetector {
 		return instance;
 	}
 
-	public ArrayList<NLPDependencyWord> detectClasses (HashMap<String, NLPDependencyWord> words){
+	public ArrayList<NLPDependencyWord> detectClasses (Collection<NLPDependencyWord> words){
 		logger.info("Starting classes detection...");
 		ArrayList<NLPDependencyWord> classes = new ArrayList<NLPDependencyWord>();
 		
 		if (words != null){
-			for (NLPDependencyWord word: words.values()){			
+			for (NLPDependencyWord word: words){			
 				if (word.getType().toUpperCase().startsWith("NN")){
 					if (!contained(classes, word)){
 						word.setWord(DataFormatter.javanize(Inflector.getInstance().singularize(word.getWord()),true));

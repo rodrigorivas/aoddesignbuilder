@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import aodbuilder.analyser.AttributeDetector;
 import aodbuilder.analyser.JoinPointAndAdviceDetector;
 import aodbuilder.analyser.ResponsabilityDetector;
-import aodbuilder.analyser.SentenceAnalizer;
+import aodbuilder.analyser.NLPProcessor;
 import aodbuilder.analyser.UMLBeanAnalyzer;
 import aodbuilder.beans.aodprofile.AODProfileAdvice;
 import aodbuilder.beans.aodprofile.AODProfileAspect;
@@ -35,7 +35,8 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 	@Override
 	public AODProfileBean build(UMLBean bean) throws Exception {
 		if (bean instanceof UMLAspect){
-			return build((UMLAspect)bean);
+			UMLAspect asp = (UMLAspect)bean;
+			return build(asp);
 		}
 		if (bean instanceof UMLAssociation){
 			return build((UMLAssociation)bean);
@@ -48,6 +49,7 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 		AODProfileAspect aspect = new AODProfileAspect();
 		aspect.setName(cl.getName());
 		aspect.setId(aspect.generateId());
+		aspect.setMainClass(cl.isMainClass());
 		aspect.setAttributes(ListUtils.clone(cl.getAttributes()));
 		aspect.setResponsabilities(ListUtils.clone(cl.getResponsabilities()));
 		
@@ -59,6 +61,7 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 		AODProfileAspect aspect = new AODProfileAspect();
 		aspect.setName(DataFormatter.javanize(bean.getName(),true));
 		aspect.setId(aspect.generateId());
+		aspect.setMainClass(bean.isMainClass());
 		
 		analyzeClass(bean, aspect);		
 		
@@ -67,17 +70,17 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 	}
 	
 	protected void analyzeClass(UMLBean bean, AODProfileAspect aodClass) throws Exception {
-		SentenceAnalizer.getInstance().analyze(bean.getDescription());
-		Collection<NLPDependencyRelation> relations = SentenceAnalizer.getInstance().getRelations();
-		HashMap<String, NLPDependencyWord> wordsHM = SentenceAnalizer.getInstance().getWords();
-		NLPDependencyWord cl = SentenceAnalizer.getInstance().getWord(aodClass.getName());
+		NLPProcessor.getInstance().parse(bean.getDescription());
+		Collection<NLPDependencyRelation> relations = NLPProcessor.getInstance().getRelations();
+		HashMap<String, NLPDependencyWord> wordsHM = NLPProcessor.getInstance().getWords();
+		NLPDependencyWord cl = NLPProcessor.getInstance().getWord(aodClass.getName());
 		
 		if (relations!=null && cl!=null){
 			/* Detect Attributes */
 			Collection<AODProfileAttribute> attributes = AttributeDetector.getInstance().detectAttribute(relations, cl);		
 			aodClass.addAttributes(attributes);
 			/* Detect Responsabilities */
-			Collection<AODProfileResponsability> responsabilities = ResponsabilityDetector.getInstance().detectResponsability(relations, cl);
+			Collection<AODProfileResponsability> responsabilities = ResponsabilityDetector.getInstance().detectResponsability(relations, cl, aodClass.isMainClass());
 			aodClass.addResponsabilities(responsabilities);
 			
 			JoinPointAndAdviceDetector.getInstance().detect(aodClass, relations, cl, wordsHM.values(), responsabilities);

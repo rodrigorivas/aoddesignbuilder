@@ -2,7 +2,7 @@ package aodbuilder.beans.uml;
 
 import java.util.Map;
 
-public class UMLAspect extends UMLBean {
+public class UMLAspect extends UMLClass {
 	
 	public UMLAspect(String id, String name) {
 		super(id, name);
