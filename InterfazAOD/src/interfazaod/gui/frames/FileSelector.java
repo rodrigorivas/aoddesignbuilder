@@ -29,7 +29,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.log4j.Logger;
 
-import aodbuilder.analyser.SentenceAnalizer;
+import aodbuilder.analyser.NLPProcessor;
 import aodbuilder.beans.aodprofile.AODProfileBean;
 import aodbuilder.constants.Constants;
 import aodbuilder.main.AODBuilder;
@@ -83,7 +83,7 @@ public class FileSelector extends javax.swing.JFrame {
 			task = AODBuilderRunner.getInstance(fileName);
 			task.addPropertyChangeListener(this);
 
-			 setParserResource(SentenceAnalizer.PARSER_ENGLISH);
+			 setParserResource(NLPProcessor.PARSER_ENGLISH);
 			
 			task.execute();
 		}
