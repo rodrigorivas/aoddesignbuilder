@@ -37,6 +37,7 @@ public class NLPProcessor {
 	
 	public static final String PARSER_ENGLISH = "englishPCFG.ser.gz";
 	public static final String PARSER_ENGLISH_FULL_PATH = "C:/workspaces/eclipse/AODBuilder/bin/englishPCFG.ser.gz";
+	private static final String MAX_SENTENCE_LENGTH = "100";
 	private LexicalizedParser lp;
 	ArrayList<NLPDependencyRelation> relations;
 	HashMap<String,NLPDependencyWord> words;
@@ -56,7 +57,7 @@ public class NLPProcessor {
 		logger.info("Start NLPProcessor...");
 
 		loadParser();
-		lp.setOptionFlags(new String[]{"-maxLength", "70"});
+		lp.setOptionFlags(new String[]{"-maxLength", MAX_SENTENCE_LENGTH});
 		relations = new ArrayList<NLPDependencyRelation>();
 		words = new HashMap<String,NLPDependencyWord>();
 		logger = Log4jConfigurator.getLogger();
@@ -136,11 +137,19 @@ public class NLPProcessor {
 		if (text !=null && text.length()>0){
 			/* reset all properties before starting*/
 			
-			String sentence = text;
-//			String[] sentences = text.split("[.]");
-//			
-//			for (String sentence: sentences){
+			
+			if (text.length() > Integer.parseInt(MAX_SENTENCE_LENGTH)){
+				String[] sentences = text.split("[.]");
 				
+				for (String sentence: sentences){
+					if (sentence.length() > Integer.parseInt(MAX_SENTENCE_LENGTH)){
+						sentence = sentence.substring(0, Integer.parseInt(MAX_SENTENCE_LENGTH));
+					}
+					parse(sentence);
+				}
+			}	
+			else{
+				String sentence = text;
 				//Parse the sentence using Standford parser.
 				Collection<TypedDependency> tdl = parseNLP(sentence);
 				
@@ -178,8 +187,8 @@ public class NLPProcessor {
 					
 					logger.info("Convertion complete.");
 				}			
-			}					
-//		}		
+			}
+		}					
 			
 		logger.info("NLPProcessor parsing completed.");
 	}
