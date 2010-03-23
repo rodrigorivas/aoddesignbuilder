@@ -19,6 +19,7 @@ import aodbuilder.constants.Constants;
 import aodbuilder.constants.FileConstants;
 import aodbuilder.factories.nlp.NLPDependencyRelationBuilder;
 import aodbuilder.factories.nlp.NLPDependencyWordBuilder;
+import aodbuilder.util.DataFormatter;
 import aodbuilder.util.Log4jConfigurator;
 import aodbuilder.util.ResourceLoader;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
@@ -29,7 +30,6 @@ import edu.stanford.nlp.trees.GrammaticalStructureFactory;
 import edu.stanford.nlp.trees.PennTreebankLanguagePack;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeGraphNode;
-import edu.stanford.nlp.trees.TreePrint;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
 import edu.stanford.nlp.trees.TypedDependency;
 
@@ -131,21 +131,32 @@ public class NLPProcessor {
 	}
 	
 	public void parse(String text){
+		parse(text,true);
+	}
+	
+	
+	public void parse(String text, boolean reset){
 		logger.info("Starting NLPProcessor parsing...");
-		reset();
+		if (reset)
+			reset();
 
 		if (text !=null && text.length()>0){
 			/* reset all properties before starting*/
 			
 			
-			if (text.length() > Integer.parseInt(MAX_SENTENCE_LENGTH)){
+			if (DataFormatter.countWords(text) > Integer.parseInt(MAX_SENTENCE_LENGTH)){
 				String[] sentences = text.split("[.]");
 				
 				for (String sentence: sentences){
-					if (sentence.length() > Integer.parseInt(MAX_SENTENCE_LENGTH)){
-						sentence = sentence.substring(0, Integer.parseInt(MAX_SENTENCE_LENGTH));
+					if (DataFormatter.countWords(sentence) > Integer.parseInt(MAX_SENTENCE_LENGTH)){
+						sentence = DataFormatter.getFirstNWords(sentence, Integer.parseInt(MAX_SENTENCE_LENGTH));
+						String tail = DataFormatter.getWordsFrom(sentence, Integer.parseInt(MAX_SENTENCE_LENGTH));
+						parse(sentence, false);
+						parse(tail, false);
 					}
-					parse(sentence);
+					else{
+						parse(sentence, false);
+					}
 				}
 			}	
 			else{
