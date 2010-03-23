@@ -3,6 +3,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -213,4 +214,55 @@ public class DataFormatter  {
 		}
 		return word;
 	}
+
+
+	public static int countWords(String text) {
+		int ret = 0;
+		StringTokenizer token = new StringTokenizer(text);
+		while (token.hasMoreTokens()){
+			token.nextToken();
+			ret++;
+		}
+		
+		return ret;
+	}
+
+
+	public static String getFirstNWords(String text, int max) {
+		String ret = "";
+		int numTokens=0;
+		StringTokenizer token = new StringTokenizer(text);
+		while (token.hasMoreTokens() && numTokens<max){
+			ret+=" "+token.nextToken();
+			numTokens++;
+		}
+		
+		return ret.trim();
+	}
+	
+
+	public static String getWordsFrom(String text, int max) {
+		String ret = "";
+		int numTokens=0;
+		StringTokenizer token = new StringTokenizer(text);
+		while (token.hasMoreTokens() && numTokens<max){
+			token.nextToken();
+			numTokens++;
+		}
+
+		while (token.hasMoreTokens()){
+			ret+=" "+token.nextToken();
+		}	
+		
+		return ret.trim();
+	}
+	
+	public static void main(String[] args) {
+		String text = "The user enters the homepage of the site. The system asks the user to enter his username and pass-word. The system validates this information and allow the user to enter to the mainpage.";
+		System.out.println("Number of tokens: "+countWords(text));
+		System.out.println("First 5 tokens: "+ getFirstNWords(text, 5));
+		System.out.println("Last 5 tokens: "+ getWordsFrom(text, 28));
+	}
+
 }
+
