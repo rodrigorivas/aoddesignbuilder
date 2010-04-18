@@ -3,17 +3,8 @@ package aodbuilder.umlLayer.factories;
 import org.apache.log4j.Logger;
 
 
-import aodbuilder.beans.uml.*;
+import aodbuilder.umlLayer.beans.*;
 import aodbuilder.constants.Constants;
-import aodbuilder.umlLayer.beans.UMLAssociation;
-import aodbuilder.umlLayer.beans.UMLAssociationEnd;
-import aodbuilder.umlLayer.beans.UMLBean;
-import aodbuilder.umlLayer.beans.UMLClass;
-import aodbuilder.umlLayer.beans.UMLGenericBean;
-import aodbuilder.umlLayer.beans.UMLModel;
-import aodbuilder.umlLayer.beans.UMLStereotype;
-import aodbuilder.umlLayer.beans.UMLTaggedValue;
-import aodbuilder.umlLayer.beans.UMLUseCase;
 import aodbuilder.util.Log4jConfigurator;
 
 public class UMLFactory {
