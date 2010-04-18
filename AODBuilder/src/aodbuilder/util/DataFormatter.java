@@ -151,11 +151,12 @@ public class DataFormatter  {
 					word = word.toLowerCase();
 					ret=unCapitalize(word);
 				}
-				else
+				else{
 					ret+=capitalize(word);
+				}
 			}
 		}
-		return ret;
+		return Inflector.getInstance().singularize(ret);
 	}
 
 	public static java.sql.Date parseSqlDate(Date date) {
@@ -256,13 +257,41 @@ public class DataFormatter  {
 		
 		return ret.trim();
 	}
+
+	public static String transformInputString(String str) {
+		if (str!=null){
+			StringBuffer value = new StringBuffer();			
+	
+			char[] buffer = str.toCharArray();
+			
+			for (int i = 0; i < buffer.length; i++) {
+				switch (buffer[i]) {
+				case '\\':
+					value.append(" or ");
+					break;
+				case '/':
+					value.append(" or ");
+					break;
+				default:
+					value.append(buffer[i]);
+					break;
+				}
+			}
+			return value.toString();
+		}
+		return null;
+	}
 	
 	public static void main(String[] args) {
-		String text = "The user enters the homepage of the site. The system asks the user to enter his username and pass-word. The system validates this information and allow the user to enter to the mainpage.";
-		System.out.println("Number of tokens: "+countWords(text));
-		System.out.println("First 5 tokens: "+ getFirstNWords(text, 5));
-		System.out.println("Last 5 tokens: "+ getWordsFrom(text, 28));
+//		String text = "The user enters the homepage of the site. The system asks the user to enter his username and pass-word. The system validates this information and allow the user to enter to the mainpage.";
+//		System.out.println("Number of tokens: "+countWords(text));
+//		System.out.println("First 5 tokens: "+ getFirstNWords(text, 5));
+//		System.out.println("Last 5 tokens: "+ getWordsFrom(text, 28));
+		String text = "The Student can also modify or delete course selections if changes are made within the add/drop period at the beginning of the semester.";
+		System.out.println(transformInputString(text));
 	}
+
+
 
 }
 

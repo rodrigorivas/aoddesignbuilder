@@ -3,12 +3,12 @@ package aodbuilder.tests;
 import java.util.HashMap;
 import java.util.Map;
 
-import aodbuilder.analyser.UMLBeanAnalyzer;
-import aodbuilder.beans.aodprofile.AODProfileBean;
-import aodbuilder.beans.uml.UMLAspect;
-import aodbuilder.beans.uml.UMLAssociation;
-import aodbuilder.beans.uml.UMLBean;
-import aodbuilder.beans.uml.UMLClass;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
+import aodbuilder.umlLayer.beans.UMLAspect;
+import aodbuilder.umlLayer.beans.UMLAssociation;
+import aodbuilder.umlLayer.beans.UMLBean;
+import aodbuilder.umlLayer.beans.UMLClass;
+import aodbuilder.umlLayer.process.UMLBeanAnalyzer;
 
 class AspectTest {
 	public static void main(String[] args) {		

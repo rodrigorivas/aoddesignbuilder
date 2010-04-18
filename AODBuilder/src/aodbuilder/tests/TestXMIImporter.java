@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import aodbuilder.analyser.GenericBeanAnalyzer;
-import aodbuilder.analyser.UMLBeanAnalyzer;
-import aodbuilder.beans.aodprofile.AODProfileBean;
-import aodbuilder.beans.uml.UMLBean;
-import aodbuilder.beans.uml.UMLGenericBean;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
+import aodbuilder.aodLayer.process.GenericBeanAnalyzer;
+import aodbuilder.umlLayer.beans.UMLBean;
+import aodbuilder.umlLayer.beans.UMLGenericBean;
+import aodbuilder.umlLayer.process.UMLBeanAnalyzer;
 import aodbuilder.util.FileUtil;
 import aodbuilder.util.UniqueID;
-import aodbuilder.xmi.XMIImporter;
+import aodbuilder.xmiLayer.XMIImporter;
 
 
 public class TestXMIImporter {

@@ -7,12 +7,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import aodbuilder.analyser.GenericBeanAnalyzer;
-import aodbuilder.beans.aodprofile.AODProfileBean;
-import aodbuilder.beans.uml.UMLGenericBean;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
+import aodbuilder.aodLayer.process.GenericBeanAnalyzer;
+import aodbuilder.umlLayer.beans.UMLGenericBean;
 import aodbuilder.util.FileUtil;
 import aodbuilder.util.Log4jConfigurator;
-import aodbuilder.xmi.XMIImporter;
+import aodbuilder.xmiLayer.XMIImporter;
 
 public class AODBuilder{
 

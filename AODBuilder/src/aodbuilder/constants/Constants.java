@@ -47,5 +47,5 @@ public class Constants {
 	
 	public static URL PARSER_ENGLISH_RESOURCE_URL = null;
 	
-	
+	public static final int DEFAULT_PROGRESS = 5;
 }

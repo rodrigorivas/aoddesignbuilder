@@ -18,6 +18,7 @@ public class Inflector {
 
     private static List<RuleAndReplacement> plurals = new ArrayList<RuleAndReplacement>();
     private static List<RuleAndReplacement> singulars = new ArrayList<RuleAndReplacement>();
+    private static List<RuleAndReplacement> presents = new ArrayList<RuleAndReplacement>();
     private static List<String> uncountables = new ArrayList<String>();
 
     private static Inflector instance; // (Pseudo-)Singleton instance.
@@ -72,7 +73,7 @@ public class Inflector {
         singular("(vert|ind)ices$", "$1ex");
         singular("(matr)ices$", "$1ix");
         singular("(quiz)zes$", "$1");
-
+        
         irregular("person", "people");
         irregular("man", "men");
         irregular("child", "children");
@@ -80,6 +81,143 @@ public class Inflector {
         irregular("move", "moves");
 
         uncountable(new String[] {"equipment", "information", "rice", "money", "species", "series", "fish", "sheep"});
+
+        present("aaed$","a");
+        present("bbed$","b");
+        present("cced$","c");
+        present("dded$","d");
+        present("ffed$","f");
+        present("gged$","g");
+        present("ied$","y");
+        present("kkd$","k");
+        present("lld$","l");
+        present("mmd$","m");
+        present("nned$","n");
+        present("pped$","p");
+        present("rred$","r");
+        present("ssed$","s");
+        present("tted$","t");
+        present("zzed$","z");
+        present("ed$","");
+        present("ing$","");
+        
+        present("awoke", "awake");
+        present("awoken", "awake");
+        present("was", "be");
+        present("were", "be");
+        present("been", "be");
+        present("beaten", "beat");
+        present("became",	"become");
+        present("began", "begin");
+        present("begun", "begin");
+        present("bent", "bend");
+        present("bit", "bite");
+        present("bitten", "bite");
+        present("blew", "blow");
+        present("blown", "blow");
+        present("broke", "break");
+        present("broken", "break");
+        present("brought", "bring");
+        present("built", "build");
+        present("burnt", "burn");
+        present("bought", "buy");
+        present("caught", "catch");
+        present("chosen", "choose");
+        present("came", "come");
+        present("dug", "dig");
+        present("did", "do");
+        present("done", "do");
+        present("drew", "draw");
+        present("drawn", "draw");
+        present("dreamt", "dream");
+        present("drove", "drive");
+        present("driven", "drive");
+        present("drank", "drink");
+        present("drunk", "drink");
+        present("ate", "eat");
+        present("eaten", "eat");
+        present("fell", "fall");
+        present("fallen", "fall");
+        present("felt", "feel");
+        present("fought", "fight");
+        present("found", "find");
+        present("flew", "fly");
+        present("flown", "fly");
+        present("forgot", "forget");
+        present("forgotten", "forget");
+        present("forgave", "forgive");
+        present("forgiven", "forgive");
+        present("froze", "freeze");
+        present("frozen", "freeze");
+        present("got", "get");
+        present("gotten", "get");
+        present("gave", "give");
+        present("given", "give");
+        present("went", "go");
+        present("gone", "go");
+        present("grew", "grow");
+        present("grown", "grow");
+        present("hung", "hang");
+        present("had", "have");
+        present("heard", "hear");
+        present("hid", "hide");
+        present("hidden", "hide");
+        present("held", "hold");
+        present("knew", "know");
+        present("known", "know");
+        present("laid", "lay");
+        present("led", "lead");
+        present("learnt", "learn");
+        present("left", "leave");
+        present("lent", "lend");
+        present("lay", "lie");
+        present("lain", "lie");
+        present("lost", "lose");
+        present("made", "make");
+        present("meant", "mean");
+        present("met", "meet");
+        present("paid", "pay");
+        present("rode", "ride");
+        present("ridden", "ride");
+        present("rang", "ring");
+        present("rung", "ring");
+        present("rose", "rise");
+        present("risen", "rise");
+        present("ran", "run");
+        present("said", "say");
+        present("saw", "see");
+        present("seen", "see");
+        present("sold", "sell");
+        present("sent", "send");
+        present("shown", "show");
+        present("sang", "sing");
+        present("sung", "sing");
+        present("sat", "sit");
+        present("slept", "sleep");
+        present("spoke", "speak");
+        present("spoken", "speak");
+        present("spent", "spend");
+        present("stood", "stand");
+        present("swam", "swim");
+        present("swum", "swim");
+        present("took", "take");
+        present("taken", "take");
+        present("taught", "teach");
+        present("tore", "tear");
+        present("torn", "tear");
+        present("told", "tell");
+        present("thought", "think");
+        present("threw", "throw");
+        present("thrown", "throw");
+        present("understood", "understand");
+        present("woke", "wake");
+        present("woken", "wake");
+        present("wore", "wear");
+        present("worn", "wear");
+        present("won", "win");
+        present("wrote", "write");
+        present("written", "write");
+
     }
 
     public static Inflector getInstance() {
@@ -111,6 +249,10 @@ public class Inflector {
             return word;
         }
         return replaceWithFirstRule(word, singulars);
+    }
+    
+    public String presentize(String word){
+    	return replaceWithFirstRule(word, presents);
     }
 
     private String replaceWithFirstRule(String word, List<RuleAndReplacement> ruleAndReplacements) {
@@ -147,6 +289,10 @@ public class Inflector {
         singulars.add(0, new RuleAndReplacement(rule, replacement));
     }
 
+    public static void present(String rule, String replacement) {
+        presents.add(new RuleAndReplacement(rule, replacement));
+    }
+
     public static void irregular(String singular, String plural) {
         plural(singular, plural);
         singular(plural, singular);
@@ -157,6 +303,20 @@ public class Inflector {
             uncountables.add(word);
         }
     }
+
+	public String[] singularize(String[] list) {
+		if (list!=null){
+			String[] steamList = new String[list.length];
+			int i=0;
+			for (String word: list){
+				steamList[i] = list[i];
+				i++;
+			}
+			
+			return steamList;
+		}
+		return null;
+	}
 }
 
 

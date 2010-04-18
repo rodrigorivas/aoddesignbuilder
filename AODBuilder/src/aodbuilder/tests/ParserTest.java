@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.Map.Entry;
 
 
-import aodbuilder.beans.nlp.NLPDependencyRelation;
-import aodbuilder.beans.nlp.NLPDependencyWord;
+import aodbuilder.aodLayer.nlp.beans.NLPDependencyRelation;
+import aodbuilder.aodLayer.nlp.beans.NLPDependencyWord;
 import aodbuilder.util.TextSplitter;
 
 import edu.stanford.nlp.trees.*;
