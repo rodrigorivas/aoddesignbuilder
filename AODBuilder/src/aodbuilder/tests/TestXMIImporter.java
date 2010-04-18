@@ -8,12 +8,12 @@ import java.util.Map.Entry;
 
 import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
 import aodbuilder.aodLayer.process.GenericBeanAnalyzer;
+import aodbuilder.importerLayer.xmi.XMIImporter;
 import aodbuilder.umlLayer.beans.UMLBean;
 import aodbuilder.umlLayer.beans.UMLGenericBean;
 import aodbuilder.umlLayer.process.UMLBeanAnalyzer;
 import aodbuilder.util.FileUtil;
 import aodbuilder.util.UniqueID;
-import aodbuilder.xmiLayer.XMIImporter;
 
 
 public class TestXMIImporter {
