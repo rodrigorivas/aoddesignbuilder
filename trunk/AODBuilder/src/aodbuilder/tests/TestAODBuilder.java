@@ -7,7 +7,7 @@ import java.util.Map;
 import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
 import aodbuilder.exporterLayer.Di2Generator;
 import aodbuilder.exporterLayer.XMIExporter;
-import aodbuilder.main.AODBuilder;
+import aodbuilder.importerLayer.process.AODBuilder;
 import aodbuilder.util.Log4jConfigurator;
 
 public class TestAODBuilder {
