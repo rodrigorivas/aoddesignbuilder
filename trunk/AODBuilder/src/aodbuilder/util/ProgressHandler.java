@@ -1,6 +1,6 @@
 package aodbuilder.util;
 
-import aodbuilder.main.AODBuilderRunner;
+import aodbuilder.importerLayer.process.AODBuilderRunner;
 
 public class ProgressHandler {
 
