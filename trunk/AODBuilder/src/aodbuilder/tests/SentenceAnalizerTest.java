@@ -3,9 +3,9 @@ package aodbuilder.tests;
 import java.util.Collection;
 import java.util.HashMap;
 
-import aodbuilder.analyser.NLPProcessor;
-import aodbuilder.beans.nlp.NLPDependencyRelation;
-import aodbuilder.beans.nlp.NLPDependencyWord;
+import aodbuilder.aodLayer.nlp.beans.NLPDependencyRelation;
+import aodbuilder.aodLayer.nlp.beans.NLPDependencyWord;
+import aodbuilder.aodLayer.process.NLPProcessor;
 
 class SentenceAnalizerTest {
 	public static void main(String[] args) {

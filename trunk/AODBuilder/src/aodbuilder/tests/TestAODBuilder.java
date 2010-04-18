@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.Map;
 
 
-import aodbuilder.beans.aodprofile.AODProfileBean;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
+import aodbuilder.exporterLayer.Di2Generator;
+import aodbuilder.exporterLayer.XMIExporter;
 import aodbuilder.main.AODBuilder;
 import aodbuilder.util.Log4jConfigurator;
-import aodbuilder.xmi.Di2Generator;
-import aodbuilder.xmi.XMIExporter;
 
 public class TestAODBuilder {
 
