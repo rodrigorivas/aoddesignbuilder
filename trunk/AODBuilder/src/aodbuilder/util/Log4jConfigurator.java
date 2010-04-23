@@ -1,5 +1,7 @@
 package aodbuilder.util;
 
+import java.util.Properties;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -12,7 +14,13 @@ public class Log4jConfigurator {
 
 	public static void getLog4JProperties() throws Exception {
 		if (!configured){
-			PropertyConfigurator.configure(ResourceLoader.loadProperties("AODLog4j"));
+			System.out.println("Loading Log4J properties from :"+FileConstants.PROPERTIES_PATH+FileConstants.LOG4J_FILE);
+			Properties prop = ResourceLoader.loadPropertiesFromFile(FileConstants.PROPERTIES_PATH+FileConstants.LOG4J_FILE);
+			if (prop==null){
+				System.out.println("Loading Log4J properties from resource:"+FileConstants.LOG4J_FILE);
+				prop = ResourceLoader.loadPropertiesFromResource(FileConstants.LOG4J_FILE);
+			}
+			PropertyConfigurator.configure(prop);
 			configured = true;
 		}
 	}

@@ -47,12 +47,14 @@ public class AODProfileAspectBuilder extends AODProfileClassBuilder implements A
 	@SuppressWarnings("unchecked")
 	public AODProfileBean build(AODProfileClass cl) throws Exception {
 		AODProfileAspect aspect = new AODProfileAspect();
+		aspect.setName(cl.getName());
 		aspect.setId(aspect.generateId());
 		aspect.setMainClass(cl.isMainClass());
 		aspect.setAttributes(ListUtils.clone(cl.getAttributes()));
 		aspect.setResponsabilities(ListUtils.clone(cl.getResponsabilities()));
-		aspect.convertAspectName();
 		
+		aspect.convertAspectName();
+
 		return aspect;
 	}
 

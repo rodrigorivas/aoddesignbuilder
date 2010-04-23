@@ -16,7 +16,7 @@ public class AODProfileResponsabilityBuilder {
 		Log4jConfigurator.getLogger().info("Building new Responsability with "+resp.getWord()+" and param:"+ ((param!=null)?param.getWord():"null"));
 		AODProfileResponsability newResponsability = new AODProfileResponsability();
 
-		if (ReservedWords.isReturnMethodKeyWord(resp.getWord())){
+		if (ReservedWords.getInstance().isReturnMethodKeyWord(resp.getWord())){
 			Collection<NLPDependencyWord> relVerbs = resp.getRelatedVerbs();
 			if (relVerbs!=null && relVerbs.size()>0)
 				newResponsability.setName(DataFormatter.javanize(relVerbs.iterator().next().getWord(),false));
@@ -27,10 +27,10 @@ public class AODProfileResponsabilityBuilder {
 			newResponsability.setName(DataFormatter.javanize(resp.getWord(),false));
 		}
 		if (param!=null){
-			if (ReservedWords.isReturnMethodType(param.getWord())){
+			if (ReservedWords.getInstance().isReturnMethodType(param.getWord())){
 				newResponsability.setReturningType(param.getWord());
 			}
-			else if (!ReservedWords.isMethodKeyWord(param.getWord()) && !ReservedWords.isClassKeyWord(param.getWord()) && param.isNoun()){
+			else if (!ReservedWords.getInstance().isMethodKeyWord(param.getWord()) && !ReservedWords.getInstance().isClassKeyWord(param.getWord()) && param.isNoun()){
 				AODProfileAttribute newAttr = (new AODProfileAttributeBuilder()).build(param);
 				if (newAttr!=null)
 					newResponsability.addParameter(newAttr);

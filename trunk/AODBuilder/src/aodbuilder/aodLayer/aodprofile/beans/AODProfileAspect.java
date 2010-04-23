@@ -57,7 +57,7 @@ public class AODProfileAspect extends AODProfileClass {
 	}
 	
 	public static String generateId(String name){
-		return AODProfileAspect.class.getSimpleName()+"."+AODProfileClass.convertClassName(convertAspectName(name));
+		return AODProfileAspect.class.getSimpleName()+"."+AODProfileClass.convertClassName(name);
 	}
 	
 	@Override
@@ -105,7 +105,7 @@ public class AODProfileAspect extends AODProfileClass {
 	}
 
 	public static String convertAspectName(String name) {
-		return ReservedWords.getAspectName(name);
+		return ReservedWords.getInstance().getAspectName(name);
 	}
 
 	public void convertAspectName() {

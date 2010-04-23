@@ -19,8 +19,8 @@ public class AODProfileJoinPointBuilder{
 		String word = dependencyWord.getWord();
 		Log4jConfigurator.getLogger().info("Building new JoinPoint...");
 		AODProfileJoinPoint jp = null;
-		if (ReservedWords.isKnownJoinPoint(word)){
-			if (ReservedWords.isComplexJoinPoint(word)){
+		if (ReservedWords.getInstance().isKnownJoinPoint(word)){
+			if (ReservedWords.getInstance().isComplexJoinPoint(word)){
 				jp = buildComplexDefault(param);
 			}
 			else if (word.equalsIgnoreCase("exception")){

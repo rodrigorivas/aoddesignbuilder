@@ -4,6 +4,8 @@ import aodbuilder.importerLayer.process.AODBuilderRunner;
 
 public class ProgressHandler {
 
+	public static int DEFAULT_PROGRESS = 5;
+
 	private static ProgressHandler instance;
 	private ProgressHandler() {
 	}

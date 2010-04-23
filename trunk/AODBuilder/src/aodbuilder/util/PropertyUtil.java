@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Set;
 
 public class PropertyUtil {
 
@@ -18,6 +17,11 @@ public class PropertyUtil {
 		loadProperty(fileName);
 	}
 	
+	public PropertyUtil(Properties properties) {
+		props = properties;
+		buildKeys();
+	}
+
 	public void loadProperty(String fileName) throws FileNotFoundException, IOException{
 		props = new Properties();
 		props.load(new FileInputStream(new File(fileName)));
@@ -37,7 +41,7 @@ public class PropertyUtil {
 			}
 		}		
 	}
-
+	
 	public ArrayList<String> getProperties(String key) {
 		int i=1;
 		String prop=null;
@@ -53,6 +57,12 @@ public class PropertyUtil {
 		return words;
 	}
 		
+	public String getProperty(String key){
+		if (props!=null){
+			return props.getProperty(key);
+		}
+		return null;
+	}
 	
 	public Properties getProps() {
 		return props;
@@ -60,18 +70,6 @@ public class PropertyUtil {
 
 	public ArrayList<String> getKeys() {
 		return keys;
-	}
-
-	public static void main(String[] args) {
-		try {
-			PropertyUtil pu = new PropertyUtil("c:/temp/reservedWords.properties");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }

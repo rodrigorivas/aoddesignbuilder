@@ -2,8 +2,6 @@ package aodbuilder.aodLayer.aodprofile.beans;
 
 import java.util.Map;
 
-import aodbuilder.util.DataFormatter;
-
 
 @SuppressWarnings("unchecked")
 public abstract class AODProfileBean implements Comparable{

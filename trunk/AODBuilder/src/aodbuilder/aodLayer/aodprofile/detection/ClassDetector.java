@@ -37,7 +37,7 @@ public class ClassDetector {
 				if (word.getType().toUpperCase().startsWith("NN")){
 					if (!contained(classes, word)){
 						word.setWord(DataFormatter.javanize(Inflector.getInstance().singularize(word.getWord()),true));
-						if (!ReservedWords.isReservedClassWord(word.getWord())){
+						if (!ReservedWords.getInstance().isReservedClassWord(word.getWord())){
 							logger.info("Found new class :"+word.getWord());
 							classes.add(word);
 						}

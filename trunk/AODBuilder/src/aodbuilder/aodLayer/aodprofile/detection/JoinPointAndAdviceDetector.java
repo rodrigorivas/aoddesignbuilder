@@ -153,7 +153,7 @@ public class JoinPointAndAdviceDetector {
 		for (NLPDependencyWord verb: verbs){
 			for (AODProfileJoinPoint joinPoint: joinPoints){
 				if (verb.isParent(joinPoint.getName()) || verb.isParent(joinPoint.getType())){
-					if (!ReservedWords.isReservedMethodWord(word.getWord())){
+					if (!ReservedWords.getInstance().isReservedMethodWord(word.getWord())){
 						return DataFormatter.javanize(verb.getWord(),false);
 					}
 				}

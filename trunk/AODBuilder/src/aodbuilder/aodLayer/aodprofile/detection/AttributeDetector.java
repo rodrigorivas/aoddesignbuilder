@@ -2,8 +2,6 @@ package aodbuilder.aodLayer.aodprofile.detection;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -125,18 +123,18 @@ public class AttributeDetector {
 		}
 	}
 	
-	private void printInfo(NLPDependencyWord relatedWord, NLPDependencyWord classContainer, NLPDependencyRelation dr) {
-		if (relatedWord.isRoot(classContainer, true)){
-			System.out.println("------------------");
-			System.out.println("===="+classContainer+"====");
-			System.out.println(dr);
-			System.out.println("REL:"+relatedWord+". Is Related?"+relatedWord.isRoot(classContainer, true));
-			HashMap<String, NLPDependencyWord> roots = relatedWord.getRelatedWordsWithDepth(classContainer);
-			for (Map.Entry<String, NLPDependencyWord> entry: roots.entrySet()){
-				System.out.println(entry.getKey()+" :"+entry.getValue().getWord());
-			}
-		}
-	}
+//	private void printInfo(NLPDependencyWord relatedWord, NLPDependencyWord classContainer, NLPDependencyRelation dr) {
+//		if (relatedWord.isRoot(classContainer, true)){
+//			System.out.println("------------------");
+//			System.out.println("===="+classContainer+"====");
+//			System.out.println(dr);
+//			System.out.println("REL:"+relatedWord+". Is Related?"+relatedWord.isRoot(classContainer, true));
+//			HashMap<String, NLPDependencyWord> roots = relatedWord.getRelatedWordsWithDepth(classContainer);
+//			for (Map.Entry<String, NLPDependencyWord> entry: roots.entrySet()){
+//				System.out.println(entry.getKey()+" :"+entry.getValue().getWord());
+//			}
+//		}
+//	}
 
 	
 }
