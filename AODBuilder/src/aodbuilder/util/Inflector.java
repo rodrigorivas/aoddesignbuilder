@@ -101,122 +101,122 @@ public class Inflector {
         present("ed$","");
         present("ing$","");
         
-        present("awoke", "awake");
-        present("awoken", "awake");
-        present("was", "be");
-        present("were", "be");
-        present("been", "be");
-        present("beaten", "beat");
-        present("became",	"become");
-        present("began", "begin");
-        present("begun", "begin");
-        present("bent", "bend");
-        present("bit", "bite");
-        present("bitten", "bite");
-        present("blew", "blow");
-        present("blown", "blow");
-        present("broke", "break");
-        present("broken", "break");
-        present("brought", "bring");
-        present("built", "build");
-        present("burnt", "burn");
-        present("bought", "buy");
-        present("caught", "catch");
-        present("chosen", "choose");
-        present("came", "come");
-        present("dug", "dig");
-        present("did", "do");
-        present("done", "do");
-        present("drew", "draw");
-        present("drawn", "draw");
-        present("dreamt", "dream");
-        present("drove", "drive");
-        present("driven", "drive");
-        present("drank", "drink");
-        present("drunk", "drink");
-        present("ate", "eat");
-        present("eaten", "eat");
-        present("fell", "fall");
-        present("fallen", "fall");
-        present("felt", "feel");
-        present("fought", "fight");
-        present("found", "find");
-        present("flew", "fly");
-        present("flown", "fly");
-        present("forgot", "forget");
-        present("forgotten", "forget");
-        present("forgave", "forgive");
-        present("forgiven", "forgive");
-        present("froze", "freeze");
-        present("frozen", "freeze");
-        present("got", "get");
-        present("gotten", "get");
-        present("gave", "give");
-        present("given", "give");
-        present("went", "go");
-        present("gone", "go");
-        present("grew", "grow");
-        present("grown", "grow");
-        present("hung", "hang");
-        present("had", "have");
-        present("heard", "hear");
-        present("hid", "hide");
-        present("hidden", "hide");
-        present("held", "hold");
-        present("knew", "know");
-        present("known", "know");
-        present("laid", "lay");
-        present("led", "lead");
-        present("learnt", "learn");
-        present("left", "leave");
-        present("lent", "lend");
-        present("lay", "lie");
-        present("lain", "lie");
-        present("lost", "lose");
-        present("made", "make");
-        present("meant", "mean");
-        present("met", "meet");
-        present("paid", "pay");
-        present("rode", "ride");
-        present("ridden", "ride");
-        present("rang", "ring");
-        present("rung", "ring");
-        present("rose", "rise");
-        present("risen", "rise");
-        present("ran", "run");
-        present("said", "say");
-        present("saw", "see");
-        present("seen", "see");
-        present("sold", "sell");
-        present("sent", "send");
-        present("shown", "show");
-        present("sang", "sing");
-        present("sung", "sing");
-        present("sat", "sit");
-        present("slept", "sleep");
-        present("spoke", "speak");
-        present("spoken", "speak");
-        present("spent", "spend");
-        present("stood", "stand");
-        present("swam", "swim");
-        present("swum", "swim");
-        present("took", "take");
-        present("taken", "take");
-        present("taught", "teach");
-        present("tore", "tear");
-        present("torn", "tear");
-        present("told", "tell");
-        present("thought", "think");
-        present("threw", "throw");
-        present("thrown", "throw");
-        present("understood", "understand");
-        present("woke", "wake");
-        present("woken", "wake");
-        present("wore", "wear");
-        present("worn", "wear");
-        present("won", "win");
-        present("wrote", "write");
-        present("written", "write");
+        present("^awoke$", "awake");
+        present("^awoken$", "awake");
+        present("^was$", "be");
+        present("^were$", "be");
+        present("^been$", "be");
+        present("^beaten$", "beat");
+        present("^became$",	"become");
+        present("^began$", "begin");
+        present("^begun$", "begin");
+        present("^bent$", "bend");
+        present("^bit$", "bite");
+        present("^bitten$", "bite");
+        present("^blew$", "blow");
+        present("^blown$", "blow");
+        present("^broke$", "break");
+        present("^broken$", "break");
+        present("^brought$", "bring");
+        present("^built$", "build");
+        present("^burnt$", "burn");
+        present("^bought$", "buy");
+        present("^caught$", "catch");
+        present("^chosen$", "choose");
+        present("^came$", "come");
+        present("^dug$", "dig");
+        present("^did$", "do");
+        present("^done$", "do");
+        present("^drew$", "draw");
+        present("^drawn$", "draw");
+        present("^dreamt$", "dream");
+        present("^drove$", "drive");
+        present("^driven$", "drive");
+        present("^drank$", "drink");
+        present("^drunk$", "drink");
+        present("^ate$", "eat");
+        present("^eaten$", "eat");
+        present("^fell$", "fall");
+        present("^fallen$", "fall");
+        present("^felt$", "feel");
+        present("^fought$", "fight");
+        present("^found$", "find");
+        present("^flew$", "fly");
+        present("^flown$", "fly");
+        present("^forgot$", "forget");
+        present("^forgotten$", "forget");
+        present("^forgave$", "forgive");
+        present("^forgiven$", "forgive");
+        present("^froze$", "freeze");
+        present("^frozen$", "freeze");
+        present("^got$", "get");
+        present("^gotten$", "get");
+        present("^gave$", "give");
+        present("^given$", "give");
+        present("^went$", "go");
+        present("^gone$", "go");
+        present("^grew$", "grow");
+        present("^grown$", "grow");
+        present("^hung$", "hang");
+        present("^had$", "have");
+        present("^heard$", "hear");
+        present("^hid$", "hide");
+        present("^hidden$", "hide");
+        present("^held$", "hold");
+        present("^knew$", "know");
+        present("^known$", "know");
+        present("^laid$", "lay");
+        present("^led$", "lead");
+        present("^learnt$", "learn");
+        present("^left$", "leave");
+        present("^lent$", "lend");
+        present("^lay$", "lie");
+        present("^lain$", "lie");
+        present("^lost$", "lose");
+        present("^made$", "make");
+        present("^meant$", "mean");
+        present("^met$", "meet");
+        present("^paid$", "pay");
+        present("^rode$", "ride");
+        present("^ridden$", "ride");
+        present("^rang$", "ring");
+        present("^rung$", "ring");
+        present("^rose$", "rise");
+        present("^risen$", "rise");
+        present("^ran$", "run");
+        present("^said$", "say");
+        present("^saw$", "see");
+        present("^seen$", "see");
+        present("^sold$", "sell");
+        present("^sent$", "send");
+        present("^shown$", "show");
+        present("^sang$", "sing");
+        present("^sung$", "sing");
+        present("^sat$", "sit");
+        present("^slept$", "sleep");
+        present("^spoke$", "speak");
+        present("^spoken$", "speak");
+        present("^spent$", "spend");
+        present("^stood$", "stand");
+        present("^swam$", "swim");
+        present("^swum$", "swim");
+        present("^took$", "take");
+        present("^taken$", "take");
+        present("^taught$", "teach");
+        present("^tore$", "tear");
+        present("^torn$", "tear");
+        present("^told$", "tell");
+        present("^thought$", "think");
+        present("^threw$", "throw");
+        present("^thrown$", "throw");
+        present("^understood$", "understand");
+        present("^woke$", "wake");
+        present("^woken$", "wake");
+        present("^wore$", "wear");
+        present("^worn$", "wear");
+        present("^won$", "win");
+        present("^wrote$", "write");
+        present("^written$", "write");
 
     }
 
@@ -304,12 +304,12 @@ public class Inflector {
         }
     }
 
-	public String[] singularize(String[] list) {
+	public String[] singularizeStringList(String[] list) {
 		if (list!=null){
 			String[] steamList = new String[list.length];
 			int i=0;
 			for (String word: list){
-				steamList[i] = list[i];
+				steamList[i] = singularize(word);
 				i++;
 			}
 			
@@ -317,6 +317,33 @@ public class Inflector {
 		}
 		return null;
 	}
+	
+	public ArrayList<String> singularize(ArrayList<String> list) {
+		if (list!=null){
+			ArrayList<String> steamList = new ArrayList<String>();
+			for (String word: list){
+				steamList.add(singularize(word));
+			}
+			
+			return steamList;
+		}
+		return null;
+	}
+    
+//	public static void main(String[] args) {
+//		String word = "ate";
+//		String rule = "^ate$";
+//		String replacement = "eat";
+//		String ret = "";
+//      
+//		Matcher matcher = Pattern.compile(rule, Pattern.CASE_INSENSITIVE).matcher(word);
+//        if (matcher.find()) {
+//             ret = matcher.replaceAll(replacement);
+//        }
+//
+//		System.out.println(Inflector.getInstance().presentize(word));
+//	}
+
 }
 
 
@@ -340,4 +367,5 @@ class RuleAndReplacement {
     public void setRule(String rule) {
         this.rule = rule;
     }
+    
 }

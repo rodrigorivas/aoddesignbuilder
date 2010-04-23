@@ -1,6 +1,7 @@
 package aodbuilder.importerLayer.process;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -8,11 +9,12 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
-import aodbuilder.aodLayer.process.GenericBeanAnalyzer;
+import aodbuilder.constants.FileConstants;
 import aodbuilder.importerLayer.xmi.XMIImporter;
 import aodbuilder.umlLayer.beans.UMLGenericBean;
 import aodbuilder.util.FileUtil;
 import aodbuilder.util.Log4jConfigurator;
+import aodbuilder.util.ReservedWords;
 
 public class AODBuilder{
 
@@ -21,7 +23,7 @@ public class AODBuilder{
 	String filePath;
 	Map<String, AODProfileBean> map;
 	
-	private AODBuilder() {
+	private AODBuilder(){
 		try {
 			Log4jConfigurator.getLog4JProperties();
 		} catch (Exception e) {
@@ -29,9 +31,16 @@ public class AODBuilder{
 			e.printStackTrace();
 		}
 		logger = Log4jConfigurator.getLogger();	
+		
+		init();
 	}
 
-	public static AODBuilder getInstance(){
+	private void init(){
+		FileConstants.loadConstants();
+		ReservedWords.getInstance();
+	}
+
+	public static AODBuilder getInstance() throws FileNotFoundException, IOException{
 		if (instance==null)
 			instance = new AODBuilder();
 		

@@ -1,4 +1,5 @@
 package aodbuilder.stemmer;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class EnglishStemmer extends Stemmer{
@@ -556,5 +557,18 @@ public class EnglishStemmer extends Stemmer{
 		}
 
 		return resultado;
+	}
+	
+	public ArrayList<String> stemmer (ArrayList<String> words){
+		ArrayList<String> ret = new ArrayList<String>();
+		
+		for (String word: words){
+			String stWord = stemmer(word);
+			if (stWord!=null){
+				ret.add(stWord);
+			}
+		}
+		
+		return ret;
 	}
 }

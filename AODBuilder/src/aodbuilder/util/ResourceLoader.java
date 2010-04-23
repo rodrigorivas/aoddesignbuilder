@@ -1,6 +1,8 @@
 
 package aodbuilder.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
@@ -128,11 +130,25 @@ public abstract class ResourceLoader
      * would be to use techniques shown in
      * http://www.javaworld.com/javaworld/javaqa/2003-06/01-qa-0606-load.html 
      */
-    public static Properties loadProperties (final String name)
+    public static Properties loadPropertiesFromResource (final String name)
     {
         return loadProperties (name,
             Thread.currentThread ().getContextClassLoader ());
     }
+    
+    public static Properties loadPropertiesFromFile (final String name)
+    {
+    
+		Properties props = null;
+		try{
+			props = new Properties();
+			props.load(new FileInputStream(new File(name)));
+		}catch (Exception e) {
+			return null;
+		}
+		return props;
+    }
+
     
 	    /**
 	     * Looks up a resource named 'name' in the classpath. The name is assumed to be absolute

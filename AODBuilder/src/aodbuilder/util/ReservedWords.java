@@ -1,127 +1,199 @@
 package aodbuilder.util;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
+import aodbuilder.constants.FileConstants;
 import aodbuilder.stemmer.EnglishStemmer;
 
 public class ReservedWords {
 
-	private static final String[] reservedClassWords = {"usecase", "use case", "use", "case", "aspect", "class", "entity", "id", "flow", "every", "everything", "he", "she", "it", "we", "they"} ;
-	private static final String[] reservedMethodWordsForJP = {"every","any","all"};
-	private static final String[] reservedResponsabilityWords = {"occur","happen","do","is","want","did", "have","ha","contain","wish"}; //ha-> has stemmed
-	private static final String[] returnMethodTypes = {"int", "float", "void", "boolean", "char", "String"};
-	private static final String[] returnMethodKeyWords = {"return", "returning"};
-	private static final String[] methodKeyWords = {"method", "responsability"};
-	private static final String[] classKeyWords = {"class", "instance", "object"};
-	private static final String[] knownJoinPoints = {"call", "execution", "new", "within", "exception", "target", "this"};
-	private static final String[] simpleJoinPoints = {"within", "exception", "target", "this"};
-	private static final String[] complexJoinPoints = {"call", "execution", "new"};
-	private static final String[] reservedAttributeWords = {"every", "everything", "new"};
-	private static final String[][] aspectWords = {
-		{"visualize", "show", "display", "view"}, //visualization
-		{"approve", "validate", "permission", "check", "authenticate", "secure", "ask", "enter", "verify"}, //security
-		{"store", "save", "register", "modify", "update", "delete", "retrieve"}, //persistence
-		{"respond", "occur", "do", "time"}, //performance
-		{"log"}, //loggging
-		{"management", "cancel", "select", "mark", "confirm"}, //usability	
-		{"error", "handling", "failure"}, //error handling
-		{"connect", "process", "interconnect"}, //comunication		
-		{"available", "ready"}, //availability
-		{"integrate", "unify", "join"} //integrability
-		};
-	private static final String[] aspectKeys = 
-		{"visualization", "security", "persistence", 
-		 "performance", "logging", "usability", 
-		 "errorHandling", "comunication", "availability", 
-		 "integrability"};
-
-	public static boolean isReservedClassWord(String word){
+	public static String RESERVED_CLASS = "reservedClassWords";
+	public static String CLASS_KEY = "classKeyWords";
+	public static String RESERVED_ATTRIBUTE = "reservedAttributeWords";
+	public static String RESERVED_RESPONSABILITY = "reservedResponsabilityWords";
+	public static String METHOD_RETURN_TYPE = "returnMethodTypes";
+	public static String METHOD_RETURN_KEY = "returnMethodKeyWords";
+	public static String METHOD_KEY = "methodKeyWords";
+	public static String RESERVED_METHOD_JP = "reservedMethodWordsForJP";
+	public static String KNOWN_JP = "knownJoinPoints";
+	public static String SIMPLE_JP = "simpleJoinPoints";
+	public static String COMPLEX_JP = "complexJoinPoints";
+	public static String ASPECT_NAMES_MAPPING = "aspectWords";
+	
+	private static ReservedWords instance;
+	private HashMap<String, ArrayList<String>> reservedWordsMap=new HashMap<String, ArrayList<String>>();
+	
+	private ReservedWords(String fileName){
+		loadReservedWords(ResourceLoader.loadPropertiesFromResource(fileName));
+	}
+	
+	private ReservedWords() {
+		System.out.println("Loading ReservedWords from file: "+FileConstants.PROPERTIES_PATH+FileConstants.RESERVED_WORDS_FILE);
+		Properties prop = ResourceLoader.loadPropertiesFromFile(FileConstants.PROPERTIES_PATH+FileConstants.RESERVED_WORDS_FILE);
+		if (prop==null){
+			System.out.println("Loading from resource: "+FileConstants.RESERVED_WORDS_FILE);
+			prop = ResourceLoader.loadPropertiesFromResource(FileConstants.RESERVED_WORDS_FILE);
+		}
+		
+		loadReservedWords(prop);
+	}
+	
+	public static ReservedWords getInstance(String fileName){
+		if (instance==null)
+			instance = new ReservedWords(fileName);
+		
+		return instance;
+	}
+	
+	public static ReservedWords getInstance(){
+		if (instance==null)
+			instance = new ReservedWords();
+		
+		return instance;
+	}
+	
+	public boolean isReservedClassWord(String word){
 		String singWord = Inflector.getInstance().singularize(word);
-		return ListUtils.contains(reservedClassWords, singWord);
+		return isReservedWord(singWord, RESERVED_CLASS);
+//		return ListUtils.contains(reservedClassWords, singWord);
+	}
+
+	private boolean isReservedWord(String word, String key) {
+		ArrayList<String> reservedWords = reservedWordsMap.get(key);
+		if (reservedWords!=null){
+			return contains(word, reservedWords);
+		}
+		return false;
+	}
+
+	private boolean contains(String word, ArrayList<String> list) {
+		if (list!=null){
+			for (String rword: list){
+				if (rword.equalsIgnoreCase(word))
+					return true;
+			}
+		}
+		return false;
 	}
 	
-	public static boolean isReservedAttributeWord(String word){
-		return ListUtils.contains(reservedAttributeWords, word);
+	public boolean isReservedAttributeWord(String word){
+		return isReservedWord(word, RESERVED_ATTRIBUTE);
+//		return ListUtils.contains(reservedAttributeWords, word);
 	}
 	
-	public static boolean isReservedMethodWord(String word){
-		return ListUtils.contains(reservedMethodWordsForJP, word);
+	public boolean isReservedMethodWord(String word){
+		return isReservedWord(word, RESERVED_METHOD_JP);
+//		return ListUtils.contains(reservedMethodWordsForJP, word);
 	}
 
-	public static boolean isKnownJoinPoint(String word){
-		return ListUtils.contains(knownJoinPoints, word);
+	public boolean isKnownJoinPoint(String word){
+		return isReservedWord(word, KNOWN_JP);
+//		return ListUtils.contains(knownJoinPoints, word);
 	}
 
-	public static boolean isSimpleJoinPoint(String word){
-		return ListUtils.contains(simpleJoinPoints, word);
+	public boolean isSimpleJoinPoint(String word){
+		return isReservedWord(word, SIMPLE_JP);
+//		return ListUtils.contains(simpleJoinPoints, word);
 	}
 
-	public static boolean isComplexJoinPoint(String word){
-		return ListUtils.contains(complexJoinPoints, word);
+	public boolean isComplexJoinPoint(String word){
+		return isReservedWord(word, COMPLEX_JP);
+//		return ListUtils.contains(complexJoinPoints, word);
 	}
 
-	public static boolean isReservedResponsabilityWord(String word){
+	public boolean isReservedResponsabilityWord(String word){
 		String steamWord = new EnglishStemmer().stemmer(word);
-		if (ListUtils.contains(reservedResponsabilityWords, steamWord))
-			return true;
-		else{
-			String singWord = Inflector.getInstance().singularize(word);
-			return ListUtils.contains(reservedResponsabilityWords, singWord);
-		}
+		String singWord = Inflector.getInstance().singularize(word);
+		return isReservedWord(word, RESERVED_RESPONSABILITY) || 
+				isReservedWord(steamWord, RESERVED_RESPONSABILITY) || 
+				isReservedWord(singWord, RESERVED_RESPONSABILITY);
+//		if (ListUtils.contains(reservedResponsabilityWords, steamWord))
+//			return true;
+//		else{
+//			String singWord = Inflector.getInstance().singularize(word);
+//			return ListUtils.contains(reservedResponsabilityWords, singWord);
+//		}
 	}
 	
-	public static boolean isReturnMethodType(String word){
-		return ListUtils.contains(returnMethodTypes, word);
+	public boolean isReturnMethodType(String word){
+		return isReservedWord(word, METHOD_RETURN_TYPE);
+//		return ListUtils.contains(returnMethodTypes, word);
 	}
 
-	public static boolean isReturnMethodKeyWord(String word){
-		return ListUtils.contains(returnMethodKeyWords, word);
+	public boolean isReturnMethodKeyWord(String word){
+		return isReservedWord(word, METHOD_RETURN_KEY);
+//		return ListUtils.contains(returnMethodKeyWords, word);
 	}
 
-	public static boolean isMethodKeyWord(String word){
-		return ListUtils.contains(methodKeyWords, word);
+	public boolean isMethodKeyWord(String word){
+		return isReservedWord(word, METHOD_KEY);
+//		return ListUtils.contains(methodKeyWords, word);
 	}
 
-	public static boolean isClassKeyWord(String word){
-		return ListUtils.contains(classKeyWords, word);
+	public boolean isClassKeyWord(String word){
+		return isReservedWord(word, CLASS_KEY);
+//		return ListUtils.contains(classKeyWords, word);
 	}
-	
-	public static void loadProperty(String fileName) throws FileNotFoundException, IOException{
-		PropertyUtil pu = new PropertyUtil(fileName);
-		String key="reservedClassWords";
-		ArrayList<String> words = pu.getProperties(key);
-		for (String word: words){
-			System.out.println(word);
-		}
-	}
-	
-	public static String getAspectName(String name){
+		
+	public String getAspectName(String name){
 		if (name!=null && name.length()>0){
 			String steamName = Inflector.getInstance().singularize(name);
 			String presentVerb = Inflector.getInstance().presentize(name);
-			int i=0;
-			for (String[] aspectList: aspectWords){
-				String[] steamList = Inflector.getInstance().singularize(aspectList);
-				if (ListUtils.contains(steamList, steamName) || ListUtils.contains(steamList, presentVerb)){
-					return aspectKeys[i];
+			for (Map.Entry<String, ArrayList<String>> e: reservedWordsMap.entrySet()){
+				String key = e.getKey();
+				ArrayList<String> value = e.getValue();
+				
+				if (key.startsWith(ASPECT_NAMES_MAPPING)){
+					int index = key.indexOf(".");
+					String subKey = "";
+					if (index>0 && index<key.length()){
+						subKey = key.substring(index+1, key.length());
+					}
+
+					ArrayList<String> steamList = Inflector.getInstance().singularize(value);
+					if (contains(steamName, steamList) || contains(presentVerb, steamList))
+						return subKey;
 				}
-				i++;
 			}
+			
+//			int i=0;
+//			ArrayList<String> aspectList = getAspectList();
+//			for (String[] aspectList: aspectWords){
+//				String[] steamList = Inflector.getInstance().singularize(aspectList);
+//				if (ListUtils.contains(steamList, steamName) || ListUtils.contains(steamList, presentVerb)){
+//					return aspectKeys[i];
+//				}
+//				i++;
+//			}
 		}
 		return name;
+	}
+	
+
+	public void loadReservedWords(Properties properties){
+		PropertyUtil pu = new PropertyUtil(properties);
+		ArrayList<String> keys = pu.getKeys();
+		for (String key: keys){
+			ArrayList<String> value = pu.getProperties(key);
+			reservedWordsMap.put(key, value);
+			//TODO: ALGUN STEAM????
+			//Responsability steam
+			//Aspects Presentize
+		}
 	}
 
 	
 	public static void main(String[] args) {
 		
-		String name = "logged";
-		
-		System.out.println(Inflector.getInstance().singularize(name));
-		System.out.println(Inflector.getInstance().presentize(name));
-		
-		System.out.println(getAspectName(name));
+//		String name = "logged";
+//		
+//		System.out.println(Inflector.getInstance().singularize(name));
+//		System.out.println(Inflector.getInstance().presentize(name));
+//		
+//		System.out.println(getAspectName(name));
 		
 //		try {
 //			loadProperty("c:/temp/reservedWords.properties");
@@ -133,7 +205,14 @@ public class ReservedWords {
 //			e.printStackTrace();
 //		}
 		
-		
+		ReservedWords rw = ReservedWords.getInstance("c:/temp/reservedWords.properties");
+		String name = "deleted";
+		System.out.println(rw.getAspectName(name));
+//			for (Map.Entry<String, ArrayList<String>> e: reservedWordsMap.entrySet()){
+//				String key = e.getKey();
+//				ArrayList<String> value = e.getValue();
+//				System.out.println(key+value);
+//			}
 	}
 
 }

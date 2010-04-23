@@ -2,9 +2,7 @@ package aodbuilder.aodLayer.aodprofile.detection;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -117,21 +115,6 @@ public class ResponsabilityDetector {
 		return responsabilities;
 	}
 
-	private boolean checkOption(int optionNumber, NLPDependencyWord wordToCheck, NLPDependencyWord classContainer) {
-		switch (optionNumber) {
-		case 1:
-			return wordToCheck.isFirstRelated(classContainer);
-		case 2:
-			return wordToCheck.isRelated(classContainer);
-		case 3:
-			return wordToCheck.isRoot(classContainer,true);
-		case 4:
-			return wordToCheck.isRoot(classContainer,false);
-		default:
-			return false;
-		}
-	}
-
 	private void checkConjunctions(Collection<NLPDependencyRelation> relations,
 			NLPDependencyWord classContainer,
 			Collection<AODProfileResponsability> responsabilities) {
@@ -163,7 +146,7 @@ public class ResponsabilityDetector {
 	}
 
 	private boolean processResponsability(Collection<AODProfileResponsability> responsabilities, NLPDependencyWord respWord, NLPDependencyWord relatedWord, NLPDependencyWord classContainer, NLPDependencyRelation dr) {
-		if (respWord.isVerb() && !ReservedWords.isReservedResponsabilityWord(respWord.getWord())){
+		if (respWord.isVerb() && !ReservedWords.getInstance().isReservedResponsabilityWord(respWord.getWord())){
 			if (relatedWord!=null && classContainer.getWord().equalsIgnoreCase(relatedWord.getWord()))
 				relatedWord = null;
 			logger.info(dr);
@@ -195,24 +178,24 @@ public class ResponsabilityDetector {
 		}
 	}
 
-	private void printInfo(NLPDependencyWord respWord, 	NLPDependencyWord relatedWord, NLPDependencyWord classContainer, NLPDependencyRelation dr) {
-		if (respWord.isRoot(classContainer, true) || (relatedWord!=null && relatedWord.isRoot(classContainer, true))){
-			System.out.println("------------------");
-			System.out.println("===="+classContainer+"====");
-			System.out.println(dr);
-			System.out.println("RESP:"+respWord+". Is Related?"+respWord.isRoot(classContainer, true));
-			HashMap<String, NLPDependencyWord> roots = respWord.getRelatedWordsWithDepth(classContainer);
-			for (Map.Entry<String, NLPDependencyWord> entry: roots.entrySet()){
-				System.out.println(entry.getKey()+" :"+entry.getValue().getWord());
-			}
-			if (relatedWord!=null){
-				System.out.println("REL:"+relatedWord+". Is Related?"+relatedWord.isRoot(classContainer, true));
-				roots = relatedWord.getRelatedWordsWithDepth(classContainer);
-				for (Map.Entry<String, NLPDependencyWord> entry: roots.entrySet()){
-					System.out.println(entry.getKey()+" :"+entry.getValue().getWord());
-				}
-			}
-		}
-	}
+//	private void printInfo(NLPDependencyWord respWord, 	NLPDependencyWord relatedWord, NLPDependencyWord classContainer, NLPDependencyRelation dr) {
+//		if (respWord.isRoot(classContainer, true) || (relatedWord!=null && relatedWord.isRoot(classContainer, true))){
+//			System.out.println("------------------");
+//			System.out.println("===="+classContainer+"====");
+//			System.out.println(dr);
+//			System.out.println("RESP:"+respWord+". Is Related?"+respWord.isRoot(classContainer, true));
+//			HashMap<String, NLPDependencyWord> roots = respWord.getRelatedWordsWithDepth(classContainer);
+//			for (Map.Entry<String, NLPDependencyWord> entry: roots.entrySet()){
+//				System.out.println(entry.getKey()+" :"+entry.getValue().getWord());
+//			}
+//			if (relatedWord!=null){
+//				System.out.println("REL:"+relatedWord+". Is Related?"+relatedWord.isRoot(classContainer, true));
+//				roots = relatedWord.getRelatedWordsWithDepth(classContainer);
+//				for (Map.Entry<String, NLPDependencyWord> entry: roots.entrySet()){
+//					System.out.println(entry.getKey()+" :"+entry.getValue().getWord());
+//				}
+//			}
+//		}
+//	}
 
 }

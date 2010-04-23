@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
-import aodbuilder.aodLayer.process.GenericBeanAnalyzer;
+import aodbuilder.importerLayer.process.GenericBeanAnalyzer;
 import aodbuilder.importerLayer.xmi.XMIImporter;
 import aodbuilder.umlLayer.beans.UMLBean;
 import aodbuilder.umlLayer.beans.UMLGenericBean;

@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 
 import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
 import aodbuilder.aodLayer.aodprofile.factories.AODProfileFactory;
-import aodbuilder.constants.Constants;
 import aodbuilder.umlLayer.beans.UMLAssociation;
 import aodbuilder.umlLayer.beans.UMLBean;
 import aodbuilder.util.Log4jConfigurator;
@@ -109,9 +108,9 @@ public class UMLBeanAnalyzer {
 			double actualProgess) {
 		//every <DEFAULT_PROGRESS>% we inform the progress
 		actualProgess+=incProgress;
-		if (actualProgess>=Constants.DEFAULT_PROGRESS){
-			ProgressHandler.getInstance().incrementProgress(Constants.DEFAULT_PROGRESS);
-			actualProgess -= Constants.DEFAULT_PROGRESS;
+		if (actualProgess>=ProgressHandler.DEFAULT_PROGRESS){
+			ProgressHandler.getInstance().incrementProgress(ProgressHandler.DEFAULT_PROGRESS);
+			actualProgess -= ProgressHandler.DEFAULT_PROGRESS;
 		}
 		return actualProgess;
 	}

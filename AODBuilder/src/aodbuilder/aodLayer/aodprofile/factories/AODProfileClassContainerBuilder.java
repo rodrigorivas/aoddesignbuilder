@@ -20,7 +20,6 @@ import aodbuilder.umlLayer.beans.UMLBean;
 import aodbuilder.util.DataFormatter;
 import aodbuilder.util.ListUtils;
 import aodbuilder.util.Log4jConfigurator;
-import aodbuilder.util.ReservedWords;
 
 public class AODProfileClassContainerBuilder implements AODProfileBuilder{
 

@@ -30,7 +30,7 @@ public class AODProfileAdviceBuilder{
 		}
 
 		newAdvice.setName(word);
-		if (param != null && ReservedWords.isKnownJoinPoint(param)){			
+		if (param != null && ReservedWords.getInstance().isKnownJoinPoint(param)){			
 			newAdvice.setJoinPointType(param);
 		}
 

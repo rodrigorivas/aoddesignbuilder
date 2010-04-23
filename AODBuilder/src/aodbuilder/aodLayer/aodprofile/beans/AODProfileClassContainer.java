@@ -80,6 +80,7 @@ public class AODProfileClassContainer extends AODProfileBean{
 				AODProfileAspect asp = (AODProfileAspect) new AODProfileAspectBuilder().build(oldClass);
 				map.remove(AODProfileClass.generateId(aodclass.getName()));
 				asp.merge(aodclass);
+
 				map.put(asp.getId(), asp);
 			}
 		}
