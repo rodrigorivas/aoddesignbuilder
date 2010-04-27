@@ -15,7 +15,7 @@ import aodbuilder.aodLayer.aodprofile.detection.AttributeDetector;
 import aodbuilder.aodLayer.aodprofile.detection.ClassDetector;
 import aodbuilder.aodLayer.aodprofile.detection.ResponsabilityDetector;
 import aodbuilder.aodLayer.nlp.beans.NLPDependencyWord;
-import aodbuilder.aodLayer.process.NLPProcessor;
+import aodbuilder.aodLayer.nlp.process.NLPProcessor;
 import aodbuilder.umlLayer.beans.UMLBean;
 import aodbuilder.util.DataFormatter;
 import aodbuilder.util.ListUtils;
