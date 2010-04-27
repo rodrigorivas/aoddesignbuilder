@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import aodbuilder.aodLayer.nlp.beans.NLPDependencyRelation;
 import aodbuilder.aodLayer.nlp.beans.NLPDependencyWord;
-import aodbuilder.aodLayer.process.NLPProcessor;
+import aodbuilder.aodLayer.nlp.process.NLPProcessor;
 
 class SentenceAnalizerTest {
 	public static void main(String[] args) {

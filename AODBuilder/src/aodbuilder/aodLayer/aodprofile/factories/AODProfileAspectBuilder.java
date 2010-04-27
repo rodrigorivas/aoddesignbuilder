@@ -21,7 +21,7 @@ import aodbuilder.aodLayer.aodprofile.detection.JoinPointAndAdviceDetector;
 import aodbuilder.aodLayer.aodprofile.detection.ResponsabilityDetector;
 import aodbuilder.aodLayer.nlp.beans.NLPDependencyRelation;
 import aodbuilder.aodLayer.nlp.beans.NLPDependencyWord;
-import aodbuilder.aodLayer.process.NLPProcessor;
+import aodbuilder.aodLayer.nlp.process.NLPProcessor;
 import aodbuilder.umlLayer.beans.UMLAspect;
 import aodbuilder.umlLayer.beans.UMLAssociation;
 import aodbuilder.umlLayer.beans.UMLBean;

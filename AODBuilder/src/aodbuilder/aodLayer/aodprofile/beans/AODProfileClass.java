@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import aodbuilder.aodLayer.nlp.beans.NLPDependencyWord;
-import aodbuilder.aodLayer.process.NLPProcessor;
+import aodbuilder.aodLayer.nlp.process.NLPProcessor;
 import aodbuilder.util.Inflector;
 
 public class AODProfileClass extends AODProfileBean {
