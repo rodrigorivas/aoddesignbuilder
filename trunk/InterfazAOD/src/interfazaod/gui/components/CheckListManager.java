@@ -17,7 +17,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import aodbuilder.beans.aodprofile.AODProfileBean;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
 
 
 public class CheckListManager extends MouseAdapter implements ListSelectionListener, ActionListener{ 

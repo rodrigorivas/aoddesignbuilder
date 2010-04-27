@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
@@ -29,11 +30,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.log4j.Logger;
 
-import aodbuilder.analyser.NLPProcessor;
-import aodbuilder.beans.aodprofile.AODProfileBean;
-import aodbuilder.constants.Constants;
-import aodbuilder.main.AODBuilder;
-import aodbuilder.main.AODBuilderRunner;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
+import aodbuilder.constants.FileConstants;
+import aodbuilder.importerLayer.process.AODBuilder;
+import aodbuilder.importerLayer.process.AODBuilderRunner;
 import aodbuilder.util.ExceptionUtil;
 import aodbuilder.util.Log4jConfigurator;
 import aodbuilder.util.ResourceLoader;
@@ -83,7 +83,7 @@ public class FileSelector extends javax.swing.JFrame {
 			task = AODBuilderRunner.getInstance(fileName);
 			task.addPropertyChangeListener(this);
 
-			 setParserResource(NLPProcessor.PARSER_ENGLISH);
+			 setParserResource(FileConstants.PARSER_ENGLISH);
 			
 			task.execute();
 		}
@@ -105,7 +105,14 @@ public class FileSelector extends javax.swing.JFrame {
 						enableButtons();
 					}
 					else{
-						Map<String, AODProfileBean> map = AODBuilder.getInstance().getMap();
+						Map<String, AODProfileBean> map = null;
+						try {
+							map = AODBuilder.getInstance().getMap();
+						} catch (FileNotFoundException e) {
+							logger.error(ExceptionUtil.getTrace(e));
+						} catch (IOException e) {
+							logger.error(ExceptionUtil.getTrace(e));
+						}
 						if (map!=null && map.values().size()>0)
 							aodClasses = map.values().toArray();
 						AODBuilderRunner.destroy();
@@ -123,7 +130,7 @@ public class FileSelector extends javax.swing.JFrame {
 				URL bundleURL = ResourceLoader.getResourceURL(resourceName);
 				URL nativeURL = org.eclipse.core.runtime.Platform.resolve(bundleURL);
 				//set global Parser URL
-				Constants.PARSER_ENGLISH_RESOURCE_URL = nativeURL;
+				FileConstants.PARSER_ENGLISH_RESOURCE_URL = nativeURL;
 			} catch (IOException e) {
 				logger.error(ExceptionUtil.getTrace(e));
 			}
