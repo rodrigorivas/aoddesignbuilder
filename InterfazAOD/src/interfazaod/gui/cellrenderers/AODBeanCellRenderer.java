@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import aodbuilder.beans.aodprofile.*;
+import aodbuilder.aodLayer.aodprofile.beans.*;
 
 
 public class AODBeanCellRenderer extends JLabel implements ListCellRenderer {

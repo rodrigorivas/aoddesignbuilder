@@ -31,18 +31,18 @@ import javax.swing.border.BevelBorder;
 
 import org.apache.log4j.Logger;
 
-import aodbuilder.beans.aodprofile.AODProfileAdvice;
-import aodbuilder.beans.aodprofile.AODProfileAspect;
-import aodbuilder.beans.aodprofile.AODProfileAssociation;
-import aodbuilder.beans.aodprofile.AODProfileAttribute;
-import aodbuilder.beans.aodprofile.AODProfileBean;
-import aodbuilder.beans.aodprofile.AODProfileClass;
-import aodbuilder.beans.aodprofile.AODProfileJoinPoint;
-import aodbuilder.beans.aodprofile.AODProfilePointcut;
-import aodbuilder.beans.aodprofile.AODProfileResponsability;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileAdvice;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileAspect;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileAssociation;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileAttribute;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileClass;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileJoinPoint;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfilePointcut;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileResponsability;
+import aodbuilder.exporterLayer.Di2Generator;
+import aodbuilder.exporterLayer.XMIExporter;
 import aodbuilder.util.Log4jConfigurator;
-import aodbuilder.xmi.Di2Generator;
-import aodbuilder.xmi.XMIExporter;
 
 
 /**

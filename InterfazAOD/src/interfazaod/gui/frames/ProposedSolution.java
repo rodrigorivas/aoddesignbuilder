@@ -28,10 +28,10 @@ import javax.swing.border.BevelBorder;
 
 import org.apache.log4j.Logger;
 
-import aodbuilder.beans.aodprofile.AODProfileAspect;
-import aodbuilder.beans.aodprofile.AODProfileAssociation;
-import aodbuilder.beans.aodprofile.AODProfileClass;
-import aodbuilder.beans.aodprofile.AODProfilePointcut;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileAspect;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileAssociation;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileClass;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfilePointcut;
 import aodbuilder.util.Log4jConfigurator;
 
 

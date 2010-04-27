@@ -2,14 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: InterfazAOD Plug-in
 Bundle-SymbolicName: InterfazAOD; singleton:=true
-Bundle-Version: 1.0.2
+Bundle-Version: 1.0.6
 Bundle-Activator: interfazaod.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.console,
  org.eclipse.jdt.ui,
- com.cea.papyrus.core;bundle-version="1.11.0",
- ProfileAodPlugin;bundle-version="1.0.2"
+ com.cea.papyrus.core;bundle-version="1.11.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/AODBuilder.jar,
@@ -17,27 +16,34 @@ Bundle-ClassPath: lib/AODBuilder.jar,
  lib/stanford-parser-2010-02-26.jar,
  bin/,
  resources/
-Export-Package: aodbuilder.analyser,
- aodbuilder.beans.aodprofile,
- aodbuilder.beans.nlp,
- aodbuilder.beans.uml,
+Export-Package: aodbuilder.aodLayer.aodprofile.beans,
+ aodbuilder.aodLayer.aodprofile.detection,
+ aodbuilder.aodLayer.aodprofile.factories,
+ aodbuilder.aodLayer.nlp.beans,
+ aodbuilder.aodLayer.nlp.factories,
+ aodbuilder.aodLayer.nlp.process,
  aodbuilder.constants,
- aodbuilder.factories.aodprofile,
- aodbuilder.factories.nlp,
- aodbuilder.factories.uml,
- aodbuilder.main,
- aodbuilder.tests,
+ aodbuilder.exporterLayer,
+ aodbuilder.importerLayer.process,
+ aodbuilder.importerLayer.xmi,
+ aodbuilder.stemmer,
+ aodbuilder.umlLayer.beans,
+ aodbuilder.umlLayer.factories,
+ aodbuilder.umlLayer.process,
  aodbuilder.util,
- aodbuilder.xmi,
  edu.stanford.nlp.fsm,
+ edu.stanford.nlp.international.arabic,
+ edu.stanford.nlp.international.arabic.pipeline,
  edu.stanford.nlp.io,
  edu.stanford.nlp.io.ui,
  edu.stanford.nlp.ling,
  edu.stanford.nlp.math,
  edu.stanford.nlp.misc,
+ edu.stanford.nlp.movetrees,
  edu.stanford.nlp.objectbank,
  edu.stanford.nlp.parser,
  edu.stanford.nlp.parser.lexparser,
+ edu.stanford.nlp.parser.metrics,
  edu.stanford.nlp.parser.ui,
  edu.stanford.nlp.process,
  edu.stanford.nlp.stats,

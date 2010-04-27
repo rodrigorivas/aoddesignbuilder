@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 
-import aodbuilder.beans.aodprofile.AODProfileBean;
+import aodbuilder.aodLayer.aodprofile.beans.AODProfileBean;
 
 public class CheckListCellRenderer extends JPanel implements ListCellRenderer{ 
     private ListCellRenderer delegate; 
