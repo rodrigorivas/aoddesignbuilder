@@ -51,7 +51,7 @@ public class AODProfileClassContainer extends AODProfileBean{
 	public void processInnerClass(Map<String, AODProfileBean> map,
 			AODProfileClass aodclass) {
 		if (!map.containsKey(aodclass.getId())){
-			//there's an aspect with the same name as this class
+			//could be an aspect with the same name as this class
 			if (!map.containsKey(AODProfileAspect.generateId(aodclass.getName()))){
 				map.put(aodclass.getId(), aodclass);
 			}

@@ -90,12 +90,16 @@ public class AODProfileClassContainerBuilder implements AODProfileBuilder{
 		AODProfileClass possibleClass = null;
 		if (aodClassContainer.isCrosscut()){
 			possibleClass = new AODProfileAspect();
+			possibleClass.setName(DataFormatter.javanize(cl.getWord(),true));
+			possibleClass.setId(possibleClass.generateId());
+			
+			((AODProfileAspect)possibleClass).convertAspectName();
 		}
 		else{
 			possibleClass =	new AODProfileClass();
+			possibleClass.setName(DataFormatter.javanize(cl.getWord(),true));
+			possibleClass.setId(possibleClass.generateId());
 		}
-		possibleClass.setName(DataFormatter.javanize(cl.getWord(),true));
-		possibleClass.setId(possibleClass.generateId());
 
 		aodClassContainer.addClass(possibleClass);
 	}

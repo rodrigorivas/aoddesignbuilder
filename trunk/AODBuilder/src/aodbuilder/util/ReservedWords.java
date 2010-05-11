@@ -72,7 +72,9 @@ public class ReservedWords {
 	private boolean contains(String word, ArrayList<String> list) {
 		if (list!=null){
 			for (String rword: list){
-				if (rword.equalsIgnoreCase(word))
+				if (rword.equalsIgnoreCase(word) || 
+						//words presentize that ends on e get truncated like validated --> validat
+						((rword.endsWith("e") && (rword.substring(0, rword.length()-1).equalsIgnoreCase(word)))))
 					return true;
 			}
 		}
@@ -154,7 +156,9 @@ public class ReservedWords {
 					}
 
 					ArrayList<String> steamList = Inflector.getInstance().singularize(value);
-					if (contains(steamName, steamList) || contains(presentVerb, steamList))
+					ArrayList<String> presentList = Inflector.getInstance().presentize(value);
+					if (contains(steamName, steamList) || contains(presentVerb, steamList) ||
+						contains(steamName, presentList) || contains(presentVerb, presentList)	)
 						return subKey;
 				}
 			}
