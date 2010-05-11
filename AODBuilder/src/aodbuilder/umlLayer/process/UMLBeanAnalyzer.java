@@ -95,6 +95,10 @@ public class UMLBeanAnalyzer {
 			if (aodBean!=null){		
 				if (!aodProfileMap.containsKey(aodBean.getId()))
 					aodProfileMap.put(aodBean.getId(), aodBean);
+				else{
+					AODProfileBean oldBean = aodProfileMap.get(aodBean.getId());
+					oldBean.merge(aodBean);
+				}
 			}		
 			actualProgess = setProgress(incProgress, actualProgess);
 		}

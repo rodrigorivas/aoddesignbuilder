@@ -329,6 +329,18 @@ public class Inflector {
 		}
 		return null;
 	}
+
+	public ArrayList<String> presentize(ArrayList<String> list) {
+		if (list!=null){
+			ArrayList<String> steamList = new ArrayList<String>();
+			for (String word: list){
+				steamList.add(presentize(word));
+			}
+			
+			return steamList;
+		}
+		return null;
+	}
     
 //	public static void main(String[] args) {
 //		String word = "ate";

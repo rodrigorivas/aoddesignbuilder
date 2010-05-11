@@ -57,7 +57,7 @@ public class AODProfileAspect extends AODProfileClass {
 	}
 	
 	public static String generateId(String name){
-		return AODProfileAspect.class.getSimpleName()+"."+AODProfileClass.convertClassName(name);
+		return AODProfileAspect.class.getSimpleName()+"."+AODProfileAspect.convertAspectName(name);
 	}
 	
 	@Override
@@ -110,6 +110,22 @@ public class AODProfileAspect extends AODProfileClass {
 
 	public void convertAspectName() {
 		this.name = DataFormatter.javanize(convertAspectName(this.name), true);
+		this.id = generateId();
+	}
+
+	@Override
+	public void merge(AODProfileBean aodBean) {
+		if (aodBean instanceof AODProfileAspect){
+			super.merge(aodBean);
+			AODProfileAspect profileAspect = (AODProfileAspect) aodBean;
+				//add non existing pointcuts from profileAspect
+				for (AODProfilePointcut pc: profileAspect.getPossiblePointcuts()){
+					if (!this.getPossiblePointcuts().contains(pc)){
+							this.addAssociation(pc);
+					}
+				}
+				
+		}
 	}
 
 
