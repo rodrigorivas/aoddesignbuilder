@@ -1,0 +1,1 @@
+Utilizando como entrada un xmi con casos de uso y casos de uso de aspectos se intenta crear una estructura de clases, relaciones, aspectos, pointcuts, etc. para realizar un diseño inicial de la aplicacion deseada.
